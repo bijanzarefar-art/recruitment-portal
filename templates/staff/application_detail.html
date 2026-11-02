@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}جزئیات پرونده{% endblock %}
+{% block nav %}{% include "staff/_nav.html" %}{% endblock %}
+{% block content %}
+
+<div id="loading-state" class="notice info">در حال بارگذاری...</div>
+<div id="error-state" class="notice warn" hidden></div>
+
+<section class="card" id="detail-card" hidden>
+    <div class="section-title">
+        <div>
+            <h2 id="applicant-name"></h2>
+            <div id="tracking-code" class="muted" style="margin-top:6px"></div>
+        </div>
+        <span id="status-badge" class="status-badge"></span>
+    </div>
+
+    <div class="detail-list">
+        <div class="detail"><div class="k">موبایل</div><div class="v" id="d-mobile"></div></div>
+        <div class="detail"><div class="k">شهر</div><div class="v" id="d-city"></div></div>
+        <div class="detail"><div class="k">موقعیت شغلی</div><div class="v" id="d-job"></div></div>
+        <div class="detail"><div class="k">سابقه کاری</div><div class="v" id="d-experience"></div></div>
+        <div class="detail"><div class="k">امکان شروع</div><div class="v" id="d-availability"></div></div>
+        <div class="detail"><div class="k">آخرین عنوان شغلی</div><div class="v" id="d-last-title"></div></div>
+        <div class="detail"><div class="k">آخرین شرکت</div><div class="v" id="d-last-company"></div></div>
+        <div class="detail"><div class="k">تاریخ ثبت</div><div class="v" id="d-created"></div></div>
+    </div>
+
+    <div class="actions-row" style="margin-top:18px">
+        <a id="download-link" href="#" class="btn primary">دانلود رزومه</a>
+    </div>
+    <div id="download-error" class="field-error" style="margin-top:8px"></div>
+
+    <div id="previous-applications-notice" class="notice info" hidden></div>
+
+    <h3 style="margin-top:22px">ارجاع پرونده</h3>
+    <div id="reviewer-current" class="muted"></div>
+    <form id="assign-form" class="form-grid" style="margin-top:10px">
+        <div class="form-group">
+            <label for="assign-reviewer-id">کارمند دریافت‌کننده ارجاع</label>
+            <select id="assign-reviewer-id" name="reviewer_id">
+                <option value="">انتخاب کنید</option>
+            </select>
+        </div>
+        <button type="submit" id="assign-submit" class="btn primary">ثبت/جایگزینی ارجاع</button>
+        <button type="button" id="revoke-submit" class="btn ghost">لغو ارجاع فعلی</button>
+    </form>
+    <div id="assign-error" class="field-error" style="margin-top:8px"></div>
+
+    <h3 style="margin-top:22px">تغییر وضعیت</h3>
+    <div id="status-conflict-notice" class="notice warn" hidden>
+        این پرونده توسط کاربر دیگری تغییر کرده؛ لطفاً تازه‌سازی کنید.
+        <button type="button" id="status-refresh-button" class="btn ghost" style="margin-right:8px">تازه‌سازی</button>
+    </div>
+    <form id="status-form" class="form-grid" style="margin-top:10px">
+        <div class="form-group">
+            <label for="status-select">وضعیت جدید</label>
+            <select id="status-select" name="to_status"></select>
+        </div>
+        <div class="form-group">
+            <label for="status-reason">دلیل داخلی (برای رد یا بازگشایی اجباری است)</label>
+            <textarea id="status-reason" name="reason" maxlength="2000"></textarea>
+        </div>
+        <button type="submit" id="status-submit" class="btn primary">ثبت تغییر وضعیت</button>
+    </form>
+    <div id="status-error" class="field-error" style="margin-top:8px"></div>
+
+    <h3 style="margin-top:22px">یادداشت‌ها</h3>
+    <div id="notes-list"></div>
+    <div id="notes-empty" class="muted" hidden>هنوز یادداشتی ثبت نشده است.</div>
+
+    <form id="note-form" style="margin-top:12px">
+        <div class="form-group">
+            <label for="note-body">افزودن یادداشت داخلی</label>
+            <textarea id="note-body" name="body" maxlength="5000" required></textarea>
+        </div>
+        <button type="submit" id="note-submit" class="btn primary">ثبت یادداشت</button>
+    </form>
+    <div id="note-error" class="field-error" style="margin-top:8px"></div>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script>window.APPLICATION_ID = "{{ application_id }}";</script>
+<script type="module" src="/static/js/staff_detail.js"></script>
+{% endblock %}

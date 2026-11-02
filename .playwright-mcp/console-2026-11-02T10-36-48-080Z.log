@@ -1,0 +1,9 @@
+[   10485ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ https://layra.milanpars.com/login:0
+[ 1867532ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://layra.milanpars.com/api/auth/profile:0
+[ 3910999ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://layra.milanpars.com/api/catalog/promotions:0
+[ 4019006ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://layra.milanpars.com/api/events?ticket=u81dXdz9KfJ6P0iYpjI-OUyh6gkRZ4rtHFyEnlsPhsg:0
+[ 4022058ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://layra.milanpars.com/api/events?ticket=u81dXdz9KfJ6P0iYpjI-OUyh6gkRZ4rtHFyEnlsPhsg:0
+[ 5711194ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://layra.milanpars.com/api/catalog/promotions:0
+[ 7511699ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://layra.milanpars.com/api/catalog/promotions:0
+[ 9312206ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://layra.milanpars.com/api/catalog/promotions:0
+[11411264ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://layra.milanpars.com/api/catalog/promotions:0

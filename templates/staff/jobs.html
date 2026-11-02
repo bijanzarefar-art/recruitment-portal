@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}مدیریت موقعیت‌های شغلی{% endblock %}
+{% block nav %}{% include "staff/_nav.html" %}{% endblock %}
+{% block content %}
+
+<section class="card" style="margin-bottom:18px">
+    <div class="section-title">
+        <div>
+            <h2>ایجاد موقعیت شغلی جدید</h2>
+            <div class="muted" style="margin-top:6px">فقط برای مدیر HR؛ حذف فیزیکی موقعیت وجود ندارد — فقط بستن یا بایگانی.</div>
+        </div>
+    </div>
+    <form id="create-job-form" class="form-grid">
+        <div class="form-group">
+            <label for="job-title">عنوان موقعیت</label>
+            <input id="job-title" name="title" class="input" required maxlength="200">
+        </div>
+        <div class="form-group">
+            <label for="job-department">واحد</label>
+            <input id="job-department" name="department" class="input" maxlength="200">
+        </div>
+        <div class="form-group">
+            <label for="job-location">محل</label>
+            <input id="job-location" name="location" class="input" maxlength="200">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+            <label for="job-requirements">شایستگی‌های احراز شغل</label>
+            <textarea id="job-requirements" name="requirements" placeholder="هر مورد را در یک خط بنویسید؛ مثال:&#10;مدرک کارشناسی مرتبط&#10;حداقل ۲ سال سابقه فروش&#10;آشنایی با Excel"></textarea>
+            <div class="help">این فهرست هم به متقاضی پیش از ثبت درخواست و هم در همین صفحه نمایش داده می‌شود.</div>
+        </div>
+        <button type="submit" id="create-job-submit" class="btn primary">ایجاد موقعیت (پیش‌نویس)</button>
+    </form>
+    <div id="create-job-error" class="field-error" style="margin-top:8px"></div>
+</section>
+
+<section class="card">
+    <div class="section-title"><h2>فهرست موقعیت‌های شغلی</h2></div>
+    <div id="jobs-loading" class="notice info">در حال بارگذاری...</div>
+    <div class="table-wrap">
+        <table class="table" id="jobs-table" hidden>
+            <thead>
+                <tr><th>عنوان</th><th>واحد</th><th>محل</th><th>وضعیت</th><th>عملیات</th></tr>
+            </thead>
+            <tbody id="jobs-rows"></tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/staff_jobs.js"></script>
+{% endblock %}

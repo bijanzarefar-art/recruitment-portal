@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}پورتال جذب و استخدام میلان پارس{% endblock %}
+{% block content %}
+
+<div class="section-title" style="margin-bottom:28px">
+    <div>
+        <h2>به پورتال جذب و استخدام میلان پارس خوش آمدید</h2>
+        <div class="muted" style="margin-top:6px">یکی از دو بخش زیر را بر اساس هدفتان انتخاب کنید.</div>
+    </div>
+</div>
+
+<div class="grid cols-2 grid--gateway">
+    <section class="card gateway-card gateway-card--public">
+        <div class="gateway-icon gateway-icon--public">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M8 14h4"/><path d="M8 18h8"/></svg>
+        </div>
+        <span class="gateway-badge gateway-badge--public">بدون نیاز به ورود</span>
+        <h3 style="margin-top:14px;padding-top:0;border-top:none">مراجعه‌کننده هستم</h3>
+        <p class="muted" style="margin:8px 0 20px">می‌خواهم اطلاعات و رزومه‌ام را برای یک فرصت شغلی ثبت کنم، یا وضعیت درخواستی را که قبلاً ثبت کرده‌ام پیگیری کنم.</p>
+        <div class="actions-row actions-row--even">
+            <a href="/jobs" class="btn primary">مشاهده موقعیت‌های باز</a>
+            <a href="/apply" class="btn ghost">ثبت درخواست</a>
+            <a href="/track" class="btn ghost">پیگیری درخواست</a>
+        </div>
+    </section>
+
+    <section class="card gateway-card gateway-card--staff">
+        <div class="gateway-icon gateway-icon--staff">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <span class="gateway-badge gateway-badge--staff">نیازمند ورود کارمند</span>
+        <h3 style="margin-top:14px;padding-top:0;border-top:none">کارمند سازمان هستم</h3>
+        <p class="muted" style="margin:8px 0 20px">برای ثبت و مدیریت آگهی‌های شغلی، بررسی پرونده‌های متقاضیان، خروجی‌گیری گزارش و مدیریت کاربران وارد سامانهٔ کارکنان شوید.</p>
+        <div class="actions-row actions-row--even">
+            <a href="/staff/login" class="btn btn--staff">ورود به سامانه</a>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

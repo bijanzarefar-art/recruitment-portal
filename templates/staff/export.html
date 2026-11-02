@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}خروجی‌گیری{% endblock %}
+{% block nav %}{% include "staff/_nav.html" %}{% endblock %}
+{% block content %}
+
+<section class="card">
+    <div class="section-title">
+        <div>
+            <h2>خروجی‌گیری از پرونده‌ها</h2>
+            <div class="muted" style="margin-top:6px">فقط برای مدیر HR؛ مطابق فیلتر جاری و سقف ۱۰٬۰۰۰ ردیف در هر خروجی.</div>
+        </div>
+    </div>
+
+    <form id="export-form">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="export-format">فرمت</label>
+                <select id="export-format" name="format">
+                    <option value="csv">CSV</option>
+                    <option value="xlsx">XLSX (اکسل)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="export-status">وضعیت</label>
+                <select id="export-status" name="status">
+                    <option value="">همه وضعیت‌ها</option>
+                    <option value="new">در انتظار غربالگری اولیه</option>
+                    <option value="phone">تماس اولیه انجام شد</option>
+                    <option value="interview">دعوت به مصاحبه</option>
+                    <option value="approved">تأیید اولیه</option>
+                    <option value="rejected">عدم ادامه فرآیند</option>
+                    <option value="hired">استخدام شد</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="export-city">شهر</label>
+                <input id="export-city" name="city" class="input">
+            </div>
+            <div class="form-group">
+                <label for="export-q">جست‌وجو (نام، موبایل، کد پیگیری)</label>
+                <input id="export-q" name="q" class="input">
+            </div>
+        </div>
+
+        <h3 style="margin-top:18px">ستون‌ها</h3>
+        <div id="column-checkboxes" class="grid cols-2"></div>
+
+        <button type="submit" id="export-submit" class="btn primary" style="margin-top:16px">دریافت خروجی</button>
+    </form>
+    <div id="export-error" class="field-error" style="margin-top:8px"></div>
+    <div id="export-notice" class="notice info" style="margin-top:8px" hidden>
+        برای حفظ صفر ابتدایی موبایل/کد پیگیری هنگام باز کردن CSV در Excel، ستون را به‌عنوان «متن» وارد کنید
+        (Data → From Text/CSV و قالب ستون را Text انتخاب کنید)؛ در XLSX این قالب از پیش روی این ستون‌ها تنظیم شده است.
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/staff_export.js"></script>
+{% endblock %}

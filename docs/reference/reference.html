@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>پورتال جذب و استخدام میلان پارس</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;--card:#ffffff;--text:#172033;--muted:#64748b;--line:#e2e8f0;
+      --brand:#2356d8;--brand2:#173ea3;--ok:#0f9f6e;--warn:#d97706;--danger:#c24141;--shadow:0 16px 42px rgba(22,34,57,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Tahoma,"Vazirmatn",Arial,sans-serif;background:linear-gradient(180deg,#f8faff 0%,#f3f6fb 100%);color:var(--text)}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .hidden{display:none!important}
+    .app-shell{min-height:100vh}
+    .topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}
+    .brand{display:flex;gap:12px;align-items:center;font-weight:800}.brand-badge{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,var(--brand),#5b7cff);display:grid;place-items:center;color:white;font-size:18px;box-shadow:0 10px 24px rgba(35,86,216,.22)}
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .btn{border:none;border-radius:12px;padding:11px 16px;background:#eef2ff;color:#24409a;font-weight:700}
+    .btn.primary{background:var(--brand);color:#fff}.btn.primary:hover{background:var(--brand2)}
+    .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+    .btn.danger{background:#fff1f2;color:#b42318}.btn.success{background:#ecfdf5;color:#047857}
+    .container{max-width:1180px;margin:0 auto;padding:34px 20px 64px}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:stretch;margin-top:18px}
+    .hero-panel,.card{background:var(--card);border:1px solid #edf1f6;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-panel{padding:44px}.hero h1{font-size:40px;line-height:1.35;margin:0 0 16px}.hero p{color:var(--muted);font-size:17px;line-height:2;margin:0}
+    .choice-panel{padding:26px;display:grid;gap:14px}.choice-card{border:1px solid var(--line);border-radius:16px;padding:20px;text-align:right;background:#fff;transition:.2s}.choice-card:hover{transform:translateY(-2px);border-color:#b9c7ff;box-shadow:0 12px 30px rgba(35,86,216,.10)}
+    .choice-card h3{margin:0 0 8px}.choice-card p{margin:0 0 16px;font-size:14px;line-height:1.8}.choice-card .icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#eef2ff;color:var(--brand);font-weight:900;margin-bottom:12px}
+    .grid{display:grid;gap:18px}.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{padding:24px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.section-title h2,.section-title h3{margin:0}.muted{color:var(--muted)}
+    .form-group{display:grid;gap:8px}.form-group label{font-size:13px;font-weight:700}.required:after{content:" *";color:#c24141}.input,select,textarea{width:100%;border:1px solid #d7deea;border-radius:12px;padding:12px 13px;background:#fff;outline:none;transition:.15s}.input:focus,select:focus,textarea:focus{border-color:#7d99f4;box-shadow:0 0 0 3px rgba(35,86,216,.08)}
+    textarea{min-height:96px;resize:vertical}.help{font-size:12px;color:var(--muted);line-height:1.7}.error{font-size:12px;color:#b42318;display:none}.form-group.invalid .error{display:block}.form-group.invalid .input,.form-group.invalid select{border-color:#e49090}
+    .upload-box{border:2px dashed #cfd7e6;border-radius:14px;padding:18px;text-align:center;background:#fbfcfe}.upload-box strong{display:block;margin-bottom:6px}
+    .consent{display:flex;gap:10px;align-items:flex-start;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px}.consent input{margin-top:5px}
+    .actions-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .notice{border-radius:14px;padding:14px 16px;margin:16px 0;font-size:14px;line-height:1.8}.notice.info{background:#eff6ff;color:#1d4ed8}.notice.success{background:#ecfdf5;color:#047857}.notice.warn{background:#fffbeb;color:#92400e}
+    .status-badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800;background:#eef2ff;color:#314bb6}.status-new{background:#eff6ff;color:#1d4ed8}.status-phone{background:#fff7ed;color:#c2410c}.status-interview{background:#f5f3ff;color:#6d28d9}.status-approved{background:#ecfdf5;color:#047857}.status-rejected{background:#fff1f2;color:#b42318}.status-hired{background:#ecfeff;color:#0e7490}
+    .metric{padding:20px}.metric .value{font-size:30px;font-weight:900;margin-top:8px}.metric .label{color:var(--muted);font-size:13px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.toolbar .input,.toolbar select{max-width:240px}.toolbar .spacer{flex:1}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}.table{width:100%;border-collapse:collapse;min-width:920px;background:#fff}.table th,.table td{padding:13px 12px;border-bottom:1px solid #eef2f7;text-align:right;font-size:13px;vertical-align:middle}.table th{background:#f8fafc;color:#475569;position:sticky;top:0}.table tr:hover td{background:#fbfdff}.link-btn{border:none;background:none;color:var(--brand);font-weight:800;padding:0}
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.46);display:grid;place-items:center;padding:20px;z-index:50}.modal-card{width:min(760px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 30px 80px rgba(15,23,42,.25)}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line)}.modal-body{padding:22px}.close{border:none;background:#f1f5f9;border-radius:10px;width:38px;height:38px;font-size:18px}
+    .detail-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.detail{background:#f8fafc;border-radius:12px;padding:12px}.detail .k{font-size:11px;color:var(--muted);margin-bottom:5px}.detail .v{font-weight:700;word-break:break-word}
+    .login-card{max-width:520px;margin:34px auto}.login-card h2{margin-top:0}.demo-box{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.9;margin-bottom:16px}
+    .footer{color:#8a97aa;text-align:center;padding:20px;font-size:12px}
+    .stepbar{display:flex;gap:8px;align-items:center;margin-bottom:22px}.step{height:8px;flex:1;background:#e9eef6;border-radius:999px}.step.active{background:var(--brand)}
+    .empty{text-align:center;padding:40px 20px;color:var(--muted)}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.hero h1{font-size:32px}.grid.cols-4{grid-template-columns:repeat(2,1fr)}.grid.cols-3{grid-template-columns:1fr 1fr}.grid.cols-2{grid-template-columns:1fr}.detail-list{grid-template-columns:1fr}}
+    @media(max-width:560px){.topbar{padding:0 14px}.brand span:last-child{display:none}.container{padding:22px 12px 52px}.hero-panel{padding:28px}.hero h1{font-size:28px}.grid.cols-4,.grid.cols-3{grid-template-columns:1fr}.card{padding:18px}.actions-row .btn{width:100%}.toolbar .input,.toolbar select{max-width:none;width:100%}.toolbar .spacer{display:none}}
+  </style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-badge">MP</div><span>میلان پارس</span><span class="muted" style="font-weight:600">پورتال جذب و استخدام</span></div>
+    <div class="top-actions">
+      <button id="homeBtn" class="btn ghost hidden" onclick="goHome()">صفحه اصلی</button>
+      <button id="logoutBtn" class="btn danger hidden" onclick="logout()">خروج</button>
+    </div>
+  </header>
+
+  <main id="homeView" class="container">
+    <section class="hero">
+      <div class="hero-panel">
+        <div class="status-badge">سامانه جذب میلان پارس</div>
+        <h1>مسیر ساده، سریع و شفاف برای پیوستن به میلان پارس</h1>
+        <p>متقاضیان می‌توانند درخواست همکاری خود را ثبت و پیگیری کنند. تیم منابع انسانی نیز از پنل ادمین، درخواست‌ها را بررسی، دسته‌بندی و مرحله بعدی جذب را مدیریت می‌کند.</p>
+      </div>
+      <div class="hero-panel choice-panel">
+        <button class="choice-card" onclick="showCandidatePortal()">
+          <div class="icon">01</div><h3>ورود متقاضی</h3><p>ثبت درخواست همکاری جدید یا پیگیری وضعیت درخواست قبلی.</p><span class="btn primary" style="display:inline-block">ورود به بخش متقاضی</span>
+        </button>
+        <button class="choice-card" onclick="showAdminLogin()">
+          <div class="icon">02</div><h3>ورود ادمین</h3><p>مشاهده متقاضیان، تغییر وضعیت، ثبت یادداشت و خروجی اکسل/CSV.</p><span class="btn" style="display:inline-block">ورود به پنل ادمین</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <main id="candidateView" class="container hidden">
+    <div class="grid cols-2">
+      <section class="card">
+        <div class="section-title"><div><h2>ثبت درخواست همکاری</h2><div class="muted" style="margin-top:6px">فرم اولیه کوتاه برای ورود به فرآیند جذب</div></div><span class="status-badge">مرحله ۱</span></div>
+        <div class="stepbar"><div class="step active"></div><div class="step"></div><div class="step"></div></div>
+        <form id="applicationForm" novalidate>
+          <div class="grid cols-2">
+            <div class="form-group"><label class="required">کد ملی</label><input id="nationalId" class="input" inputmode="numeric" maxlength="10" placeholder="مثال: 0012345678"><div class="error">کد ملی معتبر وارد کنید.</div></div>
+            <div class="form-group"><label class="required">شماره موبایل</label><input id="mobile" class="input" inputmode="tel" maxlength="11" placeholder="09xxxxxxxxx"><div class="error">شماره موبایل معتبر وارد کنید.</div></div>
+            <div class="form-group"><label class="required">نام</label><input id="firstName" class="input" placeholder="نام"><div class="error">این فیلد الزامی است.</div></div>
+            <div class="form-group"><label class="required">نام خانوادگی</label><input id="lastName" class="input" placeholder="نام خانوادگی"><div class="error">این فیلد الزامی است.</div></div>
+            <div class="form-group"><label>ایمیل</label><input id="email" type="email" class="input" placeholder="name@example.com"><div class="error">ایمیل معتبر وارد کنید.</div></div>
+            <div class="form-group"><label class="required">شهر محل سکونت</label><input id="city" class="input" placeholder="مثال: تهران"><div class="error">این فیلد الزامی است.</div></div>
+            <div class="form-group"><label class="required">عنوان شغلی مورد درخواست</label><select id="job"><option value="">انتخاب کنید</option><option>کارشناس فروش</option><option>نماینده علمی / مدرپ</option><option>کارشناس لجستیک</option><option>کارشناس انبار</option><option>کارشناس منابع انسانی</option><option>کارشناس مالی</option><option>سایر</option></select><div class="error">یک موقعیت شغلی انتخاب کنید.</div></div>
+            <div class="form-group"><label class="required">وضعیت فعلی اشتغال</label><select id="employment"><option value="">انتخاب کنید</option><option>شاغل تمام‌وقت</option><option>شاغل پاره‌وقت</option><option>در حال حاضر شاغل نیستم</option><option>دانشجو</option><option>سایر</option></select><div class="error">این فیلد الزامی است.</div></div>
+            <div class="form-group"><label class="required">مجموع سابقه کاری</label><select id="experience"><option value="">انتخاب کنید</option><option>بدون سابقه</option><option>کمتر از ۱ سال</option><option>۱ تا ۳ سال</option><option>۳ تا ۵ سال</option><option>۵ تا ۱۰ سال</option><option>بیش از ۱۰ سال</option></select><div class="error">این فیلد الزامی است.</div></div>
+            <div class="form-group"><label class="required">امکان شروع همکاری</label><select id="availability"><option value="">انتخاب کنید</option><option>بلافاصله</option><option>حداکثر تا ۲ هفته</option><option>۲ تا ۴ هفته</option><option>بیش از یک ماه</option></select><div class="error">این فیلد الزامی است.</div></div>
+            <div class="form-group"><label class="required">آخرین عنوان شغلی</label><input id="lastTitle" class="input" placeholder="مثال: کارشناس فروش"><div class="error">این فیلد الزامی است.</div></div>
+            <div class="form-group"><label class="required">آخرین شرکت محل کار</label><input id="lastCompany" class="input" placeholder="نام شرکت"><div class="error">این فیلد الزامی است.</div></div>
+          </div>
+          <div class="form-group" style="margin-top:16px">
+            <label class="required">رزومه</label>
+            <div class="upload-box"><strong>فایل رزومه را انتخاب کنید</strong><div class="help">PDF، DOC یا DOCX — حداکثر ۵ مگابایت</div><input id="resume" type="file" accept=".pdf,.doc,.docx" style="margin-top:12px"><div id="resumeName" class="help" style="margin-top:8px"></div></div>
+            <div class="error">آپلود رزومه الزامی است.</div>
+          </div>
+          <div class="consent" style="margin-top:16px"><input id="consent" type="checkbox"><label for="consent">تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم شرکت میلان پارس برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس بگیرد.</label></div>
+          <div id="formMessage"></div>
+          <div class="actions-row" style="margin-top:18px"><button type="submit" class="btn primary">ثبت درخواست همکاری</button><button type="button" class="btn ghost" onclick="document.getElementById('applicationForm').reset();document.getElementById('resumeName').textContent=''">پاک کردن فرم</button></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="section-title"><div><h2>پیگیری درخواست</h2><div class="muted" style="margin-top:6px">با کد ملی و موبایل وضعیت آخرین درخواست خود را ببینید.</div></div></div>
+        <div class="grid">
+          <div class="form-group"><label>کد ملی</label><input id="trackNationalId" class="input" maxlength="10" inputmode="numeric"></div>
+          <div class="form-group"><label>شماره موبایل</label><input id="trackMobile" class="input" maxlength="11" inputmode="tel"></div>
+          <button class="btn primary" onclick="trackApplication()">مشاهده وضعیت</button>
+          <div id="trackResult"></div>
+        </div>
+        <div class="notice info">پس از ثبت درخواست، پرونده با وضعیت «در انتظار غربالگری اولیه» ایجاد می‌شود. در مرحله بعد، تیم منابع انسانی می‌تواند تماس اولیه را ثبت و نتیجه آن را در همین پرونده مدیریت کند.</div>
+      </section>
+    </div>
+  </main>
+
+  <main id="adminLoginView" class="container hidden">
+    <section class="card login-card">
+      <h2>ورود ادمین منابع انسانی</h2>
+      <div class="muted" style="margin-bottom:18px">نسخه نمونه برای ارزیابی طراحی و فرآیند</div>
+      <div class="demo-box"><b>اطلاعات ورود دمو</b><br>نام کاربری: <code>admin</code><br>رمز عبور: <code>MilanPars1405!</code></div>
+      <div class="grid">
+        <div class="form-group"><label>نام کاربری</label><input id="adminUser" class="input" autocomplete="username"></div>
+        <div class="form-group"><label>رمز عبور</label><input id="adminPass" type="password" class="input" autocomplete="current-password"></div>
+        <button class="btn primary" onclick="adminLogin()">ورود به داشبورد</button>
+        <div id="loginMessage"></div>
+      </div>
+    </section>
+  </main>
+
+  <main id="adminView" class="container hidden">
+    <div class="section-title"><div><h2>داشبورد جذب و استخدام</h2><div class="muted" style="margin-top:6px">نمای کلی مراحل جذب متقاضیان</div></div><div class="actions-row"><button class="btn ghost" onclick="exportCSV()">خروجی CSV</button><button class="btn" onclick="seedDemo(true)">بازنشانی داده دمو</button></div></div>
+    <div id="metrics" class="grid cols-4" style="margin-bottom:18px"></div>
+    <section class="card">
+      <div class="toolbar">
+        <input id="searchBox" class="input" placeholder="جست‌وجو نام، کد ملی، موبایل، شغل..." oninput="renderAdminTable()">
+        <select id="statusFilter" onchange="renderAdminTable()"><option value="">همه وضعیت‌ها</option></select>
+        <select id="jobFilter" onchange="renderAdminTable()"><option value="">همه موقعیت‌ها</option></select>
+        <div class="spacer"></div><span id="resultCount" class="muted"></span>
+      </div>
+      <div class="table-wrap"><table class="table"><thead><tr><th>کد پرونده</th><th>متقاضی</th><th>کد ملی</th><th>موبایل</th><th>موقعیت</th><th>شهر</th><th>وضعیت</th><th>تاریخ ثبت</th><th>عملیات</th></tr></thead><tbody id="candidateRows"></tbody></table></div>
+    </section>
+  </main>
+
+  <div id="candidateModal" class="modal hidden" onclick="modalBackdrop(event)">
+    <div class="modal-card">
+      <div class="modal-head"><div><h3 id="modalTitle" style="margin:0"></h3><div id="modalSubtitle" class="muted" style="margin-top:5px"></div></div><button class="close" onclick="closeModal()">×</button></div>
+      <div id="modalBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <footer class="footer">پورتال جذب و استخدام میلان پارس — نمونه اولیه</footer>
+</div>
+
+<script>
+const STATUS = [
+  ['new','در انتظار غربالگری اولیه','status-new'],
+  ['phone','تماس اولیه انجام شد','status-phone'],
+  ['interview','دعوت به مصاحبه','status-interview'],
+  ['approved','تأیید اولیه','status-approved'],
+  ['rejected','عدم ادامه فرآیند','status-rejected'],
+  ['hired','استخدام شد','status-hired']
+];
+const dbName='MilanParsRecruitmentDB';
+const APPS_KEY='mp_candidates_v1';
+let currentAdmin=false;
+
+function $(id){return document.getElementById(id)}
+function fmtDate(iso){try{return new Intl.DateTimeFormat('fa-IR-u-ca-persian',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}catch{return iso}}
+function statusMeta(code){return STATUS.find(s=>s[0]===code)||STATUS[0]}
+function statusBadge(code){const s=statusMeta(code);return `<span class="status-badge ${s[2]}">${s[1]}</span>`}
+function getApps(){return JSON.parse(localStorage.getItem(APPS_KEY)||'[]')}
+function saveApps(apps){localStorage.setItem(APPS_KEY,JSON.stringify(apps))}
+function uid(){return 'MP-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase()}
+function switchView(id){['homeView','candidateView','adminLoginView','adminView'].forEach(v=>$(v).classList.add('hidden'));$(id).classList.remove('hidden');$('homeBtn').classList.toggle('hidden',id==='homeView');$('logoutBtn').classList.toggle('hidden',id!=='adminView')}
+function goHome(){currentAdmin=false;switchView('homeView')}
+function logout(){currentAdmin=false;switchView('homeView')}
+function showCandidatePortal(){switchView('candidateView')}
+function showAdminLogin(){switchView('adminLoginView')}
+
+function isValidIranNationalCode(input){
+  if(!/^\d{10}$/.test(input)||/^(\d)\1{9}$/.test(input))return false;
+  const check=+input[9]; let sum=0; for(let i=0;i<9;i++)sum+=+input[i]*(10-i);
+  const r=sum%11; return check===(r<2?r:11-r);
+}
+function validMobile(v){return /^09\d{9}$/.test(v)}
+function validateGroup(el,valid){el.closest('.form-group')?.classList.toggle('invalid',!valid);return valid}
+
+$('resume').addEventListener('change',e=>{$('resumeName').textContent=e.target.files[0]?`فایل انتخاب‌شده: ${e.target.files[0].name}`:''});
+$('applicationForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const nationalId=$('nationalId').value.trim(), mobile=$('mobile').value.trim();
+  let ok=true;
+  ok=validateGroup($('nationalId'),isValidIranNationalCode(nationalId))&&ok;
+  ok=validateGroup($('mobile'),validMobile(mobile))&&ok;
+  ['firstName','lastName','city','job','employment','experience','availability','lastTitle','lastCompany'].forEach(id=>{ok=validateGroup($(id),!!$(id).value.trim())&&ok});
+  ok=validateGroup($('email'),!$('email').value.trim()||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($('email').value.trim()))&&ok;
+  const file=$('resume').files[0]; ok=validateGroup($('resume'),!!file&&file.size<=5*1024*1024)&&ok;
+  if(!$('consent').checked){$('formMessage').innerHTML='<div class="notice warn">تأیید صحت اطلاعات و اجازه تماس الزامی است.</div>';ok=false}
+  if(!ok){if(!$('formMessage').innerHTML)$('formMessage').innerHTML='<div class="notice warn">فیلدهای مشخص‌شده را اصلاح کنید.</div>';return}
+  const apps=getApps();
+  if(apps.some(a=>a.nationalId===nationalId&&a.job===$('job').value&&['new','phone','interview','approved'].includes(a.status))){$('formMessage').innerHTML='<div class="notice warn">برای این کد ملی و موقعیت شغلی یک درخواست فعال وجود دارد.</div>';return}
+  const app={id:uid(),nationalId,mobile,firstName:$('firstName').value.trim(),lastName:$('lastName').value.trim(),email:$('email').value.trim(),city:$('city').value.trim(),job:$('job').value,employment:$('employment').value,experience:$('experience').value,availability:$('availability').value,lastTitle:$('lastTitle').value.trim(),lastCompany:$('lastCompany').value.trim(),status:'new',notes:'',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),resumeName:file.name,resumeType:file.type||'application/octet-stream'};
+  apps.unshift(app);saveApps(apps);await storeResume(app.id,file);
+  $('applicationForm').reset();$('resumeName').textContent='';$('formMessage').innerHTML=`<div class="notice success"><b>درخواست با موفقیت ثبت شد.</b><br>کد پیگیری: <b>${app.id}</b><br>وضعیت فعلی: در انتظار غربالگری اولیه</div>`;
+});
+
+function trackApplication(){
+ const nid=$('trackNationalId').value.trim(), mob=$('trackMobile').value.trim();
+ const matches=getApps().filter(a=>a.nationalId===nid&&a.mobile===mob).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+ if(!matches.length){$('trackResult').innerHTML='<div class="notice warn">درخواستی با این مشخصات پیدا نشد.</div>';return}
+ const a=matches[0];$('trackResult').innerHTML=`<div class="notice success"><b>${a.firstName} ${a.lastName}</b><br>موقعیت: ${a.job}<br>کد پیگیری: ${a.id}<br>وضعیت: ${statusBadge(a.status)}<br>آخرین به‌روزرسانی: ${fmtDate(a.updatedAt)}</div>`;
+}
+
+function adminLogin(){
+ if($('adminUser').value==='admin'&&$('adminPass').value==='MilanPars1405!'){currentAdmin=true;$('loginMessage').innerHTML='';switchView('adminView');prepareAdmin()}else $('loginMessage').innerHTML='<div class="notice warn">نام کاربری یا رمز عبور صحیح نیست.</div>'
+}
+function prepareAdmin(){seedDemo(false);populateFilters();renderMetrics();renderAdminTable()}
+function populateFilters(){
+ $('statusFilter').innerHTML='<option value="">همه وضعیت‌ها</option>'+STATUS.map(s=>`<option value="${s[0]}">${s[1]}</option>`).join('');
+ const jobs=[...new Set(getApps().map(a=>a.job))].sort();$('jobFilter').innerHTML='<option value="">همه موقعیت‌ها</option>'+jobs.map(j=>`<option>${j}</option>`).join('');
+}
+function renderMetrics(){const a=getApps();const vals=[['کل متقاضیان',a.length],['در انتظار غربالگری',a.filter(x=>x.status==='new').length],['در فرآیند مصاحبه',a.filter(x=>['phone','interview','approved'].includes(x.status)).length],['استخدام‌شده',a.filter(x=>x.status==='hired').length]];$('metrics').innerHTML=vals.map(([l,v])=>`<div class="card metric"><div class="label">${l}</div><div class="value">${v}</div></div>`).join('')}
+function renderAdminTable(){
+ const q=$('searchBox').value.trim().toLowerCase(), sf=$('statusFilter').value, jf=$('jobFilter').value;
+ const rows=getApps().filter(a=>(!sf||a.status===sf)&&(!jf||a.job===jf)&&(!q||[a.id,a.firstName,a.lastName,a.nationalId,a.mobile,a.job,a.city,a.lastCompany].join(' ').toLowerCase().includes(q)));
+ $('resultCount').textContent=`${rows.length} پرونده`;
+ $('candidateRows').innerHTML=rows.length?rows.map(a=>`<tr><td>${a.id}</td><td><b>${a.firstName} ${a.lastName}</b></td><td>${a.nationalId}</td><td>${a.mobile}</td><td>${a.job}</td><td>${a.city}</td><td>${statusBadge(a.status)}</td><td>${fmtDate(a.createdAt)}</td><td><button class="link-btn" onclick="openCandidate('${a.id}')">مشاهده پرونده</button></td></tr>`).join(''):`<tr><td colspan="9"><div class="empty">پرونده‌ای مطابق فیلترها وجود ندارد.</div></td></tr>`;
+}
+function openCandidate(id){
+ const a=getApps().find(x=>x.id===id);if(!a)return;
+ $('modalTitle').textContent=`${a.firstName} ${a.lastName}`;$('modalSubtitle').textContent=`${a.id} — ${a.job}`;
+ $('modalBody').innerHTML=`
+ <div class="detail-list">
+  ${detail('کد ملی',a.nationalId)}${detail('موبایل',a.mobile)}${detail('ایمیل',a.email||'—')}${detail('شهر',a.city)}${detail('وضعیت اشتغال',a.employment)}${detail('سابقه کاری',a.experience)}${detail('آخرین عنوان شغلی',a.lastTitle)}${detail('آخرین شرکت',a.lastCompany)}${detail('امکان شروع',a.availability)}${detail('تاریخ ثبت',fmtDate(a.createdAt))}
+ </div>
+ <div class="grid cols-2" style="margin-top:16px">
+  <div class="form-group"><label>وضعیت پرونده</label><select id="modalStatus">${STATUS.map(s=>`<option value="${s[0]}" ${a.status===s[0]?'selected':''}>${s[1]}</option>`).join('')}</select></div>
+  <div class="form-group"><label>رزومه</label><button class="btn ghost" onclick="downloadResume('${a.id}','${esc(a.resumeName)}')">دانلود ${a.resumeName||'رزومه'}</button></div>
+ </div>
+ <div class="form-group" style="margin-top:14px"><label>یادداشت منابع انسانی / نتیجه تماس اولیه</label><textarea id="modalNotes" placeholder="مثال: تماس انجام شد، تجربه فروش دارویی مناسب، برای مصاحبه مدیر فروش دعوت شود.">${a.notes||''}</textarea></div>
+ <div class="actions-row" style="margin-top:14px"><button class="btn primary" onclick="saveCandidateUpdate('${a.id}')">ذخیره تغییرات</button><button class="btn danger" onclick="deleteCandidate('${a.id}')">حذف پرونده</button></div>`;
+ $('candidateModal').classList.remove('hidden');
+}
+function detail(k,v){return `<div class="detail"><div class="k">${k}</div><div class="v">${v||'—'}</div></div>`}
+function esc(s=''){return s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}
+function closeModal(){$('candidateModal').classList.add('hidden')}
+function modalBackdrop(e){if(e.target.id==='candidateModal')closeModal()}
+function saveCandidateUpdate(id){const apps=getApps(),i=apps.findIndex(a=>a.id===id);if(i<0)return;apps[i].status=$('modalStatus').value;apps[i].notes=$('modalNotes').value.trim();apps[i].updatedAt=new Date().toISOString();saveApps(apps);closeModal();populateFilters();renderMetrics();renderAdminTable()}
+async function deleteCandidate(id){if(!confirm('این پرونده حذف شود؟'))return;saveApps(getApps().filter(a=>a.id!==id));await deleteResume(id);closeModal();populateFilters();renderMetrics();renderAdminTable()}
+function exportCSV(){
+ const apps=getApps(), headers=['id','firstName','lastName','nationalId','mobile','email','city','job','employment','experience','availability','lastTitle','lastCompany','status','notes','createdAt','updatedAt','resumeName'];
+ const csv=[headers.join(','),...apps.map(a=>headers.map(h=>`"${String(a[h]??'').replace(/"/g,'""')}"`).join(','))].join('\n');
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),x=document.createElement('a');x.href=url;x.download='milanpars_candidates.csv';x.click();URL.revokeObjectURL(url);
+}
+function seedDemo(force){
+ if(!force&&getApps().length)return;
+ const now=Date.now();saveApps([
+  {id:'MP-DEMO-001',nationalId:'0013542529',mobile:'09121234567',firstName:'سارا',lastName:'محمدی',email:'sara@example.com',city:'تهران',job:'کارشناس فروش',employment:'شاغل تمام‌وقت',experience:'۳ تا ۵ سال',availability:'۲ تا ۴ هفته',lastTitle:'کارشناس فروش',lastCompany:'شرکت نمونه',status:'phone',notes:'تماس اولیه انجام شد؛ نیازمند بررسی مدیر فروش.',createdAt:new Date(now-86400000*2).toISOString(),updatedAt:new Date(now-86400000).toISOString(),resumeName:'Sara-Mohammadi.pdf',resumeType:'application/pdf'},
+  {id:'MP-DEMO-002',nationalId:'0024575897',mobile:'09351234567',firstName:'علی',lastName:'رضایی',email:'ali@example.com',city:'شیراز',job:'نماینده علمی / مدرپ',employment:'در حال حاضر شاغل نیستم',experience:'۱ تا ۳ سال',availability:'بلافاصله',lastTitle:'مدرپ',lastCompany:'پخش نمونه',status:'new',notes:'',createdAt:new Date(now-86400000).toISOString(),updatedAt:new Date(now-86400000).toISOString(),resumeName:'Ali-Rezaei.pdf',resumeType:'application/pdf'},
+  {id:'MP-DEMO-003',nationalId:'0032288354',mobile:'09172223344',firstName:'مریم',lastName:'کاظمی',email:'maryam@example.com',city:'اصفهان',job:'کارشناس منابع انسانی',employment:'شاغل تمام‌وقت',experience:'۵ تا ۱۰ سال',availability:'بیش از یک ماه',lastTitle:'کارشناس منابع انسانی',lastCompany:'گروه نمونه',status:'interview',notes:'برای مصاحبه تخصصی برنامه‌ریزی شود.',createdAt:new Date(now-86400000*5).toISOString(),updatedAt:new Date(now-86400000*2).toISOString(),resumeName:'Maryam-Kazemi.docx',resumeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}
+ ]);populateFilters();renderMetrics();renderAdminTable();
+}
+
+function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(dbName,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('resumes'))r.result.createObjectStore('resumes')};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function storeResume(id,file){const db=await openDB();return new Promise((resolve,reject)=>{const tx=db.transaction('resumes','readwrite');tx.objectStore('resumes').put(file,id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}
+async function downloadResume(id,name){const db=await openDB();const tx=db.transaction('resumes','readonly'),req=tx.objectStore('resumes').get(id);req.onsuccess=()=>{const file=req.result;if(!file){alert('در داده دمو فایل واقعی رزومه ذخیره نشده است. رزومه‌های ثبت‌شده توسط کاربر قابل دانلود خواهند بود.');return}const url=URL.createObjectURL(file),a=document.createElement('a');a.href=url;a.download=name||'resume';a.click();URL.revokeObjectURL(url)} }
+async function deleteResume(id){const db=await openDB();return new Promise((resolve)=>{const tx=db.transaction('resumes','readwrite');tx.objectStore('resumes').delete(id);tx.oncomplete=resolve;tx.onerror=resolve})}
+
+seedDemo(false);
+</script>
+</body>
+</html>

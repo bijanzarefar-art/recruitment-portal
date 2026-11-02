@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}موقعیت‌های شغلی باز{% endblock %}
+{% block nav %}{% include "candidate/_nav.html" %}{% endblock %}
+{% block content %}
+
+<div class="section-title">
+    <div>
+        <h2>موقعیت‌های شغلی باز</h2>
+        <div class="muted" style="margin-top:6px">فهرست موقعیت‌هایی که هم‌اکنون امکان ثبت درخواست برایشان وجود دارد.</div>
+    </div>
+</div>
+
+<div id="jobs-loading" class="notice info">در حال بارگذاری...</div>
+<div id="jobs-empty" class="notice info" hidden>در حال حاضر موقعیت شغلی بازی برای نمایش وجود ندارد.</div>
+<div id="jobs-error" class="notice warn" hidden>فهرست موقعیت‌ها در دسترس نیست؛ لطفاً بعداً دوباره تلاش کنید.</div>
+
+<div id="jobs-list" class="grid cols-2 grid--equal-cards"></div>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/candidate_jobs.js"></script>
+{% endblock %}

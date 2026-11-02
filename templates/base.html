@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}پورتال جذب و استخدام میلان پارس{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="app-shell">
+    <header class="topbar {% if '/staff/' in request.path %}topbar--staff{% elif request.path == '/' %}topbar--home{% else %}topbar--public{% endif %}">
+        <div class="topbar-inner">
+            <div class="brand">
+                <div class="brand-badge">MP</div>
+                <div class="brand-text">
+                    <span>میلان پارس</span>
+                    {% if '/staff/' in request.path %}
+                    <span class="brand-tag brand-tag--staff">پنل کارکنان</span>
+                    {% elif request.path != '/' %}
+                    <span class="brand-tag brand-tag--public">محیط مراجعه‌کنندگان</span>
+                    {% else %}
+                    <span class="brand-sub">پورتال جذب و استخدام</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% block nav %}{% endblock %}
+        </div>
+    </header>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">پورتال جذب و استخدام میلان پارس</footer>
+</div>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

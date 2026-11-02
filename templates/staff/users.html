@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}مدیریت کاربران{% endblock %}
+{% block nav %}{% include "staff/_nav.html" %}{% endblock %}
+{% block content %}
+
+<section class="card" style="margin-bottom:18px">
+    <div class="section-title">
+        <div>
+            <h2>ساخت حساب کارمند جدید</h2>
+            <div class="muted" style="margin-top:6px">فقط برای مدیر HR؛ حساب بلافاصله پس از ساخت با همان رمز عبور قابل ورود است.</div>
+        </div>
+    </div>
+    <form id="create-user-form" class="form-grid">
+        <div class="form-group">
+            <label for="user-username" class="required">نام کاربری</label>
+            <input id="user-username" name="username" class="input" required maxlength="150">
+        </div>
+        <div class="form-group">
+            <label for="user-password" class="required">رمز عبور اولیه</label>
+            <input id="user-password" name="password" type="password" class="input" required minlength="8">
+        </div>
+        <div class="form-group">
+            <label for="user-role" class="required">نقش</label>
+            <select id="user-role" name="role" required>
+                <option value="recruiter">کارشناس جذب</option>
+                <option value="hiring_manager">مدیر استخدام</option>
+                <option value="hr_manager">مدیر HR</option>
+            </select>
+        </div>
+        <button type="submit" id="create-user-submit" class="btn primary">ساخت حساب</button>
+    </form>
+    <div id="create-user-error" class="field-error" style="margin-top:8px"></div>
+    <div id="create-user-result" class="notice success" style="margin-top:8px" hidden></div>
+</section>
+
+<section class="card">
+    <div class="section-title"><h2>فهرست کارمندان</h2></div>
+    <div id="users-loading" class="notice info">در حال بارگذاری...</div>
+    <div class="table-wrap">
+        <table class="table" id="users-table" hidden>
+            <thead>
+                <tr><th>نام کاربری</th><th>نقش</th><th>وضعیت</th><th>عملیات</th></tr>
+            </thead>
+            <tbody id="users-rows"></tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/staff_users.js"></script>
+{% endblock %}

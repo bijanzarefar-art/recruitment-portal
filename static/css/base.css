@@ -1,0 +1,298 @@
+/*
+سیستم طراحی پورتال جذب و استخدام. فونت Vazirmatn به‌صورت self-hosted (static/fonts/) بارگذاری
+می‌شود — نه از CDN خارجی — چون CSP_STYLE_SRC/CSP_FONT_SRC پروژه فقط 'self' را مجاز می‌دانند
+(config/settings/base.py، اصل VII). منطق ناامن نمونهٔ اولیه (localStorage/IndexedDB، رمز دمو،
+کد ملی) هرگز به این فایل منتقل نشده است.
+*/
+
+@font-face{
+  font-family:"Vazirmatn";
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url("/static/fonts/vazirmatn/Vazirmatn-arabic.woff2") format("woff2");
+  unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;
+}
+@font-face{
+  font-family:"Vazirmatn";
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url("/static/fonts/vazirmatn/Vazirmatn-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+2000-206F,U+20AC;
+}
+
+:root{
+  --bg:#f4f6fb;
+  --surface:#ffffff;
+  --surface-sunken:#eef1f8;
+  --border:#e2e6f0;
+  --border-strong:#cfd5e4;
+  --ink:#121726;
+  --ink-soft:#54607a;
+  --ink-faint:#8b94ab;
+
+  /* هویت بصری واقعی میلان پارس: آبی کرنلی/کبالت (برند اصلی) + فیروزه‌ای (رنگ مکمل). */
+  --accent:#1e22a8;
+  --accent-ink:#15187d;
+  --accent-soft:#ececf9;
+  --accent-2:#3e8ca5;
+  --accent-2-ink:#2c6a7e;
+  --accent-2-soft:#e9f3f6;
+
+  /* سبز معنایی جداگانه از رنگ برند: پیش از این `--accent-2` هم نقش رنگ بخش کارکنان و هم نقش
+     «موفق/تأیید» را داشت؛ با تغییر رنگ برند به فیروزه‌ای، این دو از هم جدا شدند (اصل VII). */
+  --positive:#16a34a;
+  --positive-ink:#116a34;
+  --positive-soft:#e7f7ed;
+  --warn:#b2650a;
+  --warn-soft:#fdf1e2;
+  --violet:#6d4fd6;
+  --violet-soft:#f1edfd;
+  --cyan:#0a7ea8;
+  --cyan-soft:#e6f4f8;
+  --danger:#c23b30;
+  --danger-soft:#fbecea;
+
+  --radius-sm:10px;
+  --radius:16px;
+  --radius-lg:22px;
+  --shadow-sm:0 1px 2px rgba(18,23,38,.05), 0 1px 1px rgba(18,23,38,.04);
+  --shadow:0 20px 44px -22px rgba(18,23,38,.24);
+  --shadow-lift:0 10px 24px -14px rgba(18,23,38,.28);
+  --font:"Vazirmatn",Tahoma,Arial,sans-serif;
+}
+
+*{box-sizing:border-box}
+/* باگ واقعی کشف‌شده در تست مرورگری: display روی .form-group/.card و مشابه آن‌ها اگر بعد از
+   این قاعده بیاید، attribute بومی hidden را بی‌اثر می‌کند (چون specificity کلاس از قاعده
+   پیش‌فرض مرورگر [hidden] بالاتر است). این قاعده همیشه باید آخرین/قوی‌ترین باشد. */
+[hidden]{display:none!important}
+
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--font);
+  font-size:15.5px;
+  line-height:1.75;
+  background:var(--bg);
+  color:var(--ink);
+  direction:rtl;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{margin:0;font-weight:700;line-height:1.35;letter-spacing:-.01em}
+h2{font-size:21px}
+h3{font-size:15.5px;margin:30px 0 14px;padding-top:20px;border-top:1px solid var(--border)}
+p{margin:0 0 10px}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+.hidden{display:none!important}
+
+::selection{background:var(--accent-soft);color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* ---------- ساختار صفحه ---------- */
+.app-shell{min-height:100vh;display:flex;flex-direction:column}
+.topbar{
+  height:68px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 28px;
+  position:sticky;top:0;z-index:10;box-shadow:var(--shadow-sm);border-top:3px solid transparent;
+}
+/* عرض محتوا با نوار بالا یکی است تا لوگو، منو و کارت‌ها روی یک لبهٔ مشترک بنشینند. */
+.topbar-inner{
+  width:100%;max-width:1440px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+/* دو محیط کاملاً مجزا: مراجعه‌کننده (آبی کبالت، بدون ورود) و کارکنان (فیروزه‌ای، پس از ورود) —
+   نوار بالای topbar و برچسب کنار برند بلافاصله نشان می‌دهد کاربر در کدام محیط است (اصل III).
+   بدون گرادیان: هویت بصری میلان پارس تخت و تک‌رنگ است، نه گرادیانی. */
+.topbar--public{border-top-color:var(--accent)}
+.topbar--staff{border-top-color:var(--accent-2)}
+.topbar--home{border-top-color:var(--accent)}
+.brand{display:flex;gap:12px;align-items:center}
+.brand-badge{
+  width:36px;height:36px;border-radius:11px;background:var(--accent);
+  display:grid;place-items:center;color:#fff;font-size:14px;font-weight:800;flex-shrink:0;
+  box-shadow:0 6px 14px -6px rgba(30,34,168,.5);
+}
+.brand-text{display:flex;flex-direction:column;gap:1px;line-height:1.3}
+.brand-text span:first-child{font-weight:800;font-size:15.5px;color:var(--ink)}
+.brand-text span.brand-sub{font-size:11.5px;color:var(--ink-soft);font-weight:600}
+.brand-tag{font-size:10.5px;font-weight:700;width:fit-content}
+.brand-tag--public{color:var(--accent-ink)}
+.brand-tag--staff{color:var(--accent-2-ink)}
+.topbar-nav{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.topbar-nav .btn{padding:8px 14px;font-size:13px}
+.topbar-nav .btn.active{background:var(--accent-soft);color:var(--accent-ink)}
+.nav-divider{width:1px;height:20px;background:var(--border-strong);margin:0 2px}
+.user-chip{display:flex;flex-direction:column;align-items:flex-end;line-height:1.3;padding:0 4px}
+.user-chip strong{font-size:13px;color:var(--ink)}
+.user-chip .muted{font-size:11px}
+/* تمام‌عرض: پیش‌تر 760px بود و روی نمایشگرهای عریض یک ستون باریک وسط صفحه می‌ماند. */
+.container{max-width:1440px;margin:0 auto;padding:40px 28px 72px;width:100%;flex:1}
+.footer{color:var(--ink-faint);text-align:center;padding:24px 20px;font-size:12.5px;flex-shrink:0}
+
+/* ---------- کارت‌ها و عناوین ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);padding:26px;margin-bottom:18px;
+}
+.login-card{max-width:400px;margin:48px auto 0;padding:32px 28px}
+.section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
+.section-title h2{margin:0}
+.muted{color:var(--ink-soft)}
+
+/* ---------- دکمه‌ها ---------- */
+/* همهٔ دکمه‌ها در یک ردیف هم‌ارتفاع و هم‌پدینگ می‌نشینند (align-items:stretch روی ردیف + این
+   min-height) — پیش‌تر دکمه‌های لینکی و دکمه‌های <button> ارتفاع کمی متفاوت داشتند و ردیف‌ها
+   ناهم‌تراز به نظر می‌رسیدند. */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:42px;border:1px solid transparent;border-radius:var(--radius-sm);padding:10px 20px;
+  background:var(--accent-soft);color:var(--accent-ink);font-weight:700;font-size:14px;
+  transition:background .14s ease,border-color .14s ease,color .14s ease,opacity .14s ease,box-shadow .14s ease,transform .08s ease;
+  line-height:1.3;text-decoration:none;text-align:center;white-space:nowrap;
+}
+.btn:hover{opacity:.9}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 8px 18px -10px rgba(30,34,168,.5)}
+.btn.primary:hover{background:var(--accent-ink);opacity:1}
+.btn.ghost{background:transparent;border-color:var(--border-strong);color:var(--ink)}
+.btn.ghost:hover{background:var(--surface-sunken);opacity:1}
+.btn.danger{background:var(--danger-soft);color:var(--danger)}
+.link-btn{border:none;background:none;color:var(--accent);font-weight:700;padding:0;cursor:pointer;text-decoration:none}
+.link-btn:hover{text-decoration:underline}
+
+/* ---------- فرم‌ها ---------- */
+.grid{display:grid;gap:18px}
+.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.form-grid{display:grid;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end}
+.form-grid > button{grid-column:1/-1;justify-self:start}
+.form-group{display:grid;gap:7px}
+.form-group label{font-size:13px;font-weight:700;color:var(--ink-soft)}
+label.required:after{content:" *";color:var(--danger)}
+.input,select,textarea{
+  width:100%;border:1px solid var(--border-strong);border-radius:var(--radius-sm);
+  padding:11px 14px;background:var(--surface);outline:none;transition:border-color .12s ease,box-shadow .12s ease;
+  font-size:14.5px;
+}
+textarea{min-height:88px;resize:vertical;line-height:1.7}
+.input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.error,.field-error{font-size:12.5px;color:var(--danger);min-height:14px}
+.field-error:empty{display:none}
+
+.upload-box{
+  border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:24px 18px;
+  text-align:center;background:var(--surface-sunken);transition:border-color .12s ease,background .12s ease;
+}
+.upload-box:hover{border-color:var(--accent);background:var(--accent-soft)}
+.upload-box svg{width:28px;height:28px;color:var(--ink-faint);margin-bottom:10px}
+.upload-box strong{display:block;margin-bottom:6px;font-size:14.5px}
+.help{font-size:12.5px;color:var(--ink-soft);line-height:1.75}
+
+.consent{display:flex;gap:10px;align-items:flex-start;background:var(--surface-sunken);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px}
+.consent input{margin-top:5px;width:auto}
+/* ردیف دکمه‌ها: کشسان، هم‌ارتفاع و با فاصلهٔ یکنواخت. `align-items:stretch` + `min-height` روی
+   `.btn` تضمین می‌کند هیچ دکمه‌ای کوتاه‌تر/بلندتر از بقیه نماند. */
+.actions-row{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.actions-row > .btn{flex:0 1 auto}
+/* وقتی یک ردیف بیش از دو دکمه دارد (مثل کارت مراجعه‌کننده در صفحهٔ اصلی) دکمه‌ها در شبکهٔ
+   ستون‌های مساوی می‌نشینند تا لبه‌هایشان دقیقاً هم‌تراز شود، نه پله‌ای. */
+.actions-row--even{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.actions-row--even > .btn{width:100%}
+.actions-row--split{justify-content:space-between}
+.actions-row--end{justify-content:flex-end}
+
+/* ---------- اعلان‌ها ---------- */
+.notice{border-radius:var(--radius-sm);padding:13px 16px;margin:16px 0;font-size:13.5px;line-height:1.8;border:1px solid transparent}
+.notice.info{background:var(--accent-soft);color:var(--accent-ink);border-color:#d7e0f9}
+.notice.success{background:var(--positive-soft);color:var(--positive-ink);border-color:#cdeedb}
+.notice.warn{background:var(--warn-soft);color:var(--warn);border-color:#fae1bd}
+
+/* ---------- دروازهٔ ورودی («/»): دو کارت کاملاً مجزا برای مراجعه‌کننده و کارکنان ---------- */
+/* ستون‌ها با عرض مساوی، بدون کشیدگی بی‌جا روی نمایشگرهای خیلی عریض؛ کارت‌ها هم‌ارتفاع و
+   ردیف دکمه‌هایشان با پایین کارت هم‌تراز می‌شوند (هر دو کارت از نظر ساختاری یکسان‌اند). */
+.grid--gateway{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+.grid--gateway > .card{display:flex;flex-direction:column;margin-bottom:0}
+.grid--gateway > .card > .actions-row{margin-top:auto;padding-top:20px}
+/* شبکهٔ کارت‌های هم‌ارتفاع: کارت‌ها به ارتفاع ردیف کشیده می‌شوند و ردیف دکمه‌شان به پایین
+   می‌چسبد، پس روی یک خط افقی مشترک می‌نشینند، نه هر کدام بعد از محتوای خودش. */
+.grid--equal-cards{align-items:stretch}
+.grid--equal-cards > .card{display:flex;flex-direction:column;margin-bottom:0}
+.grid--equal-cards > .card > .actions-row{margin-top:auto;padding-top:18px}
+.gateway-card{border-top-width:4px;border-top-style:solid;padding:30px}
+.gateway-card--public{border-top-color:var(--accent)}
+.gateway-card--staff{border-top-color:var(--accent-2)}
+.gateway-icon{
+  width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex-shrink:0;align-self:flex-start;
+}
+.gateway-icon svg{width:24px;height:24px}
+.gateway-icon--public{background:var(--accent-soft);color:var(--accent-ink)}
+.gateway-icon--staff{background:var(--accent-2-soft);color:var(--accent-2-ink)}
+/* `align-self:flex-start` الزامی است: کارت در `.grid--gateway` یک ستون flex است و بدون آن، فرزندان
+   inline-block تا عرض کامل کارت کشیده می‌شوند و برچسب قرص‌شکل به یک نوار تمام‌عرض تبدیل می‌شد. */
+.gateway-badge{
+  display:inline-block;align-self:flex-start;margin-top:14px;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;
+}
+.gateway-badge--public{background:var(--accent-soft);color:var(--accent-ink)}
+.gateway-badge--staff{background:var(--accent-2-soft);color:var(--accent-2-ink)}
+.btn--staff{background:var(--accent-2);color:#fff;box-shadow:0 8px 18px -10px rgba(62,140,165,.5)}
+.btn--staff:hover{background:var(--accent-2-ink);opacity:1}
+
+/* ---------- نشانگر مرحله ---------- */
+.stepbar{display:flex;gap:6px;align-items:center;margin-bottom:24px}
+.step{height:4px;flex:1;background:var(--border);border-radius:999px}
+.step.active{background:var(--accent)}
+
+/* ---------- وضعیت‌ها (نقطه‌رنگی + برچسب، نه قرص توپر) ---------- */
+.status-badge{
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 11px 5px 9px;
+  font-size:12.5px;font-weight:700;background:var(--surface-sunken);color:var(--ink-soft);flex-shrink:0;
+}
+.status-badge::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+.status-new{background:var(--accent-soft);color:var(--accent-ink)}
+.status-phone{background:var(--warn-soft);color:var(--warn)}
+.status-interview{background:var(--violet-soft);color:var(--violet)}
+.status-approved{background:var(--positive-soft);color:var(--positive-ink)}
+.status-rejected{background:var(--danger-soft);color:var(--danger)}
+.status-hired{background:var(--cyan-soft);color:var(--cyan)}
+
+/* ---------- جدول‌ها ---------- */
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--radius)}
+.table{width:100%;border-collapse:collapse;background:var(--surface)}
+.table th,.table td{padding:13px 14px;border-bottom:1px solid var(--border);text-align:right;font-size:13.5px;vertical-align:middle}
+.table tbody tr:last-child td{border-bottom:none}
+.table tbody tr{transition:background .1s ease}
+.table tbody tr:hover{background:var(--surface-sunken)}
+.table th{background:var(--surface-sunken);color:var(--ink-soft);font-weight:700;font-size:12.5px;position:sticky;top:0}
+.table td:last-child,.table th:last-child{width:1%;white-space:nowrap}
+
+/* ---------- نوار ابزار داشبورد ---------- */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.toolbar .input,.toolbar select{max-width:230px}
+
+/* ---------- آمار داشبورد ---------- */
+.metric{padding:22px;position:relative;overflow:hidden}
+.metric::before{content:"";position:absolute;inset-inline-end:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:var(--accent-soft);opacity:.6}
+.metric .label{color:var(--ink-soft);font-size:13px;position:relative}
+.metric .value{font-size:30px;font-weight:800;margin-top:8px;color:var(--ink);position:relative}
+
+/* ---------- جزئیات پرونده: سطح تخت با خط‌جداکننده، نه قوطی توی قوطی ---------- */
+.detail-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--border)}
+.detail{padding:13px 2px;border-bottom:1px solid var(--border)}
+.detail:nth-child(odd){padding-left:18px}
+.detail .k{font-size:12px;color:var(--ink-faint);margin-bottom:4px}
+.detail .v{font-weight:700;word-break:break-word;font-size:14.5px}
+
+@media(max-width:560px){.detail-list{grid-template-columns:1fr}.detail:nth-child(odd){padding-left:2px}}
+
+@media(max-width:560px){
+  .topbar{padding:12px 16px;height:auto;flex-wrap:wrap;gap:10px}
+  .container{padding:26px 14px 56px}
+  .grid.cols-2,.form-grid{grid-template-columns:1fr}
+  .card{padding:20px}
+  .login-card{margin-top:20px}
+  .actions-row .btn{width:100%}
+}

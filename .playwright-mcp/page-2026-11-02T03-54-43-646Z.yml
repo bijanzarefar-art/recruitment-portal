@@ -1,0 +1,18 @@
+- generic [ref=f43e2]:
+  - banner [ref=f43e3]:
+    - generic [ref=f43e4]:
+      - generic [ref=f43e5]: HR
+      - generic [ref=f43e6]: پورتال جذب و استخدام
+  - main [ref=f43e7]:
+    - generic [ref=f43e8]:
+      - heading "ورود کارکنان منابع انسانی" [level=2] [ref=f43e9]
+      - generic [ref=f43e10]: ورود با نام‌کاربری و رمز عبور.
+      - generic [ref=f43e11]:
+        - generic [ref=f43e12]:
+          - generic [ref=f43e13]: نام کاربری
+          - textbox "نام کاربری" [ref=f43e14]
+        - generic [ref=f43e15]:
+          - generic [ref=f43e16]: رمز عبور
+          - textbox "رمز عبور" [ref=f43e17]
+        - button "ورود" [ref=f43e18] [cursor=pointer]
+  - contentinfo [ref=f43e19]: پورتال جذب و استخدام

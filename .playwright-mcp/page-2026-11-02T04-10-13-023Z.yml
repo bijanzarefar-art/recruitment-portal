@@ -1,0 +1,88 @@
+- generic [ref=f71e2]:
+  - banner [ref=f71e3]:
+    - generic [ref=f71e4]:
+      - generic [ref=f71e5]: HR
+      - generic [ref=f71e6]:
+        - generic [ref=f71e7]: پورتال جذب و استخدام
+        - generic [ref=f71e8]: محیط مراجعه‌کنندگان
+    - navigation [ref=f71e9]:
+      - link "ثبت درخواست همکاری" [ref=f71e10] [cursor=pointer]:
+        - /url: /apply
+      - link "پیگیری وضعیت درخواست" [ref=f71e11] [cursor=pointer]:
+        - /url: /track
+  - main [ref=f71e12]:
+    - generic [ref=f71e13]:
+      - generic [ref=f71e15]:
+        - heading "ثبت درخواست همکاری" [level=2] [ref=f71e16]
+        - generic [ref=f71e17]: فرم اولیه کوتاه برای ورود به فرآیند جذب
+      - generic [ref=f71e18]:
+        - generic [ref=f71e19]:
+          - generic [ref=f71e20]:
+            - generic [ref=f71e21]: نام *
+            - textbox "نام *" [ref=f71e22]:
+              - /placeholder: نام
+          - generic [ref=f71e23]:
+            - generic [ref=f71e24]: نام خانوادگی *
+            - textbox "نام خانوادگی *" [ref=f71e25]:
+              - /placeholder: نام خانوادگی
+          - generic [ref=f71e26]:
+            - generic [ref=f71e27]: شماره موبایل *
+            - textbox "شماره موبایل *" [ref=f71e28]:
+              - /placeholder: 09xxxxxxxxx
+          - generic [ref=f71e29]:
+            - generic [ref=f71e30]: ایمیل (اختیاری)
+            - textbox "ایمیل (اختیاری)" [ref=f71e31]:
+              - /placeholder: name@example.com
+          - generic [ref=f71e32]:
+            - generic [ref=f71e33]: شهر محل سکونت *
+            - textbox "شهر محل سکونت *" [ref=f71e34]:
+              - /placeholder: "مثال: تهران"
+          - generic [ref=f71e35]:
+            - generic [ref=f71e36]: عنوان شغلی مورد درخواست *
+            - combobox "عنوان شغلی مورد درخواست *" [ref=f71e37]:
+              - option "انتخاب کنید" [selected]
+              - option "کارشناس نرم‌افزار"
+              - option "کارشناس"
+          - generic [ref=f71e38]:
+            - generic [ref=f71e39]: وضعیت فعلی اشتغال *
+            - combobox "وضعیت فعلی اشتغال *" [ref=f71e40]:
+              - option "شاغل تمام‌وقت" [selected]
+              - option "شاغل پاره‌وقت"
+              - option "در حال حاضر شاغل نیستم"
+              - option "دانشجو"
+              - option "سایر"
+          - generic [ref=f71e41]:
+            - generic [ref=f71e42]: مجموع سابقه کاری *
+            - combobox "مجموع سابقه کاری *" [ref=f71e43]:
+              - option "بدون سابقه" [selected]
+              - option "کمتر از ۱ سال"
+              - option "۱ تا ۳ سال"
+              - option "۳ تا ۵ سال"
+              - option "۵ تا ۱۰ سال"
+              - option "بیش از ۱۰ سال"
+          - generic [ref=f71e44]:
+            - generic [ref=f71e45]: امکان شروع همکاری *
+            - combobox "امکان شروع همکاری *" [ref=f71e46]:
+              - option "بلافاصله" [selected]
+              - option "حداکثر تا ۲ هفته"
+              - option "۲ تا ۴ هفته"
+              - option "بیش از یک ماه"
+          - generic [ref=f71e47]:
+            - generic [ref=f71e48]: آخرین عنوان شغلی
+            - textbox "آخرین عنوان شغلی" [ref=f71e49]:
+              - /placeholder: "مثال: کارشناس فروش"
+          - generic [ref=f71e50]:
+            - generic [ref=f71e51]: آخرین شرکت محل کار
+            - textbox "آخرین شرکت محل کار" [ref=f71e52]:
+              - /placeholder: نام شرکت
+        - generic [ref=f71e53]:
+          - generic [ref=f71e54]: رزومه *
+          - generic [ref=f71e55]:
+            - strong [ref=f71e59]: فایل رزومه را انتخاب کنید
+            - generic [ref=f71e60]: PDF، DOC یا DOCX — حداکثر ۵ مگابایت
+            - button "Choose File" [ref=f71e61]
+        - generic [ref=f71e62]:
+          - checkbox "تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس گرفته شود." [ref=f71e63]
+          - generic [ref=f71e64]: تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس گرفته شود.
+        - button "ثبت درخواست همکاری" [ref=f71e66] [cursor=pointer]
+  - contentinfo [ref=f71e67]: پورتال جذب و استخدام

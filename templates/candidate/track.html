@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}پیگیری درخواست{% endblock %}
+{% block nav %}{% include "candidate/_nav.html" %}{% endblock %}
+{% block content %}
+
+<section class="card" id="track-section">
+    <div class="section-title">
+        <div>
+            <h2>پیگیری درخواست</h2>
+            <div class="muted" style="margin-top:6px">کد پیگیری خود را وارد کنید تا وضعیت درخواستتان را ببینید.</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="tracking-code" class="required">کد پیگیری</label>
+        <input type="text" id="tracking-code" class="input" placeholder="مثال: a1b2c3d4e5f6g7h8" autocomplete="off" required>
+        <div class="field-error" data-error-for="tracking-code" role="alert" tabindex="-1"></div>
+    </div>
+    <div class="actions-row" style="margin-top:16px">
+        <button type="button" id="track-submit" class="btn primary">مشاهده وضعیت</button>
+    </div>
+</section>
+
+<section class="card" id="result-section" hidden>
+    <div class="section-title">
+        <div>
+            <h2>وضعیت درخواست</h2>
+        </div>
+        <span id="result-status-badge" class="status-badge"></span>
+    </div>
+    <div class="detail-list">
+        <div class="detail"><div class="k">موقعیت شغلی</div><div class="v" id="result-job"></div></div>
+        <div class="detail"><div class="k">آخرین به‌روزرسانی</div><div class="v" id="result-updated"></div></div>
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/candidate_track.js"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+[      90ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:8000/staff/login:0
+[   14610ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:8000/staff/login:0
+[  304354ms] [LOG] DEBUG loadEligibleReviewers called @ http://127.0.0.1:8000/static/js/staff_detail.js:23
+[  304354ms] [LOG] DEBUG select found: true @ http://127.0.0.1:8000/static/js/staff_detail.js:25
+[  304372ms] [LOG] DEBUG response ok: true 200 @ http://127.0.0.1:8000/static/js/staff_detail.js:28
+[  304372ms] [LOG] DEBUG users: 4 @ http://127.0.0.1:8000/static/js/staff_detail.js:31
+[  304372ms] [LOG] DEBUG appending mfa_free_test @ http://127.0.0.1:8000/static/js/staff_detail.js:35
+[  304372ms] [LOG] DEBUG appending recruiter_test1 @ http://127.0.0.1:8000/static/js/staff_detail.js:35
+[23748471ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications/f91f823b-8874-4685-a437-6680dee8c093:0
+[23748472ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/users:0
+[23753277ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23754994ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23756758ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23760583ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:8000/staff/users:0
+[23760584ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/users:0
+[23766526ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23770740ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23802864ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23812199ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23817163ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23821956ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:8000/staff/users:0
+[23821957ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/users:0
+[23848816ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/users:0
+[23862780ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23864915ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23870251ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:8000/staff/users:0
+[23870252ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/users:0
+[23881183ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/users:0
+[23919403ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23920730ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23960609ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23962537ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23964389ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?:0
+[23968198ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/applications?status=phone:0
+[23980148ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0
+[23997659ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:8000/api/v1/staff/jobs:0

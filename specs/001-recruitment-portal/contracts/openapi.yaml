@@ -1,0 +1,1123 @@
+openapi: 3.0.3
+info:
+  title: پورتال جذب و استخدام - API
+  version: "1.0"
+  description: >
+    قرارداد اولیه API نسخه اولیه (v1). تمام مسیرها زیر /api/v1 هستند. رابط کاربری
+    (قالب‌های Django) و این API هم‌مبدأ‌اند. احراز هویت متقاضی و کارمند با نشست
+    کوکی‌محور و کاملاً مجزاست (دو نوع کوکی نشست مستقل). این فایل قرارداد سطح‌بالا
+    است؛ جزئیات کامل اعتبارسنجی هر فیلد در data-model.md و spec.md آمده است.
+
+    **CSRF**: هر مسیر با روش غیرایمن (POST/PATCH/DELETE) که نیازمند نشست معتبر است
+    (یعنی `security` آن مسیر `candidateSession` یا `staffSession` را مشخص کرده، نه
+    `security: []`) به یک توکن CSRF معتبر (کوکی `csrftoken` + هدر `X-CSRFToken`) نیاز
+    دارد؛ بدون آن ۴۰۳ می‌گیرد، حتی با کوکی نشست کاملاً معتبر. مسیرهای احراز هویت اولیه
+    (`otp/request`, `otp/verify`, `staff/login`, `staff/mfa/verify`) پیش از وجود نشست
+    اجرا می‌شوند و از این قاعده مستثنی‌اند.
+servers:
+  - url: /api/v1
+
+security:
+  - candidateSession: []
+  - staffSession: []
+
+paths:
+  /jobs:
+    get:
+      summary: فهرست موقعیت‌های شغلی با وضعیت open (عمومی — draft/closed نمایش داده نمی‌شوند، FR-039a)
+      security: []
+      responses:
+        "200":
+          description: فهرست موقعیت‌ها
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobPositionPublic"
+
+  /privacy-notice:
+    get:
+      summary: متن جاری و نسخه حریم خصوصی (عمومی)
+      security: []
+      responses:
+        "200":
+          description: متن نسخه‌بندی‌شده
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrivacyNotice"
+
+  /auth/candidate/otp/request:
+    post:
+      summary: درخواست کد OTP برای موبایل متقاضی
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mobile, purpose]
+              properties:
+                mobile:
+                  type: string
+                  example: "09123456789"
+                purpose:
+                  type: string
+                  enum: [register, track]
+      responses:
+        "202":
+          description: >
+            پاسخ عمومی و یکسان صرف‌نظر از وجود/عدم‌وجود پرونده برای این موبایل
+            (FR-016)؛ جزئیات ارسال افشا نمی‌شود. **توجه**: عبور از نرخ مجاز OTP
+            (FR-044) عمداً همین ۲۰۲ یکسان را برمی‌گرداند، نه ۴۲۹ — برای جلوگیری از
+            افشای وجود/عدم‌وجود حساب از روی کد وضعیت (FR-016).
+
+  /auth/candidate/otp/verify:
+    post:
+      summary: تأیید کد OTP و ایجاد نشست متقاضی
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mobile, purpose, code]
+              properties:
+                mobile:
+                  type: string
+                purpose:
+                  type: string
+                  enum: [register, track]
+                code:
+                  type: string
+                  minLength: 6
+                  maxLength: 6
+      responses:
+        "200":
+          description: نشست متقاضی ایجاد شد (کوکی HttpOnly تنظیم می‌شود)
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          description: کد نادرست یا منقضی‌شده
+
+  /auth/candidate/logout:
+    post:
+      summary: خروج متقاضی
+      security:
+        - candidateSession: []
+      responses:
+        "204":
+          description: نشست باطل شد
+
+  /candidate/uploads:
+    post:
+      summary: بارگذاری موقت فایل رزومه (احرازهویت‌شده)
+      security:
+        - candidateSession: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: بارگذاری پذیرفته شد (در انتظار اسکن)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadStatus"
+        "400":
+          description: فایل ارسال نشده است
+        "413":
+          description: حجم فایل بیش از ۵ MiB یا صفر (با کد `validation_error`)
+        "415":
+          description: نوع فایل پشتیبانی‌نشده (بر اساس magic bytes، نه پسوند)
+
+  /candidate/uploads/{id}:
+    get:
+      summary: وضعیت یک بارگذاری (فقط مالک)
+      security:
+        - candidateSession: []
+      parameters:
+        - $ref: "#/components/parameters/UploadId"
+      responses:
+        "200":
+          description: وضعیت جاری
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadStatus"
+        "404":
+          description: یافت نشد یا متعلق به متقاضی دیگری است (بدون افشای وجود رکورد)
+
+  /candidate/applications:
+    post:
+      summary: ثبت درخواست همکاری (نیازمند Idempotency-Key)
+      security:
+        - candidateSession: []
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationCreateRequest"
+      responses:
+        "400":
+          description: خطای اعتبارسنجی، یا نبود آماده‌بودن فایل/بازبودن موقعیت
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "201":
+          description: درخواست ثبت شد (رسید)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationReceipt"
+        "200":
+          description: تکرار موفق همان Idempotency-Key؛ همان رسید قبلی بازگردانده می‌شود
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationReceipt"
+        "409":
+          description: >
+            درخواست فعال تکراری برای همان موقعیت، یا همان Idempotency-Key با
+            محتوای متفاوت (FR-008 / FR-009)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+    get:
+      summary: >
+        فهرست **همه** درخواست‌های متقاضی جاری، بدون صفحه‌بندی سمت سرور (پاسخ `{count, results}`
+        است، اما پارامتر `page`/`page_size` پذیرفته نمی‌شود — داده واقعاً صفحه‌بندی نمی‌شود).
+      security:
+        - candidateSession: []
+      responses:
+        "200":
+          description: فهرست کامل (بدون صفحه‌بندی)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedCandidateApplications"
+
+  /candidate/applications/{id}:
+    get:
+      summary: جزئیات عمومی یک پرونده (فقط مالک)
+      security:
+        - candidateSession: []
+      parameters:
+        - $ref: "#/components/parameters/ApplicationId"
+      responses:
+        "200":
+          description: >
+            جزئیات عمومی (بدون یادداشت HR، ارجاع، دلیل داخلی، هویت کارکنان یا
+            حسابرسی — FR-015)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationPublicDetail"
+        "404":
+          description: >
+            یافت نشد یا متعلق به متقاضی دیگری است — همیشه ۴۰۴ (هرگز ۴۰۳)، چون طراحی عمداً
+            بین «رکورد وجود ندارد» و «متعلق به دیگری است» تمایز نمی‌گذارد تا وجود رکورد افشا
+            نشود (FR-014).
+
+  /auth/staff/login:
+    post:
+      summary: مرحله اول ورود کارمند (رمز عبور)؛ هنوز دسترسی ایجاد نمی‌شود
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  format: password
+      responses:
+        "200":
+          description: نیاز به تکمیل مرحله عامل دوم
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mfa_challenge_id:
+                    type: string
+        "401":
+          description: اعتبارنامه نامعتبر
+        "429":
+          description: >
+            FR-047: نرخ تلاش ورود بر اساس ترکیب **حساب و IP** محدود می‌شود (شمارندهٔ اتمیک در
+            PostgreSQL، مشترک میان چند worker). آستانه‌های پیش‌فرض ۵/۱۵ دقیقه برای هر حساب و
+            ۲۰/۱۵ دقیقه برای هر IP هستند و **پیشنهادی‌اند، نه مصوب** (نگاه کنید به
+            `docs/decisions.md`). پاسخ هدر `Retry-After` (ثانیه) دارد.
+
+  /auth/staff/mfa/verify:
+    post:
+      summary: تکمیل ورود کارمند با کد TOTP (یا کد بازیابی)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mfa_challenge_id, code]
+              properties:
+                mfa_challenge_id:
+                  type: string
+                code:
+                  type: string
+      responses:
+        "200":
+          description: نشست کارمند ایجاد شد
+        "401":
+          description: >
+            کد نامعتبر یا چالش نامعتبر/منقضی. هر دو حالت در همان شمارندهٔ نرخ FR-047 شمرده
+            می‌شوند (چالش نامعتبر بر اساس IP، چالش معتبر بر اساس حساب) تا این مسیر راهی برای
+            دورزدن محدودیت نباشد.
+        "429":
+          description: >
+            FR-047: عبور از نرخ مجاز تلاش ورود (همان شمارندهٔ مشترک با `POST /auth/staff/login`).
+            پاسخ هدر `Retry-After` دارد.
+
+  /auth/staff/logout:
+    post:
+      summary: خروج کارمند
+      security:
+        - staffSession: []
+      responses:
+        "204":
+          description: نشست باطل شد
+
+  /staff/applications:
+    get:
+      summary: فهرست پرونده‌ها در دامنه مجوز کاربر، با فیلتر/جست‌وجو/صفحه‌بندی
+      security:
+        - staffSession: []
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: job_position
+          schema:
+            type: string
+        - in: query
+          name: city
+          schema:
+            type: string
+        - in: query
+          name: experience
+          schema:
+            type: string
+        - in: query
+          name: reviewer
+          schema:
+            type: string
+        - in: query
+          name: date_from
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: date_to
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: q
+          description: جست‌وجوی نام، موبایل یا کد پیگیری
+          schema:
+            type: string
+      responses:
+        "200":
+          description: فهرست صفحه‌بندی‌شده در دامنه مجوز
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedStaffApplications"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /staff/applications/metrics:
+    get:
+      summary: آمار با همان دامنه مجوز و همان فیلترهای فهرست (FR-024)
+      security:
+        - staffSession: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: job_position
+          schema:
+            type: string
+      responses:
+        "200":
+          description: آمار تجمیعی
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationMetrics"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /staff/applications/{id}:
+    get:
+      summary: جزئیات کامل یک پرونده (در دامنه مجوز)
+      security:
+        - staffSession: []
+      parameters:
+        - $ref: "#/components/parameters/ApplicationId"
+      responses:
+        "200":
+          description: جزئیات
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationStaffDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: >
+            یافت نشد یا خارج از دامنه مجوز. کارمندی که ارجاع فعال ندارد (یا لغو شده) این
+            پاسخ را می‌گیرد، حتی اگر نقشش عموماً مجاز باشد — دامنه از طریق
+            `get_applications_queryset` فیلتر می‌شود، پیش‌فرض منع (FR-019, FR-041).
+
+  /staff/applications/{id}/status:
+    patch:
+      summary: تغییر وضعیت پرونده (کنترل نسخه خوش‌بینانه)
+      security:
+        - staffSession: []
+      parameters:
+        - $ref: "#/components/parameters/ApplicationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to_status, expected_version]
+              properties:
+                to_status:
+                  type: string
+                  enum: [new, phone, interview, approved, rejected, hired]
+                expected_version:
+                  type: integer
+                reason:
+                  type: string
+                  description: اجباری برای rejected و برای هر تغییر استثنایی وضعیت نهایی
+      responses:
+        "200":
+          description: وضعیت به‌روز شد
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationStaffDetail"
+        "400":
+          description: انتقال غیرمجاز، یا دلیل داخلی اجباری ارسال نشده (rejected/تغییر استثنایی)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "403":
+          description: >
+            نقش کاربر اجازه تغییر وضعیت را ندارد (فقط `recruiter`/`hr_manager`؛
+            `hiring_manager` و `system_operator` همیشه رد می‌شوند — FR-018)، یا وضعیت
+            فعلی نهایی است و کاربر `hr_manager` نیست (FR-031)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "404":
+          description: یافت نشد یا خارج از دامنه مجوز (ارجاع فعال ندارد/لغو شده)
+        "409":
+          description: نسخه قدیمی (`expected_version` با نسخه فعلی رکورد مطابقت ندارد؛ نیاز به تازه‌سازی)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
+  /staff/applications/{id}/notes:
+    post:
+      summary: ثبت یادداشت جدید روی پرونده
+      security:
+        - staffSession: []
+      parameters:
+        - $ref: "#/components/parameters/ApplicationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [body]
+              properties:
+                body:
+                  type: string
+                  minLength: 1
+                  maxLength: 5000
+      responses:
+        "201":
+          description: یادداشت ثبت شد
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationNote"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: >
+            یافت نشد یا خارج از دامنه مجوز. دسترسی رکوردی با `get_applications_queryset`
+            کنترل می‌شود؛ کارمندی که ارجاع فعال ندارد (یا لغو شده) ۴۰۴ می‌گیرد، حتی اگر
+            نقشش عموماً اجازه یادداشت‌نویسی داشته باشد (FR-026).
+
+  /staff/applications/{id}/assignments:
+    patch:
+      summary: ارجاع/لغو ارجاع پرونده (فقط مدیر HR)
+      security:
+        - staffSession: []
+      parameters:
+        - $ref: "#/components/parameters/ApplicationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reviewer_id:
+                  type: string
+                  nullable: true
+                  description: null برای لغو ارجاع فعال
+      responses:
+        "200":
+          description: >
+            ارجاع اعمال شد. اولین ارجاع باید به نقش recruiter باشد؛ ارجاع بعدی
+            به hiring_manager جایگزین ارجاع فعال recruiter می‌شود (نتیجه رفع
+            ابهام در spec.md).
+        "403":
+          description: کاربر `hr_manager` نیست (این مسیر فقط برای مدیر HR است)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+        "404":
+          description: پرونده یا کارمند دریافت‌کننده (`reviewer_id`) یافت نشد
+        "409":
+          description: >
+            هر قاعدهٔ نقض‌شدهٔ ارجاع — کد `conflict`: ترتیب نامعتبر (ارجاع مستقیم به
+            hiring_manager بدون recruiter قبلی)، صلاحیت نداشتن نقش دریافت‌کننده (فقط
+            recruiter/hiring_manager واجدشرایط‌اند)، یا رقابت هم‌زمان دو ارجاع
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
+  /staff/applications/{id}/resume:
+    get:
+      summary: دانلود رزومه سالم (کنترل مجوز و سلامت فایل در هر درخواست)
+      security:
+        - staffSession: []
+      parameters:
+        - $ref: "#/components/parameters/ApplicationId"
+      responses:
+        "200":
+          description: فایل باینری رزومه
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "no-store"
+            Content-Disposition:
+              schema:
+                type: string
+          content:
+            application/octet-stream: {}
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          description: پرونده بدون فایل سالم یا خارج از دسترس
+
+  /staff/exports:
+    post:
+      summary: خروجی CSV/XLSX از پرونده‌های منطبق با فیلتر (فقط مدیر HR)
+      security:
+        - staffSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportRequest"
+      responses:
+        "200":
+          description: فایل خروجی
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+                example: "no-store"
+          content:
+            text/csv: {}
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet: {}
+        "400":
+          description: فرمت/ستون نامجاز، یا تعداد ردیف‌های منطبق بیش از سقف ۱۰٬۰۰۰ (نیاز به محدودکردن فیلتر)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          description: >
+            بیش از ۵ درخواست خروجی در ۱۰ دقیقه برای این حساب کارمند (FR-037a).
+            پاسخ هدر `Retry-After` (ثانیه) دارد. شمارش فقط پس از عبور از مرحله ۴۰۱/۴۰۳ بالا
+            انجام می‌شود (یعنی تلاش‌های رد‌شده با ۴۰۱/۴۰۳ سهمیه مصرف نمی‌کنند).
+
+  /staff/jobs:
+    get:
+      summary: فهرست موقعیت‌ها با همهٔ وضعیت‌ها (فقط مدیر HR — نه هر کارمندی، FR-038)
+      security:
+        - staffSession: []
+      responses:
+        "200":
+          description: فهرست
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobPositionStaff"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      summary: ایجاد موقعیت جدید؛ همیشه با وضعیت draft ساخته می‌شود (فقط مدیر HR، FR-038, FR-039a)
+      security:
+        - staffSession: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobPositionWrite"
+      responses:
+        "201":
+          description: ایجاد شد (وضعیت اولیه همیشه `draft`)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobPositionStaff"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /staff/jobs/{id}:
+    patch:
+      summary: ویرایش فیلدهای توصیفی موقعیت (فقط مدیر HR)؛ بدون DELETE — حذف فیزیکی مجاز نیست (FR-038).
+      security:
+        - staffSession: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobPositionWrite"
+      responses:
+        "200":
+          description: به‌روز شد
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobPositionStaff"
+        "400":
+          description: هیچ فیلدی برای ویرایش ارسال نشده
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /staff/jobs/{id}/status:
+    patch:
+      summary: تغییر وضعیت موقعیت — draft→open، open→closed، closed→open (فقط مدیر HR، FR-039a)
+      security:
+        - staffSession: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobStatusChangeRequest"
+      responses:
+        "200":
+          description: وضعیت به‌روز شد
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobPositionStaff"
+        "400":
+          description: انتقال نامجاز (مثلاً draft→closed یا بازگشت به draft)
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    candidateSession:
+      type: apiKey
+      in: cookie
+      name: candidate_sessionid
+    staffSession:
+      type: apiKey
+      in: cookie
+      name: staff_sessionid
+
+  parameters:
+    ApplicationId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    UploadId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+
+  responses:
+    ValidationError:
+      description: خطای اعتبارسنجی
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    Unauthorized:
+      description: بدون احراز هویت
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    Forbidden:
+      description: خارج از دامنه مجوز (بدون افشای وجود رکورد در صورت نیاز)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    NotFound:
+      description: یافت نشد یا خارج از دسترس
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    RateLimited:
+      description: محدودیت نرخ عبور شده
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+
+  schemas:
+    ErrorEnvelope:
+      type: object
+      properties:
+        code:
+          type: string
+          example: validation_error
+        message:
+          type: string
+        field_errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        request_id:
+          type: string
+
+    JobPositionPublic:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        department:
+          type: string
+        location:
+          type: string
+        requirements:
+          type: string
+          description: شایستگی‌های احراز شغل؛ هر خط یک مورد.
+
+    JobPositionStaff:
+      allOf:
+        - $ref: "#/components/schemas/JobPositionPublic"
+        - type: object
+          properties:
+            status:
+              type: string
+              enum: [draft, open, closed]
+            created_at:
+              type: string
+              format: date-time
+
+    JobPositionWrite:
+      description: ویرایش فیلدهای توصیفی فقط؛ تغییر وضعیت از `JobStatusChangeRequest` است (FR-039a).
+      type: object
+      properties:
+        title:
+          type: string
+        department:
+          type: string
+        location:
+          type: string
+        requirements:
+          type: string
+          description: شایستگی‌های احراز شغل؛ هر خط یک مورد.
+
+    JobStatusChangeRequest:
+      description: >
+        چرخه وضعیت صریح (FR-039a): فقط `draft→open`، `open→closed`، `closed→open`
+        (بازگشایی) مجاز است؛ هر انتقال دیگر ۴۰۰ می‌گیرد.
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [draft, open, closed]
+
+    PrivacyNotice:
+      type: object
+      properties:
+        version:
+          type: string
+        body:
+          type: string
+
+    UploadStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        scan_status:
+          type: string
+          enum: [pending, clean, quarantined, rejected, scan_failed]
+        original_filename:
+          type: string
+
+    ApplicationCreateRequest:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - city
+        - job_position
+        - employment
+        - experience
+        - availability
+        - resume_upload_id
+        - privacy_notice_version
+        - consent
+      properties:
+        first_name:
+          type: string
+          maxLength: 100
+        last_name:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          maxLength: 254
+        city:
+          type: string
+          maxLength: 100
+        job_position:
+          type: string
+        employment:
+          type: string
+          enum: [full_time, part_time, unemployed, student, other]
+        experience:
+          type: string
+          enum: [no_experience, under_1, years_1_3, years_3_5, years_5_10, over_10]
+        availability:
+          type: string
+          enum: [immediate, within_2_weeks, weeks_2_4, over_1_month]
+        last_title:
+          type: string
+          maxLength: 200
+        last_company:
+          type: string
+          maxLength: 200
+        resume_upload_id:
+          type: string
+        privacy_notice_version:
+          type: string
+        consent:
+          type: boolean
+
+    ApplicationReceipt:
+      type: object
+      properties:
+        tracking_code:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ApplicationPublicDetail:
+      type: object
+      properties:
+        tracking_code:
+          type: string
+        job_position:
+          $ref: "#/components/schemas/JobPositionPublic"
+        status:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+
+    PaginatedCandidateApplications:
+      type: object
+      properties:
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApplicationPublicDetail"
+
+    ApplicationStaffDetail:
+      type: object
+      properties:
+        id:
+          type: string
+        tracking_code:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        mobile_snapshot:
+          type: string
+        email:
+          type: string
+        city:
+          type: string
+        job_position:
+          type: string
+        employment:
+          type: string
+          enum: [full_time, part_time, unemployed, student, other]
+        experience:
+          type: string
+          enum: [no_experience, under_1, years_1_3, years_3_5, years_5_10, over_10]
+        availability:
+          type: string
+          enum: [immediate, within_2_weeks, weeks_2_4, over_1_month]
+        last_title:
+          type: string
+        last_company:
+          type: string
+        status:
+          type: string
+        version:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        reviewer:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: string
+            role:
+              type: string
+        previous_applications:
+          type: array
+          description: اشاره خلاصه به پرونده‌های قبلی همین متقاضی، فقط در دامنه مجوز کاربر (FR-063)
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              job_position:
+                type: string
+              status:
+                type: string
+        notes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApplicationNote"
+        status_history:
+          type: array
+          items:
+            type: object
+            properties:
+              from_status:
+                type: string
+              to_status:
+                type: string
+              created_at:
+                type: string
+                format: date-time
+
+    ApplicationStaffListItem:
+      description: >
+        فیلدهای فهرست کارکنان (T068 — رفع مغایرت واقعی: فهرست سبک‌تر از جزئیات است و
+        notes/reviewer/status_history/previous_applications/version را شامل نمی‌شود، چون
+        پرس‌وجوی فهرست عمداً `AttachmentContent` یا جزئیات کامل را واکشی نمی‌کند، اصل I).
+      type: object
+      properties:
+        id:
+          type: string
+        tracking_code:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        mobile_snapshot:
+          type: string
+        city:
+          type: string
+        job_position:
+          type: string
+        job_position_id:
+          type: string
+        status:
+          type: string
+        experience:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PaginatedStaffApplications:
+      type: object
+      properties:
+        count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/ApplicationStaffListItem"
+
+    ApplicationMetrics:
+      type: object
+      properties:
+        total:
+          type: integer
+        by_status:
+          type: object
+          additionalProperties:
+            type: integer
+
+    ApplicationNote:
+      type: object
+      properties:
+        id:
+          type: string
+        author:
+          type: string
+        body:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ExportRequest:
+      type: object
+      required: [format, filters, columns]
+      properties:
+        format:
+          type: string
+          enum: [csv, xlsx]
+        filters:
+          type: object
+          description: همان پارامترهای فیلتر GET /staff/applications
+        columns:
+          type: array
+          items:
+            type: string
+          description: فقط از فهرست ستون‌های مجاز سروری (بدون یادداشت/حسابرسی در نسخه اولیه)

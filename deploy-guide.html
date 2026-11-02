@@ -1,0 +1,419 @@
+<title>راهنمای استقرار</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  /* طرح: آبی کبالت میلان‌پارس به‌عنوان رنگ برند، خنثی‌های مایل به آبی، یک نوار وضعیت رنگی */
+  --bg:#f4f6fb;
+  --surface:#ffffff;
+  --surface-sunk:#eef1f8;
+  --border:#dfe4f0;
+  --border-strong:#c8d0e2;
+  --fg:#0f1526;
+  --fg-soft:#4f5a72;
+  --fg-faint:#838da6;
+  --accent:#1e22a8;
+  --accent-ink:#15187d;
+  --accent-soft:#ececf9;
+  --warn:#9a5b06;
+  --warn-soft:#fdf3e4;
+  --crit:#b3261e;
+  --crit-soft:#fbeae8;
+  --ok:#0d7a55;
+  --code-bg:#12162a;
+  --code-fg:#d7dcf0;
+  --code-border:#2a3150;
+  --display:"Vazirmatn",system-ui,Tahoma,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1018; --surface:#151a26; --surface-sunk:#1b2130;
+    --border:#28303f; --border-strong:#3a4457;
+    --fg:#e8ecf5; --fg-soft:#a9b3c7; --fg-faint:#79849a;
+    --accent:#8f9bff; --accent-ink:#b3bcff; --accent-soft:#1d2240;
+    --warn:#e0a44e; --warn-soft:#2b2317;
+    --crit:#f08a80; --crit-soft:#2c1a19;
+    --ok:#5fc79c;
+    --code-bg:#0a0d15; --code-fg:#cfd6ec; --code-border:#232a3c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1018; --surface:#151a26; --surface-sunk:#1b2130;
+  --border:#28303f; --border-strong:#3a4457;
+  --fg:#e8ecf5; --fg-soft:#a9b3c7; --fg-faint:#79849a;
+  --accent:#8f9bff; --accent-ink:#b3bcff; --accent-soft:#1d2240;
+  --warn:#e0a44e; --warn-soft:#2b2317;
+  --crit:#f08a80; --crit-soft:#2c1a19;
+  --ok:#5fc79c;
+  --code-bg:#0a0d15; --code-fg:#cfd6ec; --code-border:#232a3c;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--fg);
+  font-family:var(--display);font-size:15.5px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 64px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto}
+h1,h2,h3{margin:0;line-height:1.4;text-wrap:balance;font-weight:800;letter-spacing:-.01em}
+a{color:var(--accent-ink)}
+
+/* سرصفحه */
+.masthead{
+  border-bottom:1px solid var(--border);padding-block:40px 30px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+  font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--accent-ink);
+  background:var(--accent-soft);padding:5px 11px;border-radius:999px;
+}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.masthead h1{font-size:34px}
+.lede{color:var(--fg-soft);font-size:16px;max-width:62ch;margin:0}
+
+/* هشدار بالای صفحه */
+.callout{
+  display:flex;gap:12px;padding:16px 18px;border-radius:12px;margin-block:24px;
+  font-size:14px;line-height:1.85;border:1px solid transparent;
+}
+.callout svg{flex-shrink:0;width:19px;height:19px;margin-top:3px}
+.callout.info{background:var(--accent-soft);color:var(--accent-ink);border-color:color-mix(in srgb,var(--accent) 22%,transparent)}
+.callout.warn{background:var(--warn-soft);color:var(--warn);border-color:color-mix(in srgb,var(--warn) 25%,transparent)}
+.callout.crit{background:var(--crit-soft);color:var(--crit);border-color:color-mix(in srgb,var(--crit) 25%,transparent)}
+.callout b{font-weight:800}
+
+/* بخش‌ها */
+section.block{padding-block:34px;border-top:1px solid var(--border)}
+.block-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+.step-no{
+  font-family:var(--mono);font-size:12px;font-weight:500;color:var(--fg-faint);
+  flex-shrink:0;padding-top:6px;font-variant-numeric:tabular-nums;
+}
+.block-head h2{font-size:21px}
+.block h3{font-size:15.5px;margin-block:26px 10px;color:var(--fg)}
+section.block > h3:first-child{margin-top:0}
+p{margin:0 0 12px}
+p:last-child{margin-bottom:0}
+.row{min-width:0}
+
+/* جدول سرویس‌ها */
+.table-scroll{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin-block:16px}
+table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface)}
+th,td{text-align:right;padding:12px 14px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{background:var(--surface-sunk);font-size:12.5px;font-weight:700;color:var(--fg-soft)}
+td code{white-space:nowrap}
+
+/* کد */
+pre{
+  background:var(--code-bg);color:var(--code-fg);border:1px solid var(--code-border);
+  border-radius:12px;padding:16px 18px;overflow-x:auto;margin-block:12px;
+  font-family:var(--mono);font-size:13px;line-height:1.85;direction:ltr;text-align:left;
+}
+pre code{font-family:inherit}
+code{
+  font-family:var(--mono);font-size:.88em;background:var(--surface-sunk);
+  border:1px solid var(--border);border-radius:5px;padding:1px 5px;direction:ltr;unicode-bidi:embed;
+}
+pre code{background:none;border:none;padding:0}
+
+/* چک‌لیست */
+.checklist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1px;
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.checklist li{
+  display:flex;gap:12px;align-items:flex-start;padding:13px 16px;
+  border-bottom:1px solid var(--border);font-size:14.5px;cursor:pointer;
+}
+.checklist li:last-child{border-bottom:none}
+.checklist li:hover{background:var(--surface-sunk)}
+.checklist input[type=checkbox]{
+  appearance:none;width:18px;height:18px;border:1.5px solid var(--border-strong);
+  border-radius:5px;flex-shrink:0;margin-top:4px;cursor:pointer;position:relative;
+  background:var(--surface);transition:background .12s ease,border-color .12s ease;
+}
+.checklist input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}
+.checklist input[type=checkbox]:checked::after{
+  content:"";position:absolute;inset-inline-start:5px;top:1px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
+}
+.checklist input[type=checkbox]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.checklist label{cursor:pointer;min-width:0}
+.checklist input:checked + label{color:var(--fg-faint);text-decoration:line-through;text-decoration-color:var(--border-strong)}
+.progress{
+  display:flex;align-items:center;gap:12px;margin-block:14px 6px;font-size:13px;color:var(--fg-soft);
+}
+.bar{flex:1;height:6px;background:var(--surface-sunk);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.bar span{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease;border-radius:999px}
+
+/* کارت‌های آیتم باز */
+.open-item{
+  display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);
+}
+.open-item:last-child{border-bottom:none}
+.open-item .num{
+  font-family:var(--mono);font-size:12px;color:var(--crit);font-weight:500;
+  width:22px;flex-shrink:0;padding-top:3px;font-variant-numeric:tabular-nums;
+}
+.open-item h4{margin:0 0 4px;font-size:14.5px;font-weight:800}
+.open-item p{margin:0;font-size:14px;color:var(--fg-soft)}
+
+/* جدول cron */
+kbd-cron{font-family:var(--mono);font-size:12.5px}
+
+footer{margin-top:40px;padding-top:22px;border-top:1px solid var(--border);
+  color:var(--fg-faint);font-size:12.5px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:560px){
+  .masthead h1{font-size:26px}
+  .masthead{padding-block:28px 22px}
+  section.block{padding-block:26px}
+  body{font-size:15px}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <span class="eyebrow">پورتال جذب و استخدام میلان پارس</span>
+  <h1>راهنمای استقرار در محیط اجرا</h1>
+  <p class="lede">از محیط توسعه تا سرور واقعی — با همهٔ مواردی که باید سرویس، متغیر محیطی یا تصمیم عملیاتی بدانید.</p>
+</header>
+
+<div class="callout warn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+  <div>این سند بر اساس <b>خواندن واقعی کد این مخزن</b> نوشته شده، نه فرض. هر جا چیزی در کد آماده نبوده، با نشان «بازبینی لازم» علامت‌گذاری شده — آن‌ها را قبل از اولین استقرار حل کنید.</div>
+</div>
+
+<section class="block">
+  <div class="block-head"><span class="step-no">۰۰</span><h2>تصویر کلی: چه چیزهایی باید اجرا شوند</h2></div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>سرویس</th><th>چیست</th><th>الزامی؟</th></tr></thead>
+      <tbody>
+        <tr><td><code>web</code></td><td>Django (WSGI: gunicorn + Nginx)</td><td>حتماً</td></tr>
+        <tr><td><code>db</code></td><td>PostgreSQL 16</td><td>حتماً</td></tr>
+        <tr><td><code>worker</code></td><td><code>manage.py run_worker</code> — اسکن رزومهٔ آپلودشده</td><td>حتماً</td></tr>
+        <tr><td><code>clamav</code></td><td>سرویس ClamAV برای اسکن فایل</td><td>حتماً</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>چرا worker حتماً لازم است</h3>
+  <p>فرم ثبت درخواست رزومه را آپلود می‌کند و بعد تا <code>scan_status</code> فایل <code>clean</code> نشود، ثبت نهایی انجام نمی‌شود (<code>pollUploadStatus</code> در <code>candidate_apply.js</code>). خودِ اسکن جدا از درخواست وب انجام می‌شود: <code>run_worker</code> کار را از جدول <code>BackgroundJob</code> با <code>SELECT … FOR UPDATE SKIP LOCKED</code> برمی‌دارد.</p>
+  <div class="callout crit">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+    <div><b>اگر worker بالا نباشد:</b> هر متقاضی پیام «بررسی فایل بیش از حد انتظار طول کشید» می‌بیند و <b>هیچ درخواستی ثبت نمی‌شود</b>. این حالت هنگام ساخت همین سند عملاً بازتولید شد — بدون worker، دکمهٔ ثبت نهایی هیچ پاسخی نمی‌داد.</div>
+  </div>
+  <p>شمارنده‌های محدودسازی نرخ (<code>ExportRateCounter</code>، <code>StaffLoginRateCounter</code>، <code>TrackingLookupRateCounter</code>) شمارندهٔ <b>دیتابیسی</b> هستند و در همان درخواست وب به‌روز می‌شوند؛ نه Redis لازم است، نه Celery.</p>
+</section>
+
+<section class="block">
+  <div class="block-head"><span class="step-no">۰۱</span><h2>پیش‌نیاز سرور</h2></div>
+  <p>Python 3.12 (تصویر پایهٔ <code>docker/Dockerfile</code>)، PostgreSQL 16، و Nginx یا پراکسی معکوس معادل برای TLS و فایل‌های استاتیک.</p>
+</section>
+
+<section class="block">
+  <div class="block-head"><span class="step-no">۰۲</span><h2>تنظیمات تولید</h2></div>
+  <p><code>config/settings/prod.py</code> این‌ها را فعال می‌کند و اگر کلید راز پیش‌فرض بماند، اجرا را متوقف می‌کند:</p>
+<pre><code>DEBUG = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True      # ← یعنی حتماً باید پشت HTTPS باشید
+SECURE_HSTS_SECONDS = 31536000</code></pre>
+  <p>یعنی <b>قبل از اولین درخواست، گواهی TLS و پراکسی معکوس باید آماده باشد</b>، وگرنه کل ترافیک HTTP به HTTPS ریدایرکت می‌شود.</p>
+
+  <h3>متغیرهای محیطی</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>متغیر</th><th>توضیح</th><th>نکته</th></tr></thead>
+      <tbody>
+        <tr><td><code>DJANGO_SETTINGS_MODULE</code></td><td><code>config.settings.prod</code></td><td>پیش‌فرض پروژه <code>dev</code> است</td></tr>
+        <tr><td><code>DJANGO_SECRET_KEY</code></td><td>کلید راز</td><td>اگر پیش‌فرض بماند، اجرا بالا نمی‌آید</td></tr>
+        <tr><td><code>DJANGO_ALLOWED_HOSTS</code></td><td>دامنهٔ واقعی، با کاما</td><td>بدون آن همهٔ درخواست‌ها <code>400</code> می‌گیرند</td></tr>
+        <tr><td><code>POSTGRES_*</code></td><td>اتصال دیتابیس</td><td><code>_HOST</code> پیش‌فرض <code>db</code></td></tr>
+        <tr><td><code>CLAMD_HOST</code> / <code>CLAMD_PORT</code></td><td>آدرس ClamAV</td><td>پیش‌فرض <code>clamav:3310</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>قالب در <code>.env.example</code> هست. <b>هیچ‌وقت <code>.env</code> واقعی را در گیت نگذارید</b> — در <code>.gitignore</code> هست.</p>
+</section>
+
+<section class="block">
+  <div class="block-head"><span class="step-no">۰۳</span><h2>گام‌به‌گام</h2></div>
+
+  <h3>گام ۱ — دیتابیس</h3>
+  <p>PostgreSQL 16 بسازید. برای جداسازی نقش migrate از runtime به <code>docs/operations/db-roles.sql</code> مراجعه کنید.</p>
+  <div class="callout warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <div><b>بازبینی لازم:</b> فهرست جدول‌های <code>db-roles.sql</code> با اسکیمای فعلی هم‌خوان نیست — جدول‌های حذف‌شدهٔ OTP/MFA (<code>candidates_otpchallenge</code>، <code>otp_totp_totpdevice</code>، <code>accounts_staffrecoverycode</code>، <code>candidates_otpratecounter</code>) هنوز در آن هستند و جدول جدید <code>candidates_trackinglookupratecounter</code> در آن نیست. پیش از اعمال روی محیط واقعی، فهرست را از روی جداول واقعی بازبینی کنید.</div>
+  </div>
+
+  <h3>گام ۲ — کد و وابستگی‌ها</h3>
+<pre><code>git clone &lt;repo&gt; /srv/reqruitment
+cd /srv/reqruitment
+python3.12 -m venv .venv
+.venv/bin/pip install -r requirements/base.txt</code></pre>
+  <div class="callout warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <div><b>فقط <code>base.txt</code></b>، نه <code>dev.txt</code>. <code>docker/Dockerfile</code> فعلی <code>dev.txt</code> را نصب می‌کند (pytest، playwright، locust…) که برای تولید مناسب نیست.<br><br><b>gunicorn در هیچ‌کدام از دو فایل requirements نیست.</b> باید جداگانه نصب و پین شود:
+<pre style="margin-block:10px 0"><code>.venv/bin/pip install gunicorn</code></pre></div>
+  </div>
+
+  <h3>گام ۳ — متغیرهای محیطی</h3>
+<pre><code>cp .env.example .env
+# مقادیر واقعی را جایگزین کنید: کلید راز، دامنه، اعتبارنامهٔ دیتابیس</code></pre>
+  <p><b><code>.env</code> خودکار خوانده نمی‌شود.</b> هیچ <code>load_dotenv</code> یا <code>env_file</code> در کد نیست؛ متغیرها باید در محیط شل یا سرویس تعریف شوند — <code>EnvironmentFile=</code> در systemd، یا <code>env_file:</code> در Docker (که <code>docker-compose.yml</code> انجام می‌دهد).</p>
+
+  <h3>گام ۴ — مایگریشن</h3>
+<pre><code>export DJANGO_SETTINGS_MODULE=config.settings.prod
+.venv/bin/python manage.py migrate</code></pre>
+  <p>اگر دیتابیس از نسخهٔ قدیمی با <code>is_published</code> ارتقا می‌یابد، مایگریشن <code>jobs.0002_preflight_job_status_mapping</code> <b>عامداً متوقف می‌شود</b> اگر ردیفی با ترکیب تأییدنشده داشته باشد، و راه‌حل را در پیام خطا می‌گوید. جزئیات در <code>docs/operations/migrations.md</code>.</p>
+
+  <h3>گام ۵ — اولین حساب ادمین</h3>
+  <p>هیچ کاربری پیش‌فرض ساخته نمی‌شود (عمدی). اولین <code>hr_manager</code> را بسازید:</p>
+<pre><code>.venv/bin/python manage.py createsuperuser_staff --username admin --role hr_manager</code></pre>
+  <p>رمز تعاملی پرسیده می‌شود. نقش را از همان ابتدا <code>hr_manager</code> بدهید تا بتوانید بقیهٔ کارکنان را از پنل «مدیریت کاربران» بسازید.</p>
+
+  <h3>گام ۶ — فایل‌های استاتیک</h3>
+<pre><code>.venv/bin/python manage.py collectstatic --noinput</code></pre>
+  <div class="callout warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <div><b>whitenoise نصب نیست</b> و Django در <code>DEBUG=False</code> فایل استاتیک را سرو نمی‌کند. Nginx باید <code>staticfiles/</code> را سرو کند، وگرنه صفحهٔ سفید بدون CSS/JS می‌گیرید.</div>
+  </div>
+<pre><code>location /static/ {
+    alias /srv/reqruitment/staticfiles/;
+}</code></pre>
+
+  <h3>گام ۷ — اجرای web</h3>
+<pre><code>.venv/bin/gunicorn config.wsgi:application \
+  --bind 127.0.0.1:8000 \
+  --workers 3</code></pre>
+
+  <h3>گام ۸ — اجرای worker</h3>
+<pre><code>.venv/bin/python manage.py run_worker</code></pre>
+  <p>این فرمان <b>حلقهٔ بی‌پایان</b> است و باید به‌صورت سرویس مدیریت‌شده اجرا شود تا اگر کرش کرد دوباره بالا بیاید:</p>
+<pre><code>[Unit]
+Description=Reqruitment scan worker
+After=network.target postgresql.service
+
+[Service]
+WorkingDirectory=/srv/reqruitment
+EnvironmentFile=/srv/reqruitment/.env
+ExecStart=/srv/reqruitment/.venv/bin/python manage.py run_worker
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+  <h3>گام ۹ — ClamAV</h3>
+  <p>سرویس ClamAV را بالا بیاورید و <code>CLAMD_HOST</code>/<code>CLAMD_PORT</code> را تنظیم کنید. اولیه‌سازی دیتابیس ویروس چند دقیقه طول می‌کشد و در آن بازه اسکن‌ها <code>scan_failed</code> می‌شوند — عمداً fail-closed، نه «clean».</p>
+</section>
+
+<section class="block">
+  <div class="block-head"><span class="step-no">۰۴</span><h2>کارهای دوره‌ای (cron)</h2></div>
+  <p>این‌ها خودکار <b>نیستند</b> و هر کدام باید به cron یا systemd timer وصل شوند.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>کار</th><th>دستور</th><th>هر چند وقت</th></tr></thead>
+      <tbody>
+        <tr><td>پاک‌سازی آپلودهای یتیم (&gt;۲۴ ساعت)</td><td><code>manage.py cleanup_uploads</code></td><td>روزانه</td></tr>
+        <tr><td>اعمال سیاست نگهداری</td><td><code>manage.py enforce_retention</code></td><td>ماهانه</td></tr>
+        <tr><td>پشتیبان‌گیری</td><td><code>scripts/backup.sh</code></td><td>روزانه</td></tr>
+        <tr><td>چرخش پشتیبان ۱۲ماهه</td><td><code>scripts/backup_rotate.sh</code></td><td>ماهانه</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <div><b><code>enforce_retention</code> به‌طور پیش‌فرض هیچ کاری نمی‌کند</b> چون <code>RETENTION_OPERATIONAL_ENABLED=False</code> است — عمدی. برای فعال‌سازی، فقط بعد از تصمیم صریح ذی‌نفع روشنش کنید. سوابق حسابرسی (<code>AuditEvent</code>) هرگز حذف نمی‌شوند.</div>
+  </div>
+<pre><code>0 2 * * *  cd /srv/reqruitment &amp;&amp; set -a &amp;&amp; . ./.env &amp;&amp; set +a &amp;&amp; .venv/bin/python manage.py cleanup_uploads &gt;&gt; /var/log/reqruitment/cleanup.log 2&gt;&amp;1
+0 3 * * *  cd /srv/reqruitment &amp;&amp; set -a &amp;&amp; . ./.env &amp;&amp; set +a &amp;&amp; ./scripts/backup.sh &gt;&gt; /var/log/reqruitment/backup.log 2&gt;&amp;1</code></pre>
+</section>
+
+<section class="block">
+  <div class="block-head"><span class="step-no">۰۵</span><h2>چک‌لیست پیش از تحویل</h2></div>
+  <p>هرکدام را روی <b>محیط واقعی</b> (نه تأیید تنظیمات) اجرا کنید.</p>
+  <div class="progress"><span id="prog-label">۰ از ۰</span><div class="bar"><span id="prog-bar"></span></div></div>
+  <ul class="checklist" id="checklist">
+    <li><input type="checkbox" id="c1"><label for="c1"><code>manage.py check --deploy</code> با تنظیمات prod بدون هشدار</label></li>
+    <li><input type="checkbox" id="c2"><label for="c2"><code>DJANGO_SECRET_KEY</code> واقعی (نه پیش‌فرض) تنظیم شده</label></li>
+    <li><input type="checkbox" id="c3"><label for="c3"><code>DJANGO_ALLOWED_HOSTS</code> شامل دامنهٔ واقعی است</label></li>
+    <li><input type="checkbox" id="c4"><label for="c4">HTTPS کار می‌کند و <code>SECURE_SSL_REDIRECT</code> حلقه ایجاد نمی‌کند</label></li>
+    <li><input type="checkbox" id="c5"><label for="c5"><b><code>SECURE_PROXY_SSL_HEADER</code></b> تنظیم و روی محیط واقعی تست شده <span style="color:var(--crit)">(اکنون تنظیم نشده)</span></label></li>
+    <li><input type="checkbox" id="c6"><label for="c6"><code>migrate</code> بدون خطا اجرا شد</label></li>
+    <li><input type="checkbox" id="c7"><label for="c7"><code>collectstatic</code> اجرا شد و CSS/JS در مرورگر لود می‌شوند</label></li>
+    <li><input type="checkbox" id="c8"><label for="c8"><b>worker بالا و <code>Restart=always</code> است</b> — با یک آپلود واقعی تست شده</label></li>
+    <li><input type="checkbox" id="c9"><label for="c9">ClamAV متصل است و یک فایل تمیز به <code>clean</code> می‌رسد</label></li>
+    <li><input type="checkbox" id="c10"><label for="c10">ثبت درخواست بدون ورود کار می‌کند و کد پیگیری برمی‌گردد</label></li>
+    <li><input type="checkbox" id="c11"><label for="c11">پیگیری با کد کار می‌کند</label></li>
+    <li><input type="checkbox" id="c12"><label for="c12">ورود کارمند، ساخت موقعیت شغلی و ارجاع کار می‌کند</label></li>
+    <li><input type="checkbox" id="c13"><label for="c13">یک خروجی CSV واقعی دانلود می‌شود</label></li>
+    <li><input type="checkbox" id="c14"><label for="c14"><code>backup.sh</code> موفق شد و <code>sha256</code> تأیید شد</label></li>
+    <li><input type="checkbox" id="c15"><label for="c15">لاگ‌های حساس در فایل لاگ <code>[REDACTED]</code> هستند</label></li>
+    <li><input type="checkbox" id="c16"><label for="c16">پشتیبان روی دیسک/سرور <b>مستقل</b> است</label></li>
+    <li><input type="checkbox" id="c17"><label for="c17"><code>db-roles.sql</code> با فهرست جدول‌های فعلی بازبینی شده</label></li>
+  </ul>
+</section>
+
+<section class="block">
+  <div class="block-head"><span class="step-no">۰۶</span><h2>مسائلی که عمداً حل نشده‌اند</h2></div>
+  <p>این‌ها در <code>secrets.md</code>، <code>monitoring.md</code> و <code>db-roles.sql</code> هم ثبت شده‌اند.</p>
+
+  <div class="open-item"><span class="num">۰۱</span><div><h4>مدیر راز واقعی انتخاب نشده</h4><p>Vault / AWS Secrets Manager / … — کد فقط انتظار دارد رازها از محیط بیایند، بدون تحمیل مکانیزم.</p></div></div>
+  <div class="open-item"><span class="num">۰۲</span><div><h4>پایش و هشدار پیکربندی نشده</h4><p>Sentry / Prometheus / … در هیچ محیطی وصل نیست.</p></div></div>
+  <div class="open-item"><span class="num">۰۳</span><div><h4>نقش‌های کمترین‌مجوز PostgreSQL اجرا نشده</h4><p>طراحی شده ولی برنامه فعلاً با superuser اجرا می‌شود.</p></div></div>
+  <div class="open-item"><span class="num">۰۴</span><div><h4>پایش صف <code>BackgroundJob</code></h4><p><b>مهم‌ترین مورد:</b> اگر worker بمیرد، تنها نشانه از دید کاربر گیر کردن ثبت درخواست است. روی «سن قدیمی‌ترین کار <code>pending</code>» هشدار تنظیم کنید.</p></div></div>
+</section>
+
+<footer>
+  <span>پورتال جذب و استخدام میلان پارس</span>
+  <span>مبنا: کد این مخزن در تاریخ تهیهٔ سند</span>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var KEY = "deploy-checklist";
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("#checklist input[type=checkbox]"));
+  var bar = document.getElementById("prog-bar");
+  var label = document.getElementById("prog-label");
+  var FA = ["۰","۱","۲","۳","۴","۵","۶","۷","۸","۹"];
+  function fa(n) { return String(n).replace(/\d/g, function (d) { return FA[+d]; }); }
+
+  function load() {
+    try {
+      var saved = JSON.parse(localStorage.getItem(KEY) || "[]");
+      saved.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.checked = true;
+      });
+    } catch (e) { /* storage unavailable — render unchecked */ }
+  }
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(boxes.filter(function (b) { return b.checked; }).map(function (b) { return b.id; })));
+    } catch (e) { /* ignore */ }
+  }
+  function render() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    bar.style.width = (boxes.length ? (done / boxes.length) * 100 : 0) + "%";
+    label.textContent = fa(done) + " از " + fa(boxes.length);
+  }
+
+  load();
+  render();
+  boxes.forEach(function (b) {
+    b.addEventListener("change", function () { save(); render(); });
+  });
+})();
+</script>

@@ -1,0 +1,9 @@
+-r base.txt
+pytest==8.3.3
+pytest-django==4.9.0
+factory-boy==3.3.1
+playwright==1.47.0
+pytest-playwright==0.5.2
+ruff==0.7.1
+locust==2.32.1
+pyyaml==6.0.3

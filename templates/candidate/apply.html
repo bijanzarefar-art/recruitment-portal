@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}ثبت درخواست همکاری{% endblock %}
+{% block nav %}{% include "candidate/_nav.html" %}{% endblock %}
+{% block content %}
+
+<section class="card" id="application-section">
+    <div class="section-title">
+        <div>
+            <h2>ثبت درخواست همکاری</h2>
+            <div class="muted" style="margin-top:6px">فرم اولیه کوتاه برای ورود به فرآیند جذب</div>
+        </div>
+    </div>
+
+    <form id="apply-form" novalidate>
+        <div class="field-error" data-error-for="form" role="alert" tabindex="-1"></div>
+
+        <div class="grid cols-2">
+            <div class="form-group">
+                <label for="first_name" class="required">نام</label>
+                <input type="text" id="first_name" name="first_name" class="input" maxlength="100" placeholder="نام" required>
+                <div class="field-error" data-error-for="first_name"></div>
+            </div>
+            <div class="form-group">
+                <label for="last_name" class="required">نام خانوادگی</label>
+                <input type="text" id="last_name" name="last_name" class="input" maxlength="100" placeholder="نام خانوادگی" required>
+                <div class="field-error" data-error-for="last_name"></div>
+            </div>
+            <div class="form-group">
+                <label for="mobile" class="required">شماره موبایل</label>
+                <input type="tel" id="mobile" name="mobile" class="input" inputmode="tel" maxlength="11" placeholder="09xxxxxxxxx" autocomplete="tel" required>
+                <div class="field-error" data-error-for="mobile"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">ایمیل (اختیاری)</label>
+                <input type="email" id="email" name="email" class="input" maxlength="254" placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+                <label for="city" class="required">شهر محل سکونت</label>
+                <input type="text" id="city" name="city" class="input" maxlength="100" placeholder="مثال: تهران" required>
+                <div class="field-error" data-error-for="city"></div>
+            </div>
+            <div class="form-group">
+                <label for="job_position" class="required">عنوان شغلی مورد درخواست</label>
+                <select id="job_position" name="job_position" required>
+                    <option value="">انتخاب کنید</option>
+                    {% for job in jobs %}
+                    <option value="{{ job.id }}">{{ job.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="employment" class="required">وضعیت فعلی اشتغال</label>
+                <select id="employment" name="employment" required>
+                    <option value="full_time">شاغل تمام‌وقت</option>
+                    <option value="part_time">شاغل پاره‌وقت</option>
+                    <option value="unemployed">در حال حاضر شاغل نیستم</option>
+                    <option value="student">دانشجو</option>
+                    <option value="other">سایر</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="experience" class="required">مجموع سابقه کاری</label>
+                <select id="experience" name="experience" required>
+                    <option value="no_experience">بدون سابقه</option>
+                    <option value="under_1">کمتر از ۱ سال</option>
+                    <option value="years_1_3">۱ تا ۳ سال</option>
+                    <option value="years_3_5">۳ تا ۵ سال</option>
+                    <option value="years_5_10">۵ تا ۱۰ سال</option>
+                    <option value="over_10">بیش از ۱۰ سال</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="availability" class="required">امکان شروع همکاری</label>
+                <select id="availability" name="availability" required>
+                    <option value="immediate">بلافاصله</option>
+                    <option value="within_2_weeks">حداکثر تا ۲ هفته</option>
+                    <option value="weeks_2_4">۲ تا ۴ هفته</option>
+                    <option value="over_1_month">بیش از یک ماه</option>
+                </select>
+            </div>
+            <div class="form-group" id="last-title-group">
+                <label for="last_title">آخرین عنوان شغلی</label>
+                <input type="text" id="last_title" name="last_title" class="input" maxlength="200" placeholder="مثال: کارشناس فروش">
+            </div>
+            <div class="form-group" id="last-company-group">
+                <label for="last_company">آخرین شرکت محل کار</label>
+                <input type="text" id="last_company" name="last_company" class="input" maxlength="200" placeholder="نام شرکت">
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top:16px">
+            <label class="required">رزومه</label>
+            <div class="upload-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+                <strong>فایل رزومه را انتخاب کنید</strong>
+                <div class="help">PDF، DOC یا DOCX — حداکثر ۵ مگابایت</div>
+                <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" style="margin-top:12px" required>
+                <div id="resume-status" class="help" style="margin-top:8px"></div>
+            </div>
+            <div class="field-error" data-error-for="resume"></div>
+        </div>
+
+        <input type="hidden" name="privacy_notice_version" value="{{ privacy_notice_version }}">
+        <div class="consent" style="margin-top:16px">
+            <input type="checkbox" id="consent" name="consent">
+            <label for="consent">تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس گرفته شود.</label>
+        </div>
+
+        <div class="actions-row" style="margin-top:18px">
+            <button type="submit" class="btn primary">ثبت درخواست همکاری</button>
+        </div>
+    </form>
+</section>
+
+<section class="card" id="apply-success" hidden>
+    <div class="notice success">
+        <b>درخواست با موفقیت ثبت شد.</b><br>
+        کد پیگیری: <b id="receipt-tracking-code"></b><br>
+        این کد را نگه دارید — تنها راه پیگیری وضعیت درخواست شماست.<br>
+        وضعیت فعلی: در انتظار غربالگری اولیه
+    </div>
+    <div class="actions-row">
+        <a id="go-to-track-link" href="/track" class="btn primary">پیگیری وضعیت درخواست</a>
+        <button type="button" id="copy-tracking-code" class="btn ghost">کپی کد پیگیری</button>
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/candidate_apply.js"></script>
+{% endblock %}

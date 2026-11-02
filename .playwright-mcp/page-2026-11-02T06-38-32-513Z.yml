@@ -1,0 +1,20 @@
+- generic [ref=f105e2]:
+  - banner [ref=f105e3]:
+    - generic [ref=f105e4]:
+      - generic [ref=f105e5]: HR
+      - generic [ref=f105e6]:
+        - generic [ref=f105e7]: پورتال جذب و استخدام
+        - generic [ref=f105e8]: محیط مراجعه‌کنندگان
+    - navigation [ref=f105e9]:
+      - link "موقعیت‌های شغلی باز" [ref=f105e10] [cursor=pointer]:
+        - /url: /jobs
+      - link "ثبت درخواست همکاری" [ref=f105e11] [cursor=pointer]:
+        - /url: /apply
+      - link "پیگیری وضعیت درخواست" [ref=f105e12] [cursor=pointer]:
+        - /url: /track
+  - main [ref=f105e13]:
+    - generic [ref=f105e15]:
+      - heading "موقعیت‌های شغلی باز" [level=2] [ref=f105e16]
+      - generic [ref=f105e17]: فهرست موقعیت‌هایی که هم‌اکنون امکان ثبت درخواست برایشان وجود دارد.
+    - generic [ref=f105e18]: در حال بارگذاری...
+  - contentinfo [ref=f105e19]: پورتال جذب و استخدام

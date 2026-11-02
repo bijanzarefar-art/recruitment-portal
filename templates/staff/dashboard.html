@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}داشبورد جذب و استخدام{% endblock %}
+{% block nav %}{% include "staff/_nav.html" %}{% endblock %}
+{% block content %}
+
+<div class="section-title">
+    <div>
+        <h2>داشبورد جذب و استخدام</h2>
+        <div class="muted" style="margin-top:6px">نمای کلی مراحل جذب متقاضیان</div>
+    </div>
+</div>
+
+<div id="metrics" class="grid cols-2" style="margin-bottom:18px"></div>
+
+<section class="card">
+    <div class="toolbar" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+        <input id="search-box" class="input" style="max-width:240px" placeholder="جست‌وجو نام، موبایل، کد پیگیری...">
+        <select id="status-filter" style="max-width:200px">
+            <option value="">همه وضعیت‌ها</option>
+            <option value="new">در انتظار غربالگری اولیه</option>
+            <option value="phone">تماس اولیه انجام شد</option>
+            <option value="interview">دعوت به مصاحبه</option>
+            <option value="approved">تأیید اولیه</option>
+            <option value="rejected">عدم ادامه فرآیند</option>
+            <option value="hired">استخدام شد</option>
+        </select>
+        <button id="apply-filters" class="btn ghost">اعمال فیلتر</button>
+        <div style="flex:1"></div>
+        <span id="result-count" class="muted"></span>
+    </div>
+
+    <div id="loading-state" class="notice info" hidden>در حال بارگذاری...</div>
+    <div id="empty-state" class="notice info" hidden>پرونده‌ای مطابق فیلترها وجود ندارد.</div>
+    <div id="error-state" class="notice warn" hidden></div>
+
+    <div class="table-wrap">
+        <table class="table" id="results-table" hidden>
+            <thead>
+                <tr><th>کد پیگیری</th><th>متقاضی</th><th>موبایل</th><th>موقعیت</th><th>شهر</th><th>وضعیت</th><th>تاریخ ثبت</th><th>عملیات</th></tr>
+            </thead>
+            <tbody id="result-rows"></tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/staff_dashboard.js"></script>
+{% endblock %}

@@ -1,0 +1,81 @@
+- generic [ref=f64e2]:
+  - banner [ref=f64e3]:
+    - generic [ref=f64e4]:
+      - generic [ref=f64e5]: HR
+      - generic [ref=f64e6]: پورتال جذب و استخدام
+  - main [ref=f64e7]:
+    - generic [ref=f64e8]:
+      - generic [ref=f64e10]:
+        - heading "ثبت درخواست همکاری" [level=2] [ref=f64e11]
+        - generic [ref=f64e12]: فرم اولیه کوتاه برای ورود به فرآیند جذب
+      - generic [ref=f64e13]:
+        - generic [ref=f64e14]:
+          - generic [ref=f64e15]:
+            - generic [ref=f64e16]: نام *
+            - textbox "نام *" [ref=f64e17]:
+              - /placeholder: نام
+          - generic [ref=f64e18]:
+            - generic [ref=f64e19]: نام خانوادگی *
+            - textbox "نام خانوادگی *" [ref=f64e20]:
+              - /placeholder: نام خانوادگی
+          - generic [ref=f64e21]:
+            - generic [ref=f64e22]: شماره موبایل *
+            - textbox "شماره موبایل *" [ref=f64e23]:
+              - /placeholder: 09xxxxxxxxx
+          - generic [ref=f64e24]:
+            - generic [ref=f64e25]: ایمیل (اختیاری)
+            - textbox "ایمیل (اختیاری)" [ref=f64e26]:
+              - /placeholder: name@example.com
+          - generic [ref=f64e27]:
+            - generic [ref=f64e28]: شهر محل سکونت *
+            - textbox "شهر محل سکونت *" [ref=f64e29]:
+              - /placeholder: "مثال: تهران"
+          - generic [ref=f64e30]:
+            - generic [ref=f64e31]: عنوان شغلی مورد درخواست *
+            - combobox "عنوان شغلی مورد درخواست *" [ref=f64e32]:
+              - option "انتخاب کنید" [selected]
+              - option "کارشناس نرم‌افزار"
+              - option "کارشناس"
+          - generic [ref=f64e33]:
+            - generic [ref=f64e34]: وضعیت فعلی اشتغال *
+            - combobox "وضعیت فعلی اشتغال *" [ref=f64e35]:
+              - option "شاغل تمام‌وقت" [selected]
+              - option "شاغل پاره‌وقت"
+              - option "در حال حاضر شاغل نیستم"
+              - option "دانشجو"
+              - option "سایر"
+          - generic [ref=f64e36]:
+            - generic [ref=f64e37]: مجموع سابقه کاری *
+            - combobox "مجموع سابقه کاری *" [ref=f64e38]:
+              - option "بدون سابقه" [selected]
+              - option "کمتر از ۱ سال"
+              - option "۱ تا ۳ سال"
+              - option "۳ تا ۵ سال"
+              - option "۵ تا ۱۰ سال"
+              - option "بیش از ۱۰ سال"
+          - generic [ref=f64e39]:
+            - generic [ref=f64e40]: امکان شروع همکاری *
+            - combobox "امکان شروع همکاری *" [ref=f64e41]:
+              - option "بلافاصله" [selected]
+              - option "حداکثر تا ۲ هفته"
+              - option "۲ تا ۴ هفته"
+              - option "بیش از یک ماه"
+          - generic [ref=f64e42]:
+            - generic [ref=f64e43]: آخرین عنوان شغلی
+            - textbox "آخرین عنوان شغلی" [ref=f64e44]:
+              - /placeholder: "مثال: کارشناس فروش"
+          - generic [ref=f64e45]:
+            - generic [ref=f64e46]: آخرین شرکت محل کار
+            - textbox "آخرین شرکت محل کار" [ref=f64e47]:
+              - /placeholder: نام شرکت
+        - generic [ref=f64e48]:
+          - generic [ref=f64e49]: رزومه *
+          - generic [ref=f64e50]:
+            - strong [ref=f64e54]: فایل رزومه را انتخاب کنید
+            - generic [ref=f64e55]: PDF، DOC یا DOCX — حداکثر ۵ مگابایت
+            - button "Choose File" [ref=f64e56]
+        - generic [ref=f64e57]:
+          - checkbox "تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس گرفته شود." [ref=f64e58]
+          - generic [ref=f64e59]: تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس گرفته شود.
+        - button "ثبت درخواست همکاری" [ref=f64e61] [cursor=pointer]
+  - contentinfo [ref=f64e62]: پورتال جذب و استخدام

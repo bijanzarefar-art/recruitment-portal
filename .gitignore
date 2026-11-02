@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Django
+staticfiles/
+*.sqlite3
+local_settings.py
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Docker
+docker/*.override.yml
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Test / coverage
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/

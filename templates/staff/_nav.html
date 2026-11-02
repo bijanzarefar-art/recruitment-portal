@@ -1,0 +1,18 @@
+<nav class="topbar-nav">
+    <a href="/staff/dashboard" class="btn ghost{% if request.path == '/staff/dashboard' %} active{% endif %}">داشبورد</a>
+    <a href="/staff/jobs" class="btn ghost{% if request.path == '/staff/jobs' %} active{% endif %}">موقعیت‌های شغلی</a>
+    <a href="/staff/exports" class="btn ghost{% if request.path == '/staff/exports' %} active{% endif %}">خروجی‌گیری</a>
+    <a href="/staff/users" class="btn ghost{% if request.path == '/staff/users' %} active{% endif %}">مدیریت کاربران</a>
+    {% if request.user.is_authenticated %}
+    <span class="nav-divider"></span>
+    <span class="user-chip">
+        <strong>{{ request.user.username }}</strong>
+        <span class="muted">{{ request.user.get_role_display }}</span>
+    </span>
+    <button type="button" id="logout-button" class="btn ghost">خروج</button>
+    {% else %}
+    <span class="nav-divider"></span>
+    <a href="/staff/login" class="btn primary">ورود به سامانه</a>
+    {% endif %}
+</nav>
+<script type="module" src="/static/js/staff_nav.js"></script>

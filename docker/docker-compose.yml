@@ -1,0 +1,129 @@
+# پورتال جذب و استخدام میلان پارس — کل پشته در یک فایل.
+#
+#   docker compose -f docker/docker-compose.yml up -d --build
+#   docker compose -f docker/docker-compose.yml logs -f web
+#
+# سرویس‌ها: db (PostgreSQL) ← clamav (اسکن فایل) ← migrate (یک‌بار) ← web و worker.
+#
+# web و worker از **یک تصویر** ساخته می‌شوند و فقط دستور اجرایشان فرق دارد. worker الزامی است:
+# بدون آن اسکن رزومه هیچ‌وقت انجام نمی‌شود و هیچ درخواستی ثبت نمی‌شود.
+
+name: reqruitment
+
+x-app-env: &app-env
+  # config.settings.dev مقدار ALLOWED_HOSTS را به ['*'] بازنویسی می‌کند، پس دامنهٔ واقعی هیچ اثری
+  # ندارد و هر Hostی پذیرفته می‌شود. با prod این محدودیت واقعاً اعمال می‌شود؛ برای اجرای صرفاً
+  # محلی می‌توانید با DJANGO_SETTINGS_MODULE=config.settings.dev آن را در .env به dev برگردانید.
+  DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-config.settings.prod}
+  DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,recru.milanpars.com}
+  DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS:-https://recru.milanpars.com}
+  DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY در .env تنظیم نشده است}
+  POSTGRES_DB: ${POSTGRES_DB:-recruitment}
+  POSTGRES_USER: ${POSTGRES_USER:-recruitment}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD در .env تنظیم نشده است}
+  POSTGRES_HOST: db
+  POSTGRES_PORT: "5432"
+  CLAMD_HOST: clamav
+  CLAMD_PORT: "3310"
+  # پشت پراکسی TLS: بدون این، SECURE_SSL_REDIRECT حلقهٔ ریدایرکت بی‌نهایت می‌سازد.
+  SECURE_PROXY_SSL_HEADER: "HTTP_X_FORWARDED_PROTO, https"
+
+# اجرا مشترک برای web و worker — هر دو باید پس از migrate سالم بالا بیایند.
+x-depends: &app-depends
+  migrate:
+    condition: service_completed_successfully
+  db:
+    condition: service_healthy
+  clamav:
+    condition: service_healthy
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-recruitment}
+      POSTGRES_USER: ${POSTGRES_USER:-recruitment}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD در .env تنظیم نشده است}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # بدون -U از همان کاربر سرویس استفاده می‌کند؛ پارامترهای داخل ${} باید با $$ فرار داده شوند
+      # وگرنه Compose خودش سعی می‌کند آن‌ها را از پوسته جایگذاری کند.
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  clamav:
+    # تگ 1.3 وجود ندارد؛ همیشه فقط latest منتشر می‌شود.
+    image: clamav/clamav:latest
+    # hello-world دستور پیش‌فرض تصویر را به چاپ و خروج تبدیل می‌کند؛ باید صریح override شود،
+    # وگرنه سرویس clamd هرگز بالا نمی‌آید.
+    entrypoint: ["/init"]
+    healthcheck:
+      test: ["CMD-SHELL", "clamdcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      # اولین بارگذاری دیتابیس ویروس چند دقیقه طول می‌کشد.
+      start_period: 180s
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: ["python", "manage.py", "migrate", "--noinput"]
+    environment: *app-env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    # --access-logfile - لاگ درخواست‌ها را به stdout می‌برد تا در `docker compose logs` دیده شود.
+    command:
+      - gunicorn
+      - config.wsgi:application
+      - --bind
+      - 0.0.0.0:8000
+      - --workers
+      - "3"
+      - --access-logfile
+      - "-"
+      - --error-logfile
+      - "-"
+    environment: *app-env
+    depends_on: *app-depends
+    volumes:
+      # فقط در توسعه: کد از میزبان مانت می‌شود تا تغییر فایل نیازی به rebuild نداشته باشد.
+      # برای اجرای «مثل تولید» این خط را حذف کنید و فقط --build بزنید.
+      - ..:/code
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: ["python", "manage.py", "run_worker"]
+    environment: *app-env
+    depends_on: *app-depends
+    volumes:
+      - ..:/code
+    # run_worker حلقهٔ بی‌پایان است؛ اگر کرش کند باید دوباره بالا بیاید.
+    restart: always
+
+volumes:
+  pgdata:

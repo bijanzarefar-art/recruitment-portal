@@ -1,0 +1,26 @@
+- generic [ref=f85e2]:
+  - banner [ref=f85e3]:
+    - generic [ref=f85e4]:
+      - generic [ref=f85e5]: HR
+      - generic [ref=f85e6]: پورتال جذب و استخدام
+  - main [ref=f85e8]:
+    - generic [ref=f85e10]:
+      - heading "به پورتال جذب و استخدام خوش آمدید" [level=2] [ref=f85e11]
+      - generic [ref=f85e12]: یکی از دو بخش زیر را بر اساس هدفتان انتخاب کنید.
+    - generic [ref=f85e13]:
+      - generic [ref=f85e14]:
+        - generic [ref=f85e18]: بدون نیاز به ورود
+        - heading "مراجعه‌کننده هستم" [level=3] [ref=f85e19]
+        - paragraph [ref=f85e20]: می‌خواهم اطلاعات و رزومه‌ام را برای یک فرصت شغلی ثبت کنم، یا وضعیت درخواستی را که قبلاً ثبت کرده‌ام پیگیری کنم.
+        - generic [ref=f85e21]:
+          - link "ثبت درخواست همکاری" [ref=f85e22] [cursor=pointer]:
+            - /url: /apply
+          - link "پیگیری وضعیت درخواست" [ref=f85e23] [cursor=pointer]:
+            - /url: /track
+      - generic [ref=f85e24]:
+        - generic [ref=f85e29]: نیازمند ورود کارمند
+        - heading "کارمند سازمان هستم" [level=3] [ref=f85e30]
+        - paragraph [ref=f85e31]: برای ثبت و مدیریت آگهی‌های شغلی، بررسی پرونده‌های متقاضیان، خروجی‌گیری گزارش و مدیریت کاربران وارد سامانهٔ کارکنان شوید.
+        - link "ورود به سامانه" [ref=f85e33] [cursor=pointer]:
+          - /url: /staff/login
+  - contentinfo [ref=f85e34]: پورتال جذب و استخدام

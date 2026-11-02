@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: HR
+      - generic [ref=e6]: پورتال جذب و استخدام
+  - main [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - heading "تأیید شماره موبایل" [level=2] [ref=e11]
+          - generic [ref=e12]: پیش از تکمیل فرم، مالکیت شماره موبایل شما تأیید می‌شود.
+        - generic [ref=e13]: مرحله ۱
+      - generic [ref=e18]:
+        - generic [ref=e19]: شماره موبایل *
+        - textbox "شماره موبایل *" [ref=e20]:
+          - /placeholder: 09xxxxxxxxx
+        - text: "*"
+      - button "ارسال کد تأیید" [ref=e22] [cursor=pointer]
+    - text: "* * * * * * * *"
+  - contentinfo [ref=e23]: پورتال جذب و استخدام
