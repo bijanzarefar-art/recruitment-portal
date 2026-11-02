@@ -39,6 +39,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # gunicorn (نه manage.py runserver) اجرا می‌شود؛ django.contrib.staticfiles فقط زیر
+    # runserver و فقط با DEBUG=True خودکار سرو می‌کند — طبق مستندات رسمی. بدون WhiteNoise،
+    # /static/* همیشه ۴۰۴ می‌گرفت، صرف‌نظر از DEBUG (باگ واقعی کشف‌شده: UI بدون CSS/JS لود می‌شد).
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "apps.accounts.middleware.StaffSessionIdleTimeoutMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -96,6 +100,16 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# قالب‌ها همیشه مسیر خام /static/... را می‌نویسند (هیچ‌کجا از تگ {% static %} استفاده نشده)، پس
+# از CompressedManifestStaticFilesStorage استفاده نمی‌کنیم — آن نام فایل‌ها را با هش محتوا عوض
+# می‌کند و لینک‌های خام را می‌شکند. فقط فشرده‌سازی، بدون تغییر نام.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
+# WHITENOISE_USE_FINDERS پیش‌فرضش settings.DEBUG است — یعنی در dev مستقیم از static/ سرو
+# می‌کند (نیازی به collectstatic نیست)، و در prod باید collectstatic اجرا شده باشد.
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
