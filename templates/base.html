@@ -11,7 +11,7 @@
 <div class="app-shell">
     <header class="topbar {% if '/staff/' in request.path %}topbar--staff{% elif request.path == '/' %}topbar--home{% else %}topbar--public{% endif %}">
         <div class="topbar-inner">
-            <div class="brand">
+            <a href="/" class="brand">
                 <div class="brand-badge">MP</div>
                 <div class="brand-text">
                     <span>میلان پارس</span>
@@ -23,7 +23,7 @@
                     <span class="brand-sub">پورتال جذب و استخدام</span>
                     {% endif %}
                 </div>
-            </div>
+            </a>
             {% block nav %}{% endblock %}
         </div>
     </header>

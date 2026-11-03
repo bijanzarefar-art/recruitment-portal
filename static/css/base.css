@@ -89,6 +89,21 @@
   opacity:.55;animation:spin .7s linear infinite;
 }
 
+/* نشان موفقیت خودترسیم: دایره و تیک با SVG stroke-dashoffset کشیده می‌شوند — همان حس یک
+   GIF تبریک، بدون هیچ فایل تصویری؛ کل این بلوک چند صد بایت است. */
+@keyframes drawRing{to{stroke-dashoffset:0}}
+@keyframes drawCheck{to{stroke-dashoffset:0}}
+@keyframes popScale{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+.success-mark{width:64px;height:64px;margin:0 auto 16px;color:var(--positive);animation:popScale .4s ease both}
+.success-mark svg{width:100%;height:100%}
+.success-ring{stroke-dasharray:151;stroke-dashoffset:151;animation:drawRing .5s ease forwards .15s}
+.success-check{stroke-dasharray:34;stroke-dashoffset:34;animation:drawCheck .3s ease forwards .6s}
+
+/* نفس‌کشیدن ظریف آیکون‌های دروازهٔ ورودی — صفحهٔ اصلی اولین برخورد است، نباید کاملاً ایستا باشد. */
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.gateway-icon svg{animation:breathe 2.8s ease-in-out infinite}
+.gateway-card--staff .gateway-icon svg{animation-delay:.4s}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{
     animation-duration:.001ms!important;animation-iteration-count:1!important;
@@ -137,7 +152,8 @@ a{color:var(--accent)}
 .topbar--public{border-top-color:var(--accent)}
 .topbar--staff{border-top-color:var(--accent-2)}
 .topbar--home{border-top-color:var(--accent)}
-.brand{display:flex;gap:12px;align-items:center}
+.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;transition:opacity .12s ease}
+.brand:hover{opacity:.85}
 .brand-badge{
   width:36px;height:36px;border-radius:11px;background:var(--accent);
   display:grid;place-items:center;color:#fff;font-size:14px;font-weight:800;flex-shrink:0;
