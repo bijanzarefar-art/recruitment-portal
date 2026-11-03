@@ -13,5 +13,6 @@ urlpatterns = [
     path("staff/exports", views.staff_export_page, name="staff-export-page"),
     path("staff/jobs", views.staff_jobs_page, name="staff-jobs-page"),
     path("staff/pipeline", views.staff_pipeline_page, name="staff-pipeline-page"),
+    path("staff/account", views.staff_account_page, name="staff-account-page"),
     path("staff/users", views.staff_users_page, name="staff-users-page"),
 ]

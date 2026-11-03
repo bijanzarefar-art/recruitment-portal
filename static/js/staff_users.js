@@ -70,6 +70,15 @@ async function loadUsers() {
         });
         actionsTd.appendChild(roleBtn);
 
+        // بازنشانی رمز — برای حسابی که صاحبش رمز را فراموش کرده. با کلیک روی دکمه، یک
+        // فیلد رمز همان‌جا باز می‌شود؛ رمز تازه هرگز در فهرست نمایش داده نمی‌شود.
+        const passBtn = document.createElement("button");
+        passBtn.type = "button";
+        passBtn.className = "btn ghost btn-sm";
+        passBtn.textContent = "تغییر رمز";
+        passBtn.addEventListener("click", () => openPasswordReset(actionsTd, passBtn, user));
+        actionsTd.appendChild(passBtn);
+
         const toggleBtn = document.createElement("button");
         toggleBtn.type = "button";
         toggleBtn.className = `btn btn-sm ${user.is_active ? "ghost" : "primary"}`;
@@ -81,6 +90,81 @@ async function loadUsers() {
         rows.appendChild(tr);
     });
     applyStagger(rows, "anim-in-row");
+}
+
+function openPasswordReset(actionsTd, passBtn, user) {
+    const input = document.createElement("input");
+    input.type = "password";
+    input.className = "input input-inline";
+    input.placeholder = "رمز جدید";
+    input.autocomplete = "new-password";
+    input.minLength = 8;
+
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "btn primary btn-sm";
+    saveBtn.textContent = "ذخیره";
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.type = "button";
+    cancelBtn.className = "btn ghost btn-sm";
+    cancelBtn.textContent = "انصراف";
+
+    const restore = () => {
+        input.remove();
+        saveBtn.remove();
+        cancelBtn.remove();
+        passBtn.hidden = false;
+    };
+
+    cancelBtn.addEventListener("click", restore);
+
+    const msg = document.createElement("span");
+    msg.className = "inline-msg";
+
+    saveBtn.addEventListener("click", async () => {
+        msg.textContent = "";
+        msg.classList.remove("inline-msg--error");
+        if (input.value.length < 8) {
+            msg.textContent = "رمز جدید باید حداقل ۸ کاراکتر باشد.";
+            msg.classList.add("inline-msg--error");
+            return;
+        }
+        saveBtn.disabled = true;
+        const resp = await apiFetch(`/api/v1/staff/users/${user.id}/password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ new_password: input.value }),
+        });
+        saveBtn.disabled = false;
+        const body = await resp.json().catch(() => ({}));
+        if (!resp.ok) {
+            msg.textContent = body.message || "تغییر رمز ناموفق بود.";
+            msg.classList.add("inline-msg--error");
+            return;
+        }
+        restore();
+        flashNotice(body.message || "رمز عبور بازنشانی شد.");
+    });
+
+    passBtn.hidden = true;
+    actionsTd.insertBefore(input, passBtn);
+    actionsTd.insertBefore(saveBtn, passBtn);
+    actionsTd.insertBefore(cancelBtn, passBtn);
+    actionsTd.insertBefore(msg, passBtn);
+    input.focus();
+}
+
+// پیام موفقیت کوتاه بالای جدول — بدون alert (که در برخی محیط‌ها مسدود و همیشه ناخوشایند است).
+function flashNotice(text) {
+    const el = document.getElementById("users-flash");
+    if (!el) return;
+    el.textContent = text;
+    el.hidden = false;
+    clearTimeout(flashNotice._t);
+    flashNotice._t = setTimeout(() => {
+        el.hidden = true;
+    }, 4000);
 }
 
 async function updateUser(userId, payload) {

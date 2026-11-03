@@ -44,6 +44,13 @@ def staff_jobs_page(request):
 
 
 @login_required(login_url=STAFF_LOGIN_URL)
+def staff_account_page(request):
+    """صفحهٔ «حساب من»: هر کارمند رمز خودش را عوض می‌کند (رمز فعلی الزامی است)."""
+    get_token(request)
+    return render(request, "staff/account.html")
+
+
+@login_required(login_url=STAFF_LOGIN_URL)
 def staff_pipeline_page(request):
     """
     صفحه گردش جذب (Kanban): پرونده‌ها بر اساس وضعیت دسته‌بندی می‌شوند و قواعد گذار/نقش کنار

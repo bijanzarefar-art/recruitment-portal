@@ -161,6 +161,82 @@ def create_staff_account(*, created_by: StaffUser, username: str, password: str,
     return user
 
 
+class OldPasswordIncorrect(Exception):
+    pass
+
+
+class PasswordNotAllowed(Exception):
+    """رمز تازه از اعتبارسنجی‌های Django رد شده است (کوتاه، رایج، شبیه نام کاربری…)."""
+
+    def __init__(self, messages: list[str]):
+        self.messages = messages
+        super().__init__("; ".join(messages))
+
+
+def _validate_new_password(user: StaffUser, new_password: str) -> None:
+    from django.contrib.auth.password_validation import validate_password
+    from django.core.exceptions import ValidationError
+
+    try:
+        validate_password(new_password, user=user)
+    except ValidationError as exc:
+        raise PasswordNotAllowed(list(exc.messages)) from exc
+
+
+@transaction.atomic
+def change_own_password(*, user: StaffUser, old_password: str, new_password: str) -> StaffUser:
+    """
+    تغییر رمز توسط خودِ کارمند (صفحهٔ «حساب من»). رمز فعلی الزامی است تا نشستِ بازشده روی
+    دستگاهی که در اختیار کاربر نیست نتواند رمز را عوض کند و صاحب حساب را بیرون بیندازد.
+
+    نکتهٔ Django: `set_password()` شناسهٔ نشست (`session_auth_hash`) را عوض می‌کند تا نشست‌های
+    دیگر روی دستگاه‌های دیگر باطل شوند. برای همین، نشستِ فعلی (همین کاربری که الان رمز را
+    عوض کرد) با `update_session_auth_hash` در ویو تازه می‌شود؛ وگرنه کاربر بلافاصله بیرون
+    انداخته می‌شود — که یک نقص تجربهٔ کاربری واقعی بود (کشف‌شده در تست مرورگری).
+    """
+    if not user.check_password(old_password):
+        raise OldPasswordIncorrect()
+
+    _validate_new_password(user, new_password)
+
+    user.set_password(new_password)
+    user.save(update_fields=["password"])
+    record_event(
+        action="staff_password_changed",
+        staff_actor=user,
+        object_type="StaffUser",
+        object_id=str(user.id),
+        metadata={"by": "self"},
+    )
+    return user
+
+
+@transaction.atomic
+def admin_reset_password(*, changed_by: StaffUser, target_id, new_password: str) -> StaffUser:
+    """
+    بازنشانی رمز یک کارمند توسط مدیر HR — بدون دانستن رمز قبلی (برای حساب‌هایی که رمزشان
+    فراموش شده). نقش و وضعیت فعال‌بودن تغییر نمی‌کند؛ فقط رمز.
+    """
+    if changed_by.role != StaffUser.Role.HR_MANAGER:
+        from django.core.exceptions import PermissionDenied
+
+        raise PermissionDenied("فقط مدیر HR می‌تواند رمز دیگران را بازنشانی کند.")
+
+    target = StaffUser.objects.select_for_update().get(id=target_id)
+    _validate_new_password(target, new_password)
+
+    target.set_password(new_password)
+    target.save(update_fields=["password"])
+    record_event(
+        action="staff_password_reset",
+        staff_actor=changed_by,
+        object_type="StaffUser",
+        object_id=str(target.id),
+        metadata={"by": "hr_manager"},
+    )
+    return target
+
+
 def _other_active_hr_manager_exists(target: StaffUser) -> bool:
     return (
         StaffUser.objects.select_for_update()

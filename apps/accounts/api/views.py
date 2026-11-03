@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -8,18 +8,24 @@ from rest_framework.views import APIView
 from apps.audit.services import record_event
 
 from ..models import StaffUser
-from ..permissions import IsHrManager
+from ..permissions import IsHrManager, IsStaff
 from ..services import (
     CannotDeactivateSelf,
     DuplicateUsername,
     LastActiveHrManager,
+    OldPasswordIncorrect,
+    PasswordNotAllowed,
     StaffLoginRateLimitExceeded,
+    admin_reset_password,
+    change_own_password,
     change_staff_role,
     create_staff_account,
     enforce_staff_login_rate_limit,
     set_staff_active,
 )
 from .serializers import (
+    AdminResetPasswordSerializer,
+    ChangeOwnPasswordSerializer,
     StaffAccountCreateSerializer,
     StaffAccountSerializer,
     StaffAccountUpdateSerializer,
@@ -144,3 +150,65 @@ class StaffUserDetailView(APIView):
 
         updated = StaffUser.objects.get(id=pk)
         return Response(StaffAccountSerializer(updated).data)
+
+
+class ChangeOwnPasswordView(APIView):
+    """
+    POST /api/v1/auth/staff/change-password — هر کارمند رمز خودش را عوض می‌کند.
+    رمز فعلی الزامی است؛ پس کسی که فقط یک نشست باز دسترسی دارد نمی‌تواند رمز را عوض کند.
+    بعد از تغییر، نشست فعلی معتبر می‌ماند (کاربر لازم نیست دوباره وارد شود).
+    """
+
+    permission_classes = [IsStaff]
+
+    def post(self, request):
+        serializer = ChangeOwnPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            change_own_password(
+                user=request.user,
+                old_password=serializer.validated_data["old_password"],
+                new_password=serializer.validated_data["new_password"],
+            )
+            # set_password شناسهٔ نشست را عوض می‌کند؛ بدون این خط، تغییر رمز کاربر را
+            # بلافاصله بیرون می‌اندازد و باید دوباره وارد شود (نقص تجربهٔ کاربری واقعی).
+            update_session_auth_hash(request, request.user)
+        except OldPasswordIncorrect:
+            return Response(
+                {"code": "forbidden", "message": "رمز فعلی نادرست است.", "field_errors": None, "request_id": ""},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except PasswordNotAllowed as exc:
+            return Response(
+                {"code": "validation_error", "message": " ".join(exc.messages), "field_errors": None, "request_id": ""},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response({"message": "رمز عبور با موفقیت تغییر کرد."})
+
+
+class AdminResetPasswordView(APIView):
+    """
+    POST /api/v1/staff/users/{id}/password — بازنشانی رمز یک کارمند توسط مدیر HR.
+    برای حساب‌هایی که صاحبش رمز را فراموش کرده است؛ نقش و وضعیت فعال‌بودن دست نمی‌خورد.
+    """
+
+    permission_classes = [IsHrManager]
+
+    def post(self, request, pk):
+        target = get_object_or_404(StaffUser, id=pk)
+        serializer = AdminResetPasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            admin_reset_password(
+                changed_by=request.user, target_id=pk, new_password=serializer.validated_data["new_password"]
+            )
+        except PasswordNotAllowed as exc:
+            return Response(
+                {"code": "validation_error", "message": " ".join(exc.messages), "field_errors": None, "request_id": ""},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response({"message": f"رمز عبور «{target.username}» بازنشانی شد."})

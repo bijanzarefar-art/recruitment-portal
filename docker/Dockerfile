@@ -14,7 +14,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements/ requirements/
-RUN pip install --no-cache-dir -r requirements/base.txt gunicorn==23.0.0
+# تایم‌اوت و تلاش دوباره صریح: روی شبکه‌های کند (مثل سرورهای داخلی) مقدار پیش‌فرض ۱۵ ثانیه‌ای
+# pip برای بسته‌های بزرگ (psycopg-binary حدود ۵ مگابایت) کافی نیست و بیلد بی‌دلیل شکست می‌خورد.
+RUN pip install --no-cache-dir \
+    --timeout 120 --retries 10 \
+    -r requirements/base.txt gunicorn==23.0.0
 
 COPY . .
 

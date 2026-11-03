@@ -169,9 +169,23 @@ a{color:var(--accent)}
 .topbar-nav .btn{padding:8px 14px;font-size:13px}
 .topbar-nav .btn.active{background:var(--accent-soft);color:var(--accent-ink)}
 .nav-divider{width:1px;height:20px;background:var(--border-strong);margin:0 2px}
-.user-chip{display:flex;flex-direction:column;align-items:flex-end;line-height:1.3;padding:0 4px}
+.user-chip{
+  display:flex;flex-direction:column;align-items:flex-end;line-height:1.3;padding:4px 8px;
+  border-radius:8px;text-decoration:none;color:inherit;
+  transition:background .12s ease;
+}
+.user-chip:hover{background:var(--surface-sunken)}
+.user-chip.active{background:var(--accent-soft)}
 .user-chip strong{font-size:13px;color:var(--ink)}
 .user-chip .muted{font-size:11px}
+
+.inline-msg{font-size:12px;color:var(--fg-soft);white-space:nowrap}
+.inline-msg--error{color:var(--danger);font-weight:700}
+
+/* صفحهٔ حساب من */
+.user-summary{display:flex;align-items:center;gap:10px;padding:12px 0 18px;
+  border-bottom:1px solid var(--border);margin-bottom:20px}
+.user-summary-name{font-size:17px;font-weight:800}
 /* تمام‌عرض: پیش‌تر 760px بود و روی نمایشگرهای عریض یک ستون باریک وسط صفحه می‌ماند. */
 .container{max-width:1440px;margin:0 auto;padding:40px 28px 72px;width:100%;flex:1}
 .footer{color:var(--ink-faint);text-align:center;padding:24px 20px;font-size:12.5px;flex-shrink:0}

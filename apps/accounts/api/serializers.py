@@ -35,3 +35,16 @@ class StaffAccountUpdateSerializer(serializers.Serializer):
         if not attrs:
             raise serializers.ValidationError("حداقل یکی از role یا is_active باید ارسال شود.")
         return attrs
+
+
+class ChangeOwnPasswordSerializer(serializers.Serializer):
+    """تغییر رمز توسط خودِ کارمند — رمز فعلی برای احراز هویت دوباره الزامی است."""
+
+    old_password = serializers.CharField(trim_whitespace=False)
+    new_password = serializers.CharField(trim_whitespace=False, min_length=8)
+
+
+class AdminResetPasswordSerializer(serializers.Serializer):
+    """بازنشانی رمز یک کارمند توسط مدیر HR — بدون نیاز به رمز قبلی."""
+
+    new_password = serializers.CharField(trim_whitespace=False, min_length=8)

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}حساب من{% endblock %}
+{% block nav %}{% include "staff/_nav.html" %}{% endblock %}
+{% block content %}
+
+<section class="card" style="max-width:520px;margin:0 auto">
+    <div class="section-title">
+        <div>
+            <h2>حساب من</h2>
+            <div class="muted" style="margin-top:6px">تغییر رمز عبور حساب خودتان.</div>
+        </div>
+    </div>
+
+    <div class="user-summary">
+        <span class="user-summary-name">{{ request.user.username }}</span>
+        <span class="status-badge">{{ request.user.get_role_display }}</span>
+    </div>
+
+    <form id="change-password-form">
+        <div class="form-group">
+            <label for="old-password" class="required">رمز عبور فعلی</label>
+            <input type="password" id="old-password" class="input" autocomplete="current-password" required>
+        </div>
+        <div class="form-group">
+            <label for="new-password" class="required">رمز عبور جدید</label>
+            <input type="password" id="new-password" class="input" autocomplete="new-password" minlength="8" required>
+            <div class="help">حداقل ۸ کاراکتر؛ رمزهای رایج و شبیه به نام کاربری پذیرفته نمی‌شوند.</div>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password" class="required">تکرار رمز عبور جدید</label></label>
+            <input type="password" id="confirm-password" class="input" autocomplete="new-password" required>
+        </div>
+
+        <div class="field-error" data-error-for="password" role="alert" tabindex="-1"></div>
+        <div class="notice success" id="password-success" role="status" hidden></div>
+
+        <div class="actions-row" style="margin-top:18px">
+            <button type="submit" id="change-password-submit" class="btn primary">تغییر رمز عبور</button>
+        </div>
+    </form>
+</section>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/staff_account.js"></script>
+{% endblock %}
