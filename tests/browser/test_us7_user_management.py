@@ -44,11 +44,12 @@ def test_hr_manager_creates_account_new_user_logs_in_then_gets_deactivated(
     new_user_page = new_user_context.new_page()
     _login(new_user_page, live_server, "us7_browser_recruiter", "AnotherStr0ngPass!")
 
-    # مدیر HR اکنون همان حساب را غیرفعال می‌کند.
+    # مدیر HR اکنون همان حساب را غیرفعال می‌کند. دکمهٔ کوچک ردیف دقیقاً «غیرفعال» است
+    # (برچسب «غیرفعال‌سازی» به «غیرفعال» کوتاه شد تا ردیف جدول دو خطی نشود).
     page.goto(f"{live_server.url}/staff/users")
     row = page.locator("#users-rows tr", has_text="us7_browser_recruiter")
-    row.get_by_role("button", name="غیرفعال‌سازی").click()
-    expect(row).to_contain_text("غیرفعال")
+    row.get_by_role("button", name="غیرفعال", exact=True).click()
+    expect(row.locator(".badge-pill")).to_have_text("غیرفعال")
 
     # درخواست بعدی همان حساب (بدون خروج/ورود دوباره) باید رد شود.
     new_user_page.goto(f"{live_server.url}/staff/dashboard")

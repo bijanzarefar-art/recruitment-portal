@@ -26,37 +26,57 @@ async function loadUsers() {
     users.forEach((user) => {
         const tr = document.createElement("tr");
 
-        const usernameTd = document.createElement("td");
-        usernameTd.textContent = user.username;
+        // نام کاربری همراه با چیپ وضعیت در همان سلول — تا ستون «وضعیت» جدا لازم نباشد.
+        const userTd = document.createElement("td");
+        const nameRow = document.createElement("div");
+        nameRow.className = "user-cell";
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "user-cell-name";
+        nameSpan.textContent = user.username;
+        const statusChip = document.createElement("span");
+        statusChip.className = `badge-pill ${user.is_active ? "badge-pill--on" : "badge-pill--off"}`;
+        statusChip.textContent = user.is_active ? "فعال" : "غیرفعال";
+        nameRow.appendChild(nameSpan);
+        nameRow.appendChild(statusChip);
+        userTd.appendChild(nameRow);
+        tr.appendChild(userTd);
+
+        // نقش همیشه در جدول نمایش داده می‌شود، ولی ویرایشش فقط با کلیک روی «تغییر نقش»
+        // باز می‌شود — به‌جای یک select همیشه‌روشن که ارتفاع هر ردیف را دو برابر می‌کرد.
         const roleTd = document.createElement("td");
         roleTd.textContent = ROLE_LABELS[user.role] || user.role;
-        const statusTd = document.createElement("td");
-        statusTd.textContent = user.is_active ? "فعال" : "غیرفعال";
+        tr.appendChild(roleTd);
 
         const actionsTd = document.createElement("td");
+        actionsTd.className = "actions-cell";
 
-        const roleSelect = document.createElement("select");
-        ["recruiter", "hiring_manager", "hr_manager"].forEach((role) => {
-            const option = document.createElement("option");
-            option.value = role;
-            option.textContent = ROLE_LABELS[role];
-            if (role === user.role) option.selected = true;
-            roleSelect.appendChild(option);
+        const roleBtn = document.createElement("button");
+        roleBtn.type = "button";
+        roleBtn.className = "btn ghost btn-sm";
+        roleBtn.textContent = "تغییر نقش";
+        roleBtn.addEventListener("click", () => {
+            const roleSelect = document.createElement("select");
+            roleSelect.className = "input input-inline";
+            ["recruiter", "hiring_manager", "hr_manager"].forEach((role) => {
+                const option = document.createElement("option");
+                option.value = role;
+                option.textContent = ROLE_LABELS[role];
+                if (role === user.role) option.selected = true;
+                roleSelect.appendChild(option);
+            });
+            roleSelect.addEventListener("change", () => updateUser(user.id, { role: roleSelect.value }));
+            roleBtn.replaceWith(roleSelect);
+            roleSelect.focus();
         });
-        roleSelect.addEventListener("change", () => updateUser(user.id, { role: roleSelect.value }));
-        actionsTd.appendChild(roleSelect);
+        actionsTd.appendChild(roleBtn);
 
         const toggleBtn = document.createElement("button");
         toggleBtn.type = "button";
-        toggleBtn.className = "btn ghost";
-        toggleBtn.style.marginRight = "8px";
-        toggleBtn.textContent = user.is_active ? "غیرفعال‌سازی" : "فعال‌سازی";
+        toggleBtn.className = `btn btn-sm ${user.is_active ? "ghost" : "primary"}`;
+        toggleBtn.textContent = user.is_active ? "غیرفعال" : "فعال";
         toggleBtn.addEventListener("click", () => updateUser(user.id, { is_active: !user.is_active }));
         actionsTd.appendChild(toggleBtn);
 
-        tr.appendChild(usernameTd);
-        tr.appendChild(roleTd);
-        tr.appendChild(statusTd);
         tr.appendChild(actionsTd);
         rows.appendChild(tr);
     });

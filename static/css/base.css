@@ -316,6 +316,21 @@ textarea{min-height:88px;resize:vertical;line-height:1.7}
 .table th{background:var(--surface-sunken);color:var(--ink-soft);font-weight:700;font-size:12.5px;position:sticky;top:0}
 .table td:last-child,.table th:last-child{width:1%;white-space:nowrap}
 
+/* ---------- ردیف‌های فشردهٔ فهرست کارمندان ---------- */
+/* ستون عملیات دو دکمهٔ کوچک را کنار هم نگه می‌دارد؛ به‌جای select تمام‌عرض در هر ردیف (که
+   ارتفاع ردیف را دو برابر می‌کرد) نقش فقط با کلیک روی «تغییر نقش» قابل ویرایش می‌شود. */
+.user-cell{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.user-cell-name{font-weight:700}
+.actions-cell{display:flex;gap:6px;justify-content:flex-end}
+.btn-sm{min-height:32px;padding:5px 12px;font-size:12.5px;border-radius:8px}
+.btn-sm.primary{box-shadow:none}
+.badge-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;line-height:1.7}
+.badge-pill::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge-pill--on{background:var(--positive-soft);color:var(--positive-ink)}
+.badge-pill--off{background:var(--surface-sunken);color:var(--ink-faint)}
+/* select داخل سلول جدول باید به اندازهٔ محتوایش باشد، نه تمام‌عرض (قاعدهٔ کلی select). */
+.input-inline{width:auto;min-width:150px;padding:5px 10px;font-size:12.5px;min-height:32px}
+
 /* ---------- نوار ابزار داشبورد ---------- */
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
 .toolbar .input,.toolbar select{max-width:230px}
