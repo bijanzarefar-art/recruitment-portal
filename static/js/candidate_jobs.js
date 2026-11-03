@@ -1,6 +1,7 @@
 // فهرست عمومی موقعیت‌های شغلی باز (بدون ورود) — فقط از GET /api/v1/jobs خوانده می‌شود
 // (PublicJobListView، AllowAny)؛ همیشه فقط وضعیت open را برمی‌گرداند (FR-001, FR-002).
 import { apiFetch } from "./csrf.js";
+import { applyStagger } from "./motion.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const loadingEl = document.getElementById("jobs-loading");
@@ -83,4 +84,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         listEl.appendChild(card);
     });
+    applyStagger(listEl, "card");
 });

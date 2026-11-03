@@ -3,6 +3,7 @@
 // دقیقاً همان apps.applications.services.get_applications_queryset سمت سرور است — این صفحه
 // هیچ فیلتر/کنترل دسترسی اضافه‌ای روی داده اعمال نمی‌کند.
 import { apiFetch } from "./csrf.js";
+import { applyStagger } from "./motion.js";
 
 const COLUMNS = [
     { status: "new", label: "در انتظار غربالگری اولیه", badgeClass: "status-new" },
@@ -87,11 +88,13 @@ async function loadBoard() {
                 list.appendChild(empty);
             } else {
                 items.forEach((item) => list.appendChild(buildCard(item)));
+                applyStagger(list);
             }
             column.appendChild(list);
 
             boardEl.appendChild(column);
         });
+        applyStagger(boardEl, "anim-in-row");
     } catch (err) {
         loadingEl.hidden = true;
         errorEl.hidden = false;

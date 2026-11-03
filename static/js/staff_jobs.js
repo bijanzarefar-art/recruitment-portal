@@ -1,6 +1,7 @@
 // مدیریت موقعیت شغلی (T061)؛ مجوز واقعی فقط در سرور (`IsHrManager`) بررسی می‌شود.
 // چرخه وضعیت (FR-039a): draft → open → closed → open؛ ورود به open = بازگشایی/فعال‌سازی.
 import { apiFetch } from "./csrf.js";
+import { applyStagger } from "./motion.js";
 
 const STATUS_LABELS = { draft: "پیش‌نویس", open: "باز", closed: "بسته" };
 
@@ -63,6 +64,7 @@ async function loadJobs() {
         tr.appendChild(actionsTd);
         rows.appendChild(tr);
     });
+    applyStagger(rows, "anim-in-row");
 }
 
 async function changeStatus(jobId, status) {

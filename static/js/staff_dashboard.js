@@ -1,5 +1,6 @@
 // داشبورد HR: فهرست، فیلتر، آمار — همه از API واقعی، بدون localStorage/داده دمو (T045).
 import { apiFetch } from "./csrf.js";
+import { applyStagger } from "./motion.js";
 
 const STATUS_LABELS = {
     new: "در انتظار غربالگری اولیه",
@@ -89,6 +90,7 @@ async function loadResults() {
             tr.appendChild(actionTd);
             rows.appendChild(tr);
         });
+        applyStagger(rows, "anim-in-row");
         setState({});
         await loadMetrics(query);
     } catch (err) {

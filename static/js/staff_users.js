@@ -1,5 +1,6 @@
 // مدیریت کاربران از پنل ادمین (US7)؛ مجوز واقعی فقط در سرور (`IsHrManager`) بررسی می‌شود.
 import { apiFetch } from "./csrf.js";
+import { applyStagger } from "./motion.js";
 
 const ROLE_LABELS = {
     recruiter: "کارشناس جذب",
@@ -59,6 +60,7 @@ async function loadUsers() {
         tr.appendChild(actionsTd);
         rows.appendChild(tr);
     });
+    applyStagger(rows, "anim-in-row");
 }
 
 async function updateUser(userId, payload) {

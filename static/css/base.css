@@ -69,6 +69,33 @@
    پیش‌فرض مرورگر [hidden] بالاتر است). این قاعده همیشه باید آخرین/قوی‌ترین باشد. */
 [hidden]{display:none!important}
 
+/* ---------- حرکت: ورود محتوا، بازخورد بارگذاری، حالت قابل‌کلیک ---------- */
+/* هر حرکتی اینجا معنادار است، نه تزئینی: ورود = «این محتوا تازه رسید»، اسپینر = «در حال
+   انتظار»، لرزش کارت‌های قابل‌کلیک = «این قابل کلیک است». هیچ‌کدام روی ابعاد لایوت
+   (width/height) انیمیت نمی‌شوند، فقط opacity/transform/box-shadow. */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.anim-in{animation:fadeInUp .32s ease both}
+.anim-in-row{animation:fadeIn .28s ease both}
+
+/* اسپینر بارگذاری: به‌جای ویرایش هر قالب، با انتخابگر صفت روی همان الگوی هماهنگ
+   id="...loading..." که همهٔ صفحات از قبل دارند اعمال می‌شود — بدون تغییر HTML. */
+.notice[id*="loading"]{display:flex;align-items:center;gap:10px}
+.notice[id*="loading"]::before{
+  content:"";width:15px;height:15px;flex-shrink:0;border-radius:50%;
+  border:2px solid currentColor;border-inline-start-color:transparent;
+  opacity:.55;animation:spin .7s linear infinite;
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important;
+  }
+}
+
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
@@ -137,6 +164,7 @@ a{color:var(--accent)}
 .card{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
   box-shadow:var(--shadow-sm);padding:26px;margin-bottom:18px;
+  animation:fadeInUp .32s ease both;
 }
 .login-card{max-width:400px;margin:48px auto 0;padding:32px 28px}
 .section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
@@ -155,7 +183,10 @@ a{color:var(--accent)}
   line-height:1.3;text-decoration:none;text-align:center;white-space:nowrap;
 }
 .btn:hover{opacity:.9}
-.btn:active{transform:translateY(1px)}
+/* بازخورد فشردن: کمی بیشتر از قبل، تا کلیک روی دکمه‌های صفحه‌های طولانی هم حس شود. */
+.btn:active{transform:translateY(1px) scale(.985)}
+.btn.primary:hover{transform:translateY(-1px)}
+.btn.primary:active{transform:translateY(0) scale(.985)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .btn.primary{background:var(--accent);color:#fff;box-shadow:0 8px 18px -10px rgba(30,34,168,.5)}
 .btn.primary:hover{background:var(--accent-ink);opacity:1}
@@ -310,9 +341,12 @@ textarea{min-height:88px;resize:vertical;line-height:1.7}
 .pipeline-empty{font-size:12.5px;padding:10px 2px}
 .pipeline-card{
   display:block;background:var(--surface-sunken);border:1px solid var(--border);border-radius:var(--radius-sm);
-  padding:10px 12px;text-decoration:none;color:inherit;transition:border-color .12s ease,background .12s ease;
+  padding:10px 12px;text-decoration:none;color:inherit;
+  transition:border-color .12s ease,background .12s ease,transform .12s ease,box-shadow .12s ease;
 }
-.pipeline-card:hover{border-color:var(--border-strong);background:var(--surface)}
+/* کل کارت یک لینک است (نه فقط دکمهٔ داخلش)، پس بالاآمدن در هاور درست است — تأیید می‌کند
+   که کل سطح قابل‌کلیک است، نه فقط تزئین. */
+.pipeline-card:hover{border-color:var(--border-strong);background:var(--surface);transform:translateY(-2px);box-shadow:var(--shadow-lift)}
 .pipeline-card-name{font-weight:700;font-size:13.5px;color:var(--ink)}
 .pipeline-card-job{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
 .pipeline-card-meta{font-size:11.5px;color:var(--ink-faint);margin-top:5px}
