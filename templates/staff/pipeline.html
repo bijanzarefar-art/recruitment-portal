@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}فرآیند جذب{% endblock %}
+{% block nav %}{% include "staff/_nav.html" %}{% endblock %}
+{% block content %}
+
+<div class="section-title">
+    <div>
+        <h2>فرآیند جذب</h2>
+        <div class="muted" style="margin-top:6px">پرونده‌ها بر اساس مرحلهٔ بررسی، در دامنهٔ مجوز شما.</div>
+    </div>
+</div>
+
+<section class="card" id="flow-legend">
+    <div class="section-title" style="margin-bottom:14px">
+        <h3 style="margin:0;padding:0;border:none">گردش تأییدات بر اساس سطح دسترسی</h3>
+    </div>
+    <div class="flow-steps">
+        <div class="flow-step">
+            <span class="status-badge status-new">در انتظار غربالگری</span>
+            <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+            <span class="status-badge status-phone">تماس اولیه</span>
+            <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+            <span class="status-badge status-interview">مصاحبه</span>
+            <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+            <span class="status-badge status-approved">تأیید اولیه</span>
+            <div class="flow-arrow">→</div>
+        </div>
+        <div class="flow-step">
+            <span class="status-badge status-hired">استخدام</span>
+        </div>
+    </div>
+    <div class="flow-rules">
+        <div class="flow-rule">
+            <span class="role-chip role-chip--allowed">کارشناس جذب، مدیر HR</span>
+            <span>هر گذار عادی بین مراحل بالا را می‌توانند ثبت کنند؛ رد در هر مرحله هم با همین دو نقش و با ذکر دلیل ممکن است.</span>
+        </div>
+        <div class="flow-rule">
+            <span class="role-chip role-chip--blocked">مدیر استخدام</span>
+            <span>فقط پرونده‌های ارجاع‌شده به خودش را می‌بیند؛ هرگز نمی‌تواند وضعیت را تغییر دهد (فقط مشاهده و یادداشت).</span>
+        </div>
+        <div class="flow-rule">
+            <span class="role-chip role-chip--restricted">فقط مدیر HR</span>
+            <span>بازگشایی/اصلاح یک وضعیت نهایی («استخدام شد» یا «عدم ادامه فرآیند») — همیشه با ذکر دلیل اجباری و ثبت به‌عنوان تغییر استثنایی.</span>
+        </div>
+    </div>
+</section>
+
+<div id="pipeline-loading" class="notice info">در حال بارگذاری...</div>
+<div id="pipeline-error" class="notice warn" hidden></div>
+
+<div id="pipeline-board" class="pipeline-board" hidden></div>
+
+{% endblock %}
+{% block extra_scripts %}
+<script type="module" src="/static/js/staff_pipeline.js"></script>
+{% endblock %}

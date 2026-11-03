@@ -44,6 +44,18 @@ def staff_jobs_page(request):
 
 
 @login_required(login_url=STAFF_LOGIN_URL)
+def staff_pipeline_page(request):
+    """
+    صفحه گردش جذب (Kanban): پرونده‌ها بر اساس وضعیت دسته‌بندی می‌شوند و قواعد گذار/نقش کنار
+    هر ستون نمایش داده می‌شود. فهرست واقعی از همان `GET /api/v1/staff/applications` خوانده
+    می‌شود (همان دامنهٔ مجوز `get_applications_queryset` که داشبورد هم استفاده می‌کند)؛ اینجا
+    فقط چیدمان نمایش فرق دارد، نه منبع داده یا کنترل دسترسی.
+    """
+    get_token(request)
+    return render(request, "staff/pipeline.html")
+
+
+@login_required(login_url=STAFF_LOGIN_URL)
 def staff_users_page(request):
     """
     صفحه مدیریت کاربران از پنل ادمین (US7). رندر صفحه فقط نیازمند نشست کارمند معتبر است، نه
