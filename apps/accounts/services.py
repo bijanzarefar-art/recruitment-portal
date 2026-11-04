@@ -10,6 +10,7 @@ from datetime import timezone as dt_timezone
 
 from django.conf import settings
 from django.db import IntegrityError, transaction
+from django.db.models import ProtectedError
 from django.utils import timezone
 
 from apps.audit.services import record_event
@@ -132,7 +133,17 @@ class CannotDeactivateSelf(Exception):
     pass
 
 
+class CannotDeleteSelf(Exception):
+    pass
+
+
 class LastActiveHrManager(Exception):
+    pass
+
+
+class UserHasProtectedRecords(Exception):
+    """حذف ممکن نیست چون سوابق دیگری (بررسی/تخصیص درخواست، یادداشت و…) به این حساب وابسته‌اند."""
+
     pass
 
 
@@ -297,3 +308,35 @@ def set_staff_active(*, changed_by: StaffUser, target_id, is_active: bool) -> St
         object_id=str(target.id),
     )
     return target
+
+
+@transaction.atomic
+def delete_staff_account(*, changed_by: StaffUser, target_id) -> None:
+    """
+    حذف دائمی یک حساب کارمند (نه فقط غیرفعال‌سازی). همان دو قفل ایمنی حذفِ عملیِ آخرین مدیر
+    HR فعال و حذفِ حساب خودِ اجراکننده را دارد (مشابه `set_staff_active`)، به‌علاوهٔ یک قفل
+    سوم: اگر سوابق دیگری (بررسی/تخصیص درخواست، یادداشت، پیام…) با `on_delete=PROTECT` به این
+    حساب وابسته باشند، دیتابیس خودش حذف را رد می‌کند؛ آن خطا اینجا به `UserHasProtectedRecords`
+    ترجمه می‌شود تا کاربر پیشنهاد غیرفعال‌سازی را به‌جای حذف ببیند (سابقهٔ حسابرسی دست‌نخورده
+    می‌ماند چون `AuditEvent.staff_actor` خودش `SET_NULL` است، نه `PROTECT`).
+    """
+    target = StaffUser.objects.select_for_update().get(id=target_id)
+
+    if target.id == changed_by.id:
+        raise CannotDeleteSelf()
+    if target.role == StaffUser.Role.HR_MANAGER and not _other_active_hr_manager_exists(target):
+        raise LastActiveHrManager()
+
+    username = target.username
+    try:
+        target.delete()
+    except ProtectedError as exc:
+        raise UserHasProtectedRecords() from exc
+
+    record_event(
+        action="staff_account_deleted",
+        staff_actor=changed_by,
+        object_type="StaffUser",
+        object_id=str(target_id),
+        metadata={"username": username},
+    )

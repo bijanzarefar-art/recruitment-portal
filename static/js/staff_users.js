@@ -86,6 +86,16 @@ async function loadUsers() {
         toggleBtn.addEventListener("click", () => updateUser(user.id, { is_active: !user.is_active }));
         actionsTd.appendChild(toggleBtn);
 
+        // حذف دائمی — جدا از «غیرفعال» که فقط ورود را مسدود می‌کند. تأیید دوباره دارد چون
+        // برگشت‌ناپذیر است؛ اگر حساب به سوابق دیگری وابسته باشد سرور ۴۰۹ برمی‌گرداند و پیام
+        // همان خطا (نه یک پیام عمومی) نشان داده می‌شود.
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn danger btn-sm";
+        deleteBtn.textContent = "حذف";
+        deleteBtn.addEventListener("click", () => deleteUser(user));
+        actionsTd.appendChild(deleteBtn);
+
         tr.appendChild(actionsTd);
         rows.appendChild(tr);
     });
@@ -165,6 +175,22 @@ function flashNotice(text) {
     flashNotice._t = setTimeout(() => {
         el.hidden = true;
     }, 4000);
+}
+
+async function deleteUser(user) {
+    const confirmed = window.confirm(
+        `حذف حساب «${user.username}» برگشت‌ناپذیر است. آیا مطمئن هستید؟`
+    );
+    if (!confirmed) return;
+
+    const resp = await apiFetch(`/api/v1/staff/users/${user.id}`, { method: "DELETE" });
+    if (resp.ok) {
+        flashNotice(`حساب «${user.username}» حذف شد.`);
+        await loadUsers();
+        return;
+    }
+    const body = await resp.json().catch(() => ({}));
+    window.alert(body.message || "حذف ناموفق بود.");
 }
 
 async function updateUser(userId, payload) {

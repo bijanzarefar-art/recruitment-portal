@@ -10,6 +10,56 @@ const STATUS_LABELS = {
     hired: "استخدام شد",
 };
 
+// ترتیب مراحل، هم‌راستا با ماشین حالت سمت سرور (apps/applications/statemachine.py).
+// «رد» و «استخدام» مرحلهٔ پایانی‌اند و جای هم نمی‌نشینند.
+const PROGRESS_STEPS = ["new", "phone", "interview", "approved", "hired"];
+
+function renderSteps(currentStatus) {
+    const container = document.getElementById("result-steps");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const isRejected = currentStatus === "rejected";
+    const reachedIndex = PROGRESS_STEPS.indexOf(currentStatus);
+
+    PROGRESS_STEPS.forEach((status, index) => {
+        const step = document.createElement("div");
+        step.className = "track-step";
+
+        // وقتی رد شده، مراحل تا قبل از «استخدام» گذشته‌اند ولی دیگر ادامه‌ای نیست؛
+        // پس هیچ مرحله‌ای «فعال» نشان داده نمی‌شود و وضعیت رد جداگانه پایین می‌آید.
+        if (!isRejected) {
+            if (index < reachedIndex) step.classList.add("is-done");
+            else if (index === reachedIndex) step.classList.add("is-current");
+        }
+
+        const dot = document.createElement("div");
+        dot.className = "track-dot";
+        step.appendChild(dot);
+
+        const label = document.createElement("div");
+        label.className = "track-label";
+        label.textContent = STATUS_LABELS[status];
+        step.appendChild(label);
+
+        container.appendChild(step);
+    });
+
+    if (isRejected) {
+        const rejectedNote = document.createElement("div");
+        rejectedNote.className = "track-rejected";
+        const chip = document.createElement("span");
+        chip.className = "status-badge status-rejected";
+        chip.textContent = STATUS_LABELS.rejected;
+        rejectedNote.appendChild(chip);
+        const hint = document.createElement("span");
+        hint.className = "muted";
+        hint.textContent = "فرآیند بررسی این درخواست پایان یافته است.";
+        rejectedNote.appendChild(hint);
+        container.appendChild(rejectedNote);
+    }
+}
+
 async function fetchTrackingStatus(trackingCode) {
     return apiFetch(`/api/v1/track/${encodeURIComponent(trackingCode)}`);
 }
@@ -58,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const badge = document.getElementById("result-status-badge");
         badge.className = `status-badge status-${data.status}`;
         badge.textContent = STATUS_LABELS[data.status] || data.status;
+        renderSteps(data.status);
         resultSection.hidden = false;
     };
 

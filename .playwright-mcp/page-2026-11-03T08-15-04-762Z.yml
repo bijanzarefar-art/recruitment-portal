@@ -1,0 +1,30 @@
+- generic [ref=f22e2]:
+  - banner [ref=f22e3]:
+    - generic [ref=f22e5]:
+      - generic [ref=f22e6]: MP
+      - generic [ref=f22e7]:
+        - generic [ref=f22e8]: میلان پارس
+        - generic [ref=f22e9]: پورتال جذب و استخدام
+  - main [ref=f22e10]:
+    - generic [ref=f22e12]:
+      - heading "به پورتال جذب و استخدام میلان پارس خوش آمدید" [level=2] [ref=f22e13]
+      - generic [ref=f22e14]: یکی از دو بخش زیر را بر اساس هدفتان انتخاب کنید.
+    - generic [ref=f22e15]:
+      - generic [ref=f22e16]:
+        - generic [ref=f22e20]: بدون نیاز به ورود
+        - heading "مراجعه‌کننده هستم" [level=3] [ref=f22e21]
+        - paragraph [ref=f22e22]: می‌خواهم اطلاعات و رزومه‌ام را برای یک فرصت شغلی ثبت کنم، یا وضعیت درخواستی را که قبلاً ثبت کرده‌ام پیگیری کنم.
+        - generic [ref=f22e23]:
+          - link "مشاهده موقعیت‌های باز" [ref=f22e24] [cursor=pointer]:
+            - /url: /jobs
+          - link "ثبت درخواست" [ref=f22e25] [cursor=pointer]:
+            - /url: /apply
+          - link "پیگیری درخواست" [ref=f22e26] [cursor=pointer]:
+            - /url: /track
+      - generic [ref=f22e27]:
+        - generic [ref=f22e32]: نیازمند ورود کارمند
+        - heading "کارمند سازمان هستم" [level=3] [ref=f22e33]
+        - paragraph [ref=f22e34]: برای ثبت و مدیریت آگهی‌های شغلی، بررسی پرونده‌های متقاضیان، خروجی‌گیری گزارش و مدیریت کاربران وارد سامانهٔ کارکنان شوید.
+        - link "ورود به سامانه" [ref=f22e36] [cursor=pointer]:
+          - /url: /staff/login
+  - contentinfo [ref=f22e37]: پورتال جذب و استخدام میلان پارس

@@ -11,15 +11,18 @@ from ..models import StaffUser
 from ..permissions import IsHrManager, IsStaff
 from ..services import (
     CannotDeactivateSelf,
+    CannotDeleteSelf,
     DuplicateUsername,
     LastActiveHrManager,
     OldPasswordIncorrect,
     PasswordNotAllowed,
     StaffLoginRateLimitExceeded,
+    UserHasProtectedRecords,
     admin_reset_password,
     change_own_password,
     change_staff_role,
     create_staff_account,
+    delete_staff_account,
     enforce_staff_login_rate_limit,
     set_staff_active,
 )
@@ -150,6 +153,50 @@ class StaffUserDetailView(APIView):
 
         updated = StaffUser.objects.get(id=pk)
         return Response(StaffAccountSerializer(updated).data)
+
+    def delete(self, request, pk):
+        """
+        DELETE /api/v1/staff/users/{id} — حذف دائمی یک حساب کارمند (نه غیرفعال‌سازی). فقط
+        `hr_manager`. حذف حساب خودِ اجراکننده و آخرین مدیر HR فعال رد می‌شود (همان قفل‌های
+        `is_active`)، و اگر حساب به سوابق دیگری (بررسی/تخصیص درخواست و…) وابسته باشد، حذف با
+        خطای واضح رد می‌شود تا کاربر غیرفعال‌سازی را جایگزین کند.
+        """
+        get_object_or_404(StaffUser, id=pk)  # 404 زودهنگام برای شناسهٔ ناموجود
+
+        try:
+            delete_staff_account(changed_by=request.user, target_id=pk)
+        except CannotDeleteSelf:
+            return Response(
+                {
+                    "code": "forbidden",
+                    "message": "امکان حذف حساب خودتان وجود ندارد.",
+                    "field_errors": None,
+                    "request_id": "",
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        except LastActiveHrManager:
+            return Response(
+                {
+                    "code": "forbidden",
+                    "message": "نمی‌توان آخرین مدیر HR فعال را حذف کرد.",
+                    "field_errors": None,
+                    "request_id": "",
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        except UserHasProtectedRecords:
+            return Response(
+                {
+                    "code": "conflict",
+                    "message": "این حساب به سوابق دیگری (مانند بررسی یا تخصیص درخواست) وابسته است و حذف نمی‌شود؛ به‌جای حذف، غیرفعالش کنید.",
+                    "field_errors": None,
+                    "request_id": "",
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ChangeOwnPasswordView(APIView):

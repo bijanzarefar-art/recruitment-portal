@@ -1,0 +1,93 @@
+- generic [ref=f27e2]:
+  - banner [ref=f27e3]:
+    - generic [ref=f27e4]:
+      - link "MP میلان پارس محیط مراجعه‌کنندگان" [ref=f27e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f27e6]: MP
+        - generic [ref=f27e7]:
+          - generic [ref=f27e8]: میلان پارس
+          - generic [ref=f27e9]: محیط مراجعه‌کنندگان
+      - navigation [ref=f27e10]:
+        - link "موقعیت‌های شغلی باز" [ref=f27e11] [cursor=pointer]:
+          - /url: /jobs
+        - link "ثبت درخواست همکاری" [ref=f27e12] [cursor=pointer]:
+          - /url: /apply
+        - link "پیگیری وضعیت درخواست" [ref=f27e13] [cursor=pointer]:
+          - /url: /track
+  - main [ref=f27e14]:
+    - generic [ref=f27e15]:
+      - generic [ref=f27e17]:
+        - heading "ثبت درخواست همکاری" [level=2] [ref=f27e18]
+        - generic [ref=f27e19]: فرم اولیه کوتاه برای ورود به فرآیند جذب
+      - generic [ref=f27e20]:
+        - generic [ref=f27e21]:
+          - generic [ref=f27e22]:
+            - generic [ref=f27e23]: نام *
+            - textbox "نام *" [ref=f27e24]:
+              - /placeholder: نام
+          - generic [ref=f27e25]:
+            - generic [ref=f27e26]: نام خانوادگی *
+            - textbox "نام خانوادگی *" [ref=f27e27]:
+              - /placeholder: نام خانوادگی
+          - generic [ref=f27e28]:
+            - generic [ref=f27e29]: شماره موبایل *
+            - textbox "شماره موبایل *" [ref=f27e30]:
+              - /placeholder: 09xxxxxxxxx
+          - generic [ref=f27e31]:
+            - generic [ref=f27e32]: ایمیل (اختیاری)
+            - textbox "ایمیل (اختیاری)" [ref=f27e33]:
+              - /placeholder: name@example.com
+          - generic [ref=f27e34]:
+            - generic [ref=f27e35]: شهر محل سکونت *
+            - textbox "شهر محل سکونت *" [ref=f27e36]:
+              - /placeholder: "مثال: تهران"
+          - generic [ref=f27e37]:
+            - generic [ref=f27e38]: عنوان شغلی مورد درخواست *
+            - combobox "عنوان شغلی مورد درخواست *" [ref=f27e39]:
+              - option "انتخاب کنید" [selected]
+              - option "کارشناس نرم‌افزار"
+              - option "کارشناس"
+              - option "کارشناس"
+          - generic [ref=f27e40]:
+            - generic [ref=f27e41]: وضعیت فعلی اشتغال *
+            - combobox "وضعیت فعلی اشتغال *" [ref=f27e42]:
+              - option "شاغل تمام‌وقت" [selected]
+              - option "شاغل پاره‌وقت"
+              - option "در حال حاضر شاغل نیستم"
+              - option "دانشجو"
+              - option "سایر"
+          - generic [ref=f27e43]:
+            - generic [ref=f27e44]: مجموع سابقه کاری *
+            - combobox "مجموع سابقه کاری *" [ref=f27e45]:
+              - option "بدون سابقه" [selected]
+              - option "کمتر از ۱ سال"
+              - option "۱ تا ۳ سال"
+              - option "۳ تا ۵ سال"
+              - option "۵ تا ۱۰ سال"
+              - option "بیش از ۱۰ سال"
+          - generic [ref=f27e46]:
+            - generic [ref=f27e47]: امکان شروع همکاری *
+            - combobox "امکان شروع همکاری *" [ref=f27e48]:
+              - option "بلافاصله" [selected]
+              - option "حداکثر تا ۲ هفته"
+              - option "۲ تا ۴ هفته"
+              - option "بیش از یک ماه"
+          - generic [ref=f27e49]:
+            - generic [ref=f27e50]: آخرین عنوان شغلی
+            - textbox "آخرین عنوان شغلی" [ref=f27e51]:
+              - /placeholder: "مثال: کارشناس فروش"
+          - generic [ref=f27e52]:
+            - generic [ref=f27e53]: آخرین شرکت محل کار
+            - textbox "آخرین شرکت محل کار" [ref=f27e54]:
+              - /placeholder: نام شرکت
+        - generic [ref=f27e55]:
+          - generic [ref=f27e56]: رزومه *
+          - generic [ref=f27e57]:
+            - strong [ref=f27e61]: فایل رزومه را انتخاب کنید
+            - generic [ref=f27e62]: PDF، DOC یا DOCX — حداکثر ۵ مگابایت
+            - button "Choose File" [ref=f27e63]
+        - generic [ref=f27e64]:
+          - checkbox "تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس گرفته شود." [ref=f27e65]
+          - generic [ref=f27e66]: تأیید می‌کنم اطلاعات واردشده صحیح است و اجازه می‌دهم برای بررسی فرصت‌های شغلی و مراحل جذب با من تماس گرفته شود.
+        - button "ثبت درخواست همکاری" [ref=f27e68] [cursor=pointer]
+  - contentinfo [ref=f27e69]: پورتال جذب و استخدام میلان پارس

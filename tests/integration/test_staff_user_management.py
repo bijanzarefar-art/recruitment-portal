@@ -6,6 +6,7 @@ import pytest
 from rest_framework.test import APIClient
 
 from apps.accounts.models import StaffUser
+from apps.applications.models import Application, ApplicationNote
 from apps.audit.models import AuditEvent
 
 pytestmark = pytest.mark.django_db
@@ -30,6 +31,7 @@ def test_non_hr_manager_roles_get_403_on_every_user_management_route(recruiter, 
         assert (
             client.patch(f"/api/v1/staff/users/{target.id}", {"is_active": False}, format="json").status_code == 403
         )
+        assert client.delete(f"/api/v1/staff/users/{target.id}").status_code == 403
 
 
 def test_hr_manager_can_create_account_usable_immediately_with_username_and_password(hr_manager):
@@ -151,3 +153,88 @@ def test_role_change_away_from_hr_manager_is_blocked_for_the_last_active_one(hr_
     assert resp.status_code == 403
     hr_manager.refresh_from_db()
     assert hr_manager.role == StaffUser.Role.HR_MANAGER
+
+
+def test_hr_manager_can_permanently_delete_an_account_and_it_is_audited(hr_manager, staff_user_factory):
+    target = staff_user_factory(role=StaffUser.Role.RECRUITER)
+    target_id = target.id
+    client = APIClient()
+    client.force_authenticate(user=hr_manager)
+
+    resp = client.delete(f"/api/v1/staff/users/{target_id}")
+    assert resp.status_code == 204
+    assert not StaffUser.objects.filter(id=target_id).exists()
+
+    event = AuditEvent.objects.get(action="staff_account_deleted", object_id=str(target_id))
+    assert event.staff_actor_id == hr_manager.id
+    assert event.metadata["username"] == target.username
+
+
+def test_deleting_an_unknown_user_returns_404(hr_manager):
+    client = APIClient()
+    client.force_authenticate(user=hr_manager)
+
+    resp = client.delete("/api/v1/staff/users/00000000-0000-0000-0000-000000000000")
+    assert resp.status_code == 404
+
+
+def test_cannot_delete_own_account(hr_manager):
+    client = APIClient()
+    client.force_authenticate(user=hr_manager)
+
+    resp = client.delete(f"/api/v1/staff/users/{hr_manager.id}")
+    assert resp.status_code == 403
+    assert StaffUser.objects.filter(id=hr_manager.id).exists()
+
+
+def test_cannot_delete_the_last_active_hr_manager(hr_manager, staff_user_factory):
+    other_hr = staff_user_factory(role=StaffUser.Role.HR_MANAGER)
+    client = APIClient()
+    client.force_authenticate(user=hr_manager)
+
+    # غیرفعال‌کردن other_hr مجاز است چون hr_manager خودش فعال باقی می‌ماند.
+    resp = client.patch(f"/api/v1/staff/users/{other_hr.id}", {"is_active": False}, format="json")
+    assert resp.status_code == 200
+
+    # اکنون فقط hr_manager فعال است؛ تلاش other_hr برای حذف او باید رد شود — حتی با
+    # force_authenticate مستقیم (بدون نیاز به دور زدن IsStaff).
+    other_hr_client = APIClient()
+    other_hr_client.force_authenticate(user=other_hr)
+    resp = other_hr_client.delete(f"/api/v1/staff/users/{hr_manager.id}")
+    assert resp.status_code == 403
+    assert StaffUser.objects.filter(id=hr_manager.id).exists()
+
+
+def test_deleting_a_user_with_protected_records_is_rejected_with_409_not_a_crash(
+    hr_manager, staff_user_factory, candidate_factory, job_position_factory
+):
+    """
+    یافتهٔ واقعی: `ApplicationReviewer`/`ApplicationNote` با `on_delete=PROTECT` به `StaffUser`
+    وابسته‌اند، پس حذف خام یک کارمند دارای سابقه باید با خطای ۴۰۹ واضح رد شود (نه یک 500) تا
+    مدیر HR بفهمد باید غیرفعال‌سازی را جایگزین کند، نه حذف.
+    """
+    target = staff_user_factory(role=StaffUser.Role.RECRUITER)
+    candidate = candidate_factory()
+    job_position = job_position_factory()
+    application = Application.objects.create(
+        tracking_code="TRK-DEL-TEST-1",
+        candidate=candidate,
+        job_position=job_position,
+        first_name="تست",
+        last_name="حذف",
+        mobile_snapshot=candidate.mobile,
+        city="تهران",
+        employment=Application.Employment.FULL_TIME,
+        experience=Application.Experience.NO_EXPERIENCE,
+        availability=Application.Availability.IMMEDIATE,
+        idempotency_key="idem-del-test-1",
+    )
+    ApplicationNote.objects.create(application=application, author=target, body="یادداشت تست")
+
+    client = APIClient()
+    client.force_authenticate(user=hr_manager)
+
+    resp = client.delete(f"/api/v1/staff/users/{target.id}")
+    assert resp.status_code == 409
+    assert "غیرفعال" in resp.json()["message"]
+    assert StaffUser.objects.filter(id=target.id).exists()

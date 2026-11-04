@@ -1,0 +1,21 @@
+- generic [ref=f30e2]:
+  - banner [ref=f30e3]:
+    - link "MP میلان پارس پنل کارکنان" [ref=f30e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f30e6]: MP
+      - generic [ref=f30e7]:
+        - generic [ref=f30e8]: میلان پارس
+        - generic [ref=f30e9]: پنل کارکنان
+  - main [ref=f30e10]:
+    - generic [ref=f30e11]:
+      - heading "ورود کارکنان منابع انسانی" [level=2] [ref=f30e12]
+      - generic [ref=f30e13]: ورود با نام‌کاربری و رمز عبور.
+      - generic [ref=f30e14]:
+        - generic [ref=f30e15]:
+          - generic [ref=f30e16]: نام کاربری
+          - textbox "نام کاربری" [ref=f30e17]: ui_preview_hr
+        - generic [ref=f30e18]:
+          - generic [ref=f30e19]: رمز عبور
+          - textbox "رمز عبور" [ref=f30e20]: PreviewPass123!
+        - button "ورود" [ref=f30e21] [cursor=pointer]
+  - contentinfo [ref=f30e22]: پورتال جذب و استخدام میلان پارس
