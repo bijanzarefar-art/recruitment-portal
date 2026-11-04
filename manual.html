@@ -1,0 +1,663 @@
+<title>راهنمای استفاده از پورتال جذب</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap">
+<style>
+/* طرح: راهنمای محصول برای HR میلان پارس. آبی کبالت برند، خنثی‌های مایل به آبی،
+   شکل‌ها همه SVG درون‌خطی (بدون تصویر خارجی — CSP پروژه فقط 'self' را مجاز می‌داند). */
+:root{
+  --bg:#f4f6fb; --surface:#ffffff; --sunk:#eef1f8;
+  --border:#dfe4f0; --border-strong:#c8d0e2;
+  --fg:#0f1526; --fg-soft:#4f5a72; --fg-faint:#838da6;
+  --brand:#1e22a8; --brand-ink:#15187d; --brand-soft:#ececf9;
+  --teal:#3e8ca5; --teal-ink:#2c6a7e; --teal-soft:#e9f3f6;
+  --pos:#16a34a; --pos-ink:#116a34; --pos-soft:#e7f7ed;
+  --warn:#9a5b06; --warn-soft:#fdf3e4;
+  --danger:#b3261e; --danger-soft:#fbeae8;
+  --violet:#6d4fd6; --violet-soft:#f1edfd;
+  --cyan:#0a7ea8; --cyan-soft:#e6f4f8;
+  --radius:16px; --radius-sm:10px;
+  --shadow:0 1px 2px rgba(15,21,38,.05),0 1px 1px rgba(15,21,38,.04);
+  --font:"Vazirmatn",system-ui,Tahoma,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1018; --surface:#151a26; --sunk:#1b2130;
+    --border:#28303f; --border-strong:#3a4457;
+    --fg:#e8ecf5; --fg-soft:#a9b3c7; --fg-faint:#79849a;
+    --brand:#8f9bff; --brand-ink:#b3bcff; --brand-soft:#1d2240;
+    --teal:#6fb8cf; --teal-ink:#8fcede; --teal-soft:#16262e;
+    --pos:#5fc79c; --pos-ink:#7dd8b0; --pos-soft:#14261e;
+    --warn:#e0a44e; --warn-soft:#2b2317;
+    --danger:#f08a80; --danger-soft:#2c1a19;
+    --violet:#a893f0; --violet-soft:#211c33;
+    --cyan:#5cc4e8; --cyan-soft:#12242c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1018; --surface:#151a26; --sunk:#1b2130;
+  --border:#28303f; --border-strong:#3a4457;
+  --fg:#e8ecf5; --fg-soft:#a9b3c7; --fg-faint:#79849a;
+  --brand:#8f9bff; --brand-ink:#b3bcff; --brand-soft:#1d2240;
+  --teal:#6fb8cf; --teal-ink:#8fcede; --teal-soft:#16262e;
+  --pos:#5fc79c; --pos-ink:#7dd8b0; --pos-soft:#14261e;
+  --warn:#e0a44e; --warn-soft:#2b2317;
+  --danger:#f08a80; --danger-soft:#2c1a19;
+  --violet:#a893f0; --violet-soft:#211c33;
+  --cyan:#5cc4e8; --cyan-soft:#12242c;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);
+  font-size:15.5px;line-height:1.85;direction:rtl;-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 72px;
+}
+.wrap{max-width:900px;margin:0 auto}
+h1,h2,h3,h4{margin:0;line-height:1.4;font-weight:800;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0 0 12px;max-width:68ch}
+p:last-child{margin-bottom:0}
+a{color:var(--brand-ink)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.87em;direction:ltr;unicode-bidi:embed;
+  background:var(--sunk);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+
+/* ---------- سرصفحه ---------- */
+.masthead{padding-block:52px 36px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:14px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-size:12px;font-weight:700;
+  color:var(--brand-ink);background:var(--brand-soft);padding:5px 12px;border-radius:999px}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.masthead h1{font-size:36px}
+.lede{color:var(--fg-soft);font-size:16.5px;max-width:62ch;margin:0}
+
+/* ---------- فهرست ---------- */
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-block:28px 0}
+.toc a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:11px 14px;font-size:14px;font-weight:600;transition:border-color .12s,background .12s}
+.toc a:hover{border-color:var(--border-strong);background:var(--sunk)}
+.toc .n{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--fg-faint);flex-shrink:0}
+
+/* ---------- بخش‌ها ---------- */
+section{padding-block:38px;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
+.sec-n{font-family:ui-monospace,monospace;font-size:12.5px;color:var(--fg-faint);flex-shrink:0;
+  padding-top:6px;font-variant-numeric:tabular-nums}
+.sec-head h2{font-size:23px}
+h3{font-size:16.5px;margin-block:28px 10px}
+h4{font-size:14.5px;margin-block:20px 6px}
+
+/* ---------- جعبه‌ها ---------- */
+.box{display:flex;gap:12px;padding:15px 17px;border-radius:12px;border:1px solid transparent;
+  font-size:14px;margin-block:16px}
+.box svg{width:18px;height:18px;flex-shrink:0;margin-top:4px}
+.box p{margin:0}
+.box.tip{background:var(--brand-soft);color:var(--brand-ink);border-color:color-mix(in srgb,var(--brand) 22%,transparent)}
+.box.warn{background:var(--warn-soft);color:var(--warn);border-color:color-mix(in srgb,var(--warn) 25%,transparent)}
+.box.ok{background:var(--pos-soft);color:var(--pos-ink);border-color:color-mix(in srgb,var(--pos) 25%,transparent)}
+
+/* ---------- شکل‌ها ---------- */
+figure{margin:22px 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px 18px 14px;box-shadow:var(--shadow)}
+figure svg{display:block;width:100%;max-width:100%;height:auto}
+/* صفحه RTL است؛ اگر جهت داخل SVG به ارث برسد، متن‌ها از نقطهٔ x به سمت چپ رشد می‌کنند و از
+   جعبه بیرون می‌زنند. با ltr همهٔ مختصات SVG قابل‌پیش‌بینی می‌شوند؛ متن فارسی با
+   text-anchor درست تراز می‌شود. */
+figure svg text{direction:ltr;unicode-bidi:plaintext}
+figcaption{color:var(--fg-faint);font-size:12.5px;text-align:center;margin-top:14px;
+  padding-top:12px;border-top:1px solid var(--border)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- مراحل شماره‌دار ---------- */
+.steps{display:flex;flex-direction:column;gap:0;margin-block:18px;counter-reset:step}
+.step{display:flex;gap:16px;padding-block:14px;border-bottom:1px dashed var(--border)}
+.step:last-child{border-bottom:none}
+.step-n{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:800;margin-top:2px}
+.step-body{min-width:0}
+.step-body h4{margin:0 0 4px;font-size:14.5px}
+.step-body p{margin:0;font-size:14px;color:var(--fg-soft)}
+
+/* ---------- جدول ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin-block:16px}
+table{border-collapse:collapse;width:100%;min-width:560px;background:var(--surface)}
+th,td{padding:11px 14px;text-align:right;font-size:13.5px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{background:var(--sunk);font-weight:700;font-size:12.5px;color:var(--fg-soft);white-space:nowrap}
+
+/* ---------- چیپ نقش ---------- */
+.role{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;
+  font-size:11.5px;font-weight:700;white-space:nowrap;line-height:1.8}
+.role-hr{background:var(--brand-soft);color:var(--brand-ink)}
+.role-rec{background:var(--teal-soft);color:var(--teal-ink)}
+.role-hm{background:var(--violet-soft);color:var(--violet)}
+.role-op{background:var(--sunk);color:var(--fg-faint)}
+
+.yes{color:var(--pos-ink);font-weight:800}
+.no{color:var(--fg-faint)}
+
+footer{padding-top:26px;margin-top:34px;border-top:1px solid var(--border);
+  color:var(--fg-faint);font-size:12.5px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:600px){
+  .masthead h1{font-size:26px}
+  .masthead{padding-block:32px 24px}
+  section{padding-block:28px}
+  figure{padding:16px 12px 12px}
+  .step{gap:12px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <span class="eyebrow">پورتال جذب و استخدام میلان پارس</span>
+  <h1>راهنمای استفاده</h1>
+  <p class="lede">همه‌چیز دربارهٔ ثبت درخواست، پیگیری، بررسی پرونده و مدیریت کاربران — با شکل‌هایی که مسیر هر مرحله را نشان می‌دهند.</p>
+</header>
+
+<nav class="toc">
+  <a href="#overview"><span class="n">۰۱</span> نقشهٔ کلی پورتال</a>
+  <a href="#candidate"><span class="n">۰۲</span> مسیر متقاضی</a>
+  <a href="#track"><span class="n">۰۳</span> پیگیری با کد</a>
+  <a href="#roles"><span class="n">۰۴</span> نقش‌ها و دسترسی</a>
+  <a href="#pipeline"><span class="n">۰۵</span> گردش بررسی پرونده</a>
+  <a href="#detail"><span class="n">۰۶</span> کار با یک پرونده</a>
+  <a href="#jobs"><span class="n">۰۷</span> مدیریت موقعیت‌ها</a>
+  <a href="#users"><span class="n">۰۸</span> مدیریت کاربران</a>
+  <a href="#export"><span class="n">۰۹</span> خروجی‌گیری</a>
+  <a href="#faq"><span class="n">۱۰</span> پرسش‌های رایج</a>
+</nav>
+
+<!-- ========== ۱ ========== -->
+<section id="overview">
+  <div class="sec-head"><span class="sec-n">۰۱</span><h2>نقشهٔ کلی پورتال</h2></div>
+  <p>پورتال دو محیط کاملاً جدا دارد که از همان صفحهٔ اول از هم تفکیک شده‌اند. مراجعه‌کننده بدون هیچ ورودی به کارش می‌رسد؛ کارمند سازمان باید وارد سامانه شود.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 760 300" role="img" aria-label="نقشهٔ کلی: صفحهٔ اصلی به دو مسیر مراجعه‌کننده و کارمند تقسیم می‌شود">
+        <defs>
+          <marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0 0 L9 4.5 L0 9 z" fill="var(--fg-faint)"/>
+          </marker>
+        </defs>
+
+        <!-- صفحه اصلی -->
+        <rect x="290" y="18" width="180" height="54" rx="12" fill="var(--brand)" />
+        <text x="380" y="41" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">صفحهٔ اصلی</text>
+        <text x="380" y="60" text-anchor="middle" font-size="10.5" fill="#ffffffcc">میلان‌پارس — انتخاب مسیر</text>
+
+        <!-- خطوط -->
+        <path d="M380 72 L380 96 L170 96 L170 132" stroke="var(--fg-faint)" stroke-width="1.5" fill="none" marker-end="url(#arw)"/>
+        <path d="M380 72 L380 96 L590 96 L590 132" stroke="var(--fg-faint)" stroke-width="1.5" fill="none" marker-end="url(#arw)"/>
+        <path d="M380 72 L380 132" stroke="var(--pos)" stroke-width="1.5" fill="none"/>
+        <text x="380" y="112" text-anchor="middle" font-size="10" fill="var(--pos-ink)" font-weight="700">ورود</text>
+
+        <!-- مراجعه‌کننده -->
+        <rect x="30" y="132" width="200" height="132" rx="14" fill="var(--surface)" stroke="var(--brand)" stroke-width="2"/>
+        <text x="130" y="155" text-anchor="middle" font-size="12.5" font-weight="800" fill="var(--brand-ink)">مراجعه‌کننده</text>
+        <text x="130" y="171" text-anchor="middle" font-size="9.5" fill="var(--fg-faint)">بدون نیاز به ورود</text>
+        <rect x="46" y="186" width="168" height="26" rx="7" fill="var(--brand-soft)"/>
+        <text x="130" y="203" text-anchor="middle" font-size="10.5" fill="var(--brand-ink)">موقعیت‌های شغلی باز</text>
+        <rect x="46" y="218" width="168" height="26" rx="7" fill="var(--brand-soft)"/>
+        <text x="130" y="235" text-anchor="middle" font-size="10.5" fill="var(--brand-ink)">ثبت درخواست همکاری</text>
+        <rect x="46" y="172" width="0" height="0" fill="none"/>
+
+        <!-- پیگیری -->
+        <rect x="530" y="132" width="200" height="132" rx="14" fill="var(--surface)" stroke="var(--brand)" stroke-width="2"/>
+        <text x="630" y="155" text-anchor="middle" font-size="12.5" font-weight="800" fill="var(--brand-ink)">پیگیری وضعیت</text>
+        <text x="630" y="171" text-anchor="middle" font-size="9.5" fill="var(--fg-faint)">فقط با کد پیگیری — بدون ورود</text>
+        <rect x="546" y="186" width="168" height="26" rx="7" fill="var(--brand-soft)"/>
+        <text x="630" y="203" text-anchor="middle" font-size="10.5" fill="var(--brand-ink)">کد پیگیری را وارد کنید</text>
+        <rect x="546" y="218" width="168" height="26" rx="7" fill="var(--brand-soft)"/>
+        <text x="630" y="235" text-anchor="middle" font-size="10.5" fill="var(--brand-ink)">وضعیت فعلی را ببینید</text>
+
+        <!-- کارکنان -->
+        <rect x="290" y="132" width="180" height="52" rx="12" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2"/>
+        <text x="380" y="153" text-anchor="middle" font-size="11.5" font-weight="800" fill="var(--teal-ink)">پنل کارکنان</text>
+        <text x="380" y="169" text-anchor="middle" font-size="9.5" fill="var(--teal-ink)" opacity=".85">بعد از ورود</text>
+        <path d="M380 184 L380 196" stroke="var(--fg-faint)" stroke-width="1.5" fill="none" marker-end="url(#arw)"/>
+
+        <!-- چهار بخش پنل -->
+        <rect x="290" y="200" width="85" height="26" rx="7" fill="var(--sunk)"/>
+        <text x="332" y="217" text-anchor="middle" font-size="9" fill="var(--fg-soft)">داشبورد</text>
+        <rect x="383" y="200" width="85" height="26" rx="7" fill="var(--sunk)"/>
+        <text x="425" y="217" text-anchor="middle" font-size="9" fill="var(--fg-soft)">فرآیند جذب</text>
+        <rect x="290" y="232" width="85" height="26" rx="7" fill="var(--sunk)"/>
+        <text x="332" y="249" text-anchor="middle" font-size="9" fill="var(--fg-soft)">موقعیت‌ها</text>
+        <rect x="383" y="232" width="85" height="26" rx="7" fill="var(--sunk)"/>
+        <text x="425" y="249" text-anchor="middle" font-size="9" fill="var(--fg-soft)">کاربران / خروجی</text>
+      </svg>
+    </div>
+    <figcaption>شکل ۱ — صفحهٔ اصلی به دو مسیر جدا تقسیم می‌شود؛ مراجعه‌کننده بدون ورود، کارمند پس از ورود.</figcaption>
+  </figure>
+</section>
+
+<!-- ========== ۲ ========== -->
+<section id="candidate">
+  <div class="sec-head"><span class="sec-n">۰۲</span><h2>مسیر متقاضی: ثبت درخواست</h2></div>
+  <p>ثبت درخواست یک فرم تک‌مرحله‌ای است. هیچ کد تأییدی پیامک نمی‌شود و حساب کاربری هم ساخته نمی‌شود — فقط اطلاعات و رزومه ثبت می‌شود و یک کد پیگیری تحویل داده می‌شود.</p>
+
+  <div class="steps">
+    <div class="step"><div class="step-n">۱</div><div class="step-body">
+      <h4>موقعیت شغلی را انتخاب کنید</h4>
+      <p>از صفحهٔ «موقعیت‌های شغلی باز» می‌توانید ببینید هر موقعیت چه شایستگی‌هایی می‌خواهد، و مستقیم برای همان یکی درخواست بدهید.</p></div></div>
+    <div class="step"><div class="step-n">۲</div><div class="step-body">
+      <h4>اطلاعات شخصی را پر کنید</h4>
+      <p>نام، نام خانوادگی، شماره موبایل و شهر محل سکونت اجباری‌اند. ایمیل اختیاری است.</p></div></div>
+    <div class="step"><div class="step-n">۳</div><div class="step-body">
+      <h4>وضعیت شغلی فعلی را مشخص کنید</h4>
+      <p>وضعیت اشتغال، مجموع سابقه کاری و امکان شروع همکاری. اگر سابقه دارید، آخرین عنوان شغلی و نام شرکت هم اجباری می‌شود.</p></div></div>
+    <div class="step"><div class="step-n">۴</div><div class="step-body">
+      <h4>رزومه را بارگذاری کنید</h4>
+      <p>PDF یا Word، حداکثر ۵ مگابایت. فایل پیش از ثبت نهایی از نظر بدافزار بررسی می‌شود؛ اگر اسکن درست انجام نشود، ثبت انجام نخواهد شد.</p></div></div>
+    <div class="step"><div class="step-n">۵</div><div class="step-body">
+      <h4>رضایت را تأیید و ثبت کنید</h4>
+      <p>بدون تأیید متن حریم خصوصی، فرم ثبت نمی‌شود.</p></div></div>
+    <div class="step"><div class="step-n">۶</div><div class="step-body">
+      <h4>کد پیگیری را بردارید</h4>
+      <p>بعد از ثبت، یک کد پیگیری نمایش داده می‌شود. <b>این تنها راه پیگیری درخواست است</b> — آن را کپی و جایی نگه دارید.</p></div></div>
+  </div>
+
+  <div class="box tip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 16v-4"/><path d="M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg>
+    <p>دکمهٔ «پیگیری وضعیت درخواست» بعد از ثبت، خودِ کد را در صفحهٔ پیگیری پر می‌کند — لازم نیست آن را دستی تایپ کنید.</p>
+  </div>
+</section>
+
+<!-- ========== ۳ ========== -->
+<section id="track">
+  <div class="sec-head"><span class="sec-n">۰۳</span><h2>پیگیری وضعیت با کد</h2></div>
+  <p>کد پیگیری را در صفحهٔ «پیگیری وضعیت درخواست» وارد کنید تا مرحلهٔ فعلی پرونده را ببینید. این صفحه به هیچ ورودی نیاز ندارد.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 760 150" role="img" aria-label="شش وضعیت ممکن یک درخواست و ترتیب حرکت آنها">
+        <defs>
+          <marker id="arw2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--fg-faint)"/>
+          </marker>
+        </defs>
+        <g font-size="10.5" text-anchor="middle" font-weight="700">
+          <rect x="20" y="34" width="104" height="42" rx="10" fill="var(--brand-soft)" stroke="var(--brand)" stroke-width="1.5"/>
+          <text x="72" y="52" fill="var(--brand-ink)">در انتظار</text>
+          <text x="72" y="66" fill="var(--brand-ink)">غربالگری</text>
+
+          <rect x="152" y="34" width="104" height="42" rx="10" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+          <text x="204" y="52" fill="var(--warn)">تماس اولیه</text>
+          <text x="204" y="66" fill="var(--warn)">انجام شد</text>
+
+          <rect x="284" y="34" width="104" height="42" rx="10" fill="var(--violet-soft)" stroke="var(--violet)" stroke-width="1.5"/>
+          <text x="336" y="52" fill="var(--violet)">دعوت به</text>
+          <text x="336" y="66" fill="var(--violet)">مصاحبه</text>
+
+          <rect x="416" y="34" width="104" height="42" rx="10" fill="var(--pos-soft)" stroke="var(--pos)" stroke-width="1.5"/>
+          <text x="468" y="52" fill="var(--pos-ink)">تأیید</text>
+          <text x="468" y="66" fill="var(--pos-ink)">اولیه</text>
+
+          <rect x="548" y="34" width="104" height="42" rx="10" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="1.5"/>
+          <text x="600" y="52" fill="var(--cyan)">استخدام</text>
+          <text x="600" y="66" fill="var(--cyan)">شد</text>
+        </g>
+        <path d="M124 55 L146 55" stroke="var(--fg-faint)" stroke-width="1.5" marker-end="url(#arw2)"/>
+        <path d="M256 55 L278 55" stroke="var(--fg-faint)" stroke-width="1.5" marker-end="url(#arw2)"/>
+        <path d="M388 55 L410 55" stroke="var(--fg-faint)" stroke-width="1.5" marker-end="url(#arw2)"/>
+        <path d="M520 55 L542 55" stroke="var(--fg-faint)" stroke-width="1.5" marker-end="url(#arw2)"/>
+
+        <rect x="284" y="106" width="104" height="34" rx="10" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+        <text x="336" y="128" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)">عدم ادامه</text>
+        <path d="M72 76 L72 123 L278 123" stroke="var(--danger)" stroke-width="1.2" stroke-dasharray="4 3" fill="none" marker-end="url(#arw2)" opacity=".55"/>
+        <text x="150" y="140" text-anchor="middle" font-size="9" fill="var(--fg-faint)">از هر مرحله‌ای قابل رد است</text>
+      </svg>
+    </div>
+    <figcaption>شکل ۲ — شش وضعیت یک درخواست. از هر مرحله می‌توان پرونده را «رد» کرد؛ این کار همیشه دلیل می‌خواهد.</figcaption>
+  </figure>
+
+  <div class="box warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <p>اگر کد را گم کنید، راه دیگری برای بازیابی درخواست وجود ندارد. برای جلوگیری از حدس‌زدن کدها، تعداد تلاش‌ها محدود است (۲۰ بار در هر ۱۰ دقیقه برای هر آدرس) و فراتر از آن موقتاً مسدود می‌شوید.</p>
+  </div>
+</section>
+
+<!-- ========== ۴ ========== -->
+<section id="roles">
+  <div class="sec-head"><span class="sec-n">۰۴</span><h2>نقش‌ها و سطح دسترسی</h2></div>
+  <p>هر کارمند یکی از چهار نقش را دارد. دسترسی به پرونده‌ها پیش‌فرض بسته است: هیچ نقشی همه‌چیز را نمی‌بیند مگر مجوز صریح داشته باشد.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>کار</th><th><span class="role role-hr">مدیر HR</span></th><th><span class="role role-rec">کارشناس جذب</span></th><th><span class="role role-hm">مدیر استخدام</span></th><th><span class="role role-op">اپراتور سامانه</span></th></tr></thead>
+      <tbody>
+        <tr><td>دیدن فهرست همهٔ پرونده‌ها</td><td class="yes">✓</td><td class="no">فقط ارجاع‌شده</td><td class="no">فقط ارجاع‌شده</td><td class="no">—</td></tr>
+        <tr><td>تغییر وضعیت پرونده</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>بازگشایی وضعیت نهایی</td><td class="yes">✓ (با دلیل)</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>ثبت یادداشت داخلی</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+        <tr><td>ارجاع پرونده به دیگران</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>ساخت و مدیریت موقعیت شغلی</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>خروجی CSV / اکسل</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>ساخت حساب کارمند</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>دانلود رزومه</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box tip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 16v-4"/><path d="M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg>
+    <p>«مدیر استخدام» عمداً نمی‌تواند وضعیت را تغییر دهد — نقش او بررسی و اظهارنظر است، نه تصمیم نهایی. این تفکیک در کد اعمال می‌شود، نه فقط در رابط کاربری.</p>
+  </div>
+</section>
+
+<!-- ========== ۵ ========== -->
+<section id="pipeline">
+  <div class="sec-head"><span class="sec-n">۰۵</span><h2>گردش بررسی پرونده</h2></div>
+  <p>در منوی کارکنان، بخش <b>«فرآیند جذب»</b> پرونده‌ها را به‌صورت ستونی و بر اساس وضعیت نشان می‌دهد. با یک نگاه می‌بینید هر مرحله چند پرونده دارد و پرونده‌ها پشت کدام مرحله گیر کرده‌اند.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 760 250" role="img" aria-label="تابلوی فرآیند جذب با شش ستون وضعیت و کارت پرونده در ستون‌ها">
+        <g font-size="9.5" font-weight="700" text-anchor="middle">
+          <rect x="8" y="14" width="118" height="220" rx="12" fill="var(--sunk)" stroke="var(--border)"/>
+          <rect x="134" y="14" width="118" height="220" rx="12" fill="var(--sunk)" stroke="var(--border)"/>
+          <rect x="260" y="14" width="118" height="220" rx="12" fill="var(--sunk)" stroke="var(--border)"/>
+          <rect x="386" y="14" width="118" height="220" rx="12" fill="var(--sunk)" stroke="var(--border)"/>
+          <rect x="512" y="14" width="118" height="220" rx="12" fill="var(--sunk)" stroke="var(--border)"/>
+          <rect x="638" y="14" width="114" height="220" rx="12" fill="var(--sunk)" stroke="var(--border)"/>
+
+          <rect x="18" y="24" width="98" height="22" rx="11" fill="var(--brand-soft)"/>
+          <text x="67" y="39" fill="var(--brand-ink)">در انتظار غربالگری</text>
+          <rect x="144" y="24" width="98" height="22" rx="11" fill="var(--warn-soft)"/>
+          <text x="193" y="39" fill="var(--warn)">تماس اولیه</text>
+          <rect x="270" y="24" width="98" height="22" rx="11" fill="var(--violet-soft)"/>
+          <text x="319" y="39" fill="var(--violet)">مصاحبه</text>
+          <rect x="396" y="24" width="98" height="22" rx="11" fill="var(--pos-soft)"/>
+          <text x="445" y="39" fill="var(--pos-ink)">تأیید اولیه</text>
+          <rect x="522" y="24" width="98" height="22" rx="11" fill="var(--cyan-soft)"/>
+          <text x="571" y="39" fill="var(--cyan)">استخدام</text>
+          <rect x="648" y="24" width="94" height="22" rx="11" fill="var(--danger-soft)"/>
+          <text x="695" y="39" fill="var(--danger)">رد شده</text>
+        </g>
+
+        <!-- کارت‌ها ستون ۱ (ستون: x=8، عرض 118 → کارت x=18، عرض 98) -->
+        <g>
+          <rect x="18" y="56" width="98" height="44" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="26" y="72" font-size="9" font-weight="700" fill="var(--fg)">نگار احمدی</text>
+          <text x="26" y="85" font-size="8" fill="var(--fg-soft)">کارشناس فروش</text>
+          <rect x="18" y="106" width="98" height="44" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="26" y="122" font-size="9" font-weight="700" fill="var(--fg)">علی رضایی</text>
+          <text x="26" y="135" font-size="8" fill="var(--fg-soft)">نمایندهٔ علمی</text>
+        </g>
+        <!-- ستون ۲ (x=134) -->
+        <g>
+          <rect x="144" y="56" width="98" height="44" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="152" y="72" font-size="9" font-weight="700" fill="var(--fg)">سارا محمدی</text>
+          <text x="152" y="85" font-size="8" fill="var(--fg-soft)">کارشناس مالی</text>
+        </g>
+        <!-- ستون ۳ (x=260) -->
+        <g>
+          <rect x="270" y="56" width="98" height="44" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="278" y="72" font-size="9" font-weight="700" fill="var(--fg)">مریم کاظمی</text>
+          <text x="278" y="85" font-size="8" fill="var(--fg-soft)">منابع انسانی</text>
+        </g>
+        <!-- ستون ۵ (x=512) -->
+        <g>
+          <rect x="522" y="56" width="98" height="44" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+          <text x="530" y="72" font-size="9" font-weight="700" fill="var(--fg)">آرش نوری</text>
+          <text x="530" y="85" font-size="8" fill="var(--fg-soft)">کارشناس فروش</text>
+        </g>
+
+        <!-- ستون‌های خالی -->
+        <text x="445" y="80" text-anchor="middle" font-size="8.5" fill="var(--fg-faint)">خالی</text>
+        <text x="695" y="80" text-anchor="middle" font-size="8.5" fill="var(--fg-faint)">خالی</text>
+      </svg>
+    </div>
+    <figcaption>شکل ۳ — تابلوی «فرآیند جذب»: هر ستون یک مرحله است و تعداد پرونده‌های همان مرحله کنار عنوانش نوشته می‌شود.</figcaption>
+  </figure>
+
+  <h3>قواعد گذار بین مراحل</h3>
+  <p>وضعیت‌ها فقط طبق این مسیر جابه‌جا می‌شوند. نمی‌توانید یک پروندهٔ تازه را مستقیم «استخدام شد» کنید:</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 760 210" role="img" aria-label="درخت گذارهای مجاز بین وضعیت‌های پرونده">
+        <defs>
+          <marker id="arw3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--pos)"/>
+          </marker>
+          <marker id="arw4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--danger)"/>
+          </marker>
+        </defs>
+
+        <rect x="14" y="18" width="96" height="40" rx="9" fill="var(--brand-soft)" stroke="var(--brand)" stroke-width="1.5"/>
+        <text x="62" y="43" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--brand-ink)">در انتظار</text>
+
+        <rect x="152" y="18" width="96" height="40" rx="9" fill="var(--warn-soft)" stroke="var(--warn)" stroke-width="1.5"/>
+        <text x="200" y="43" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--warn)">تماس اولیه</text>
+
+        <rect x="290" y="18" width="96" height="40" rx="9" fill="var(--violet-soft)" stroke="var(--violet)" stroke-width="1.5"/>
+        <text x="338" y="43" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--violet)">مصاحبه</text>
+
+        <rect x="428" y="18" width="96" height="40" rx="9" fill="var(--pos-soft)" stroke="var(--pos)" stroke-width="1.5"/>
+        <text x="476" y="43" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--pos-ink)">تأیید اولیه</text>
+
+        <rect x="566" y="18" width="96" height="40" rx="9" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="1.5"/>
+        <text x="614" y="43" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--cyan)">استخدام شد</text>
+
+        <path d="M110 38 L146 38" stroke="var(--pos)" stroke-width="1.8" marker-end="url(#arw3)"/>
+        <path d="M248 38 L284 38" stroke="var(--pos)" stroke-width="1.8" marker-end="url(#arw3)"/>
+        <path d="M386 38 L422 38" stroke="var(--pos)" stroke-width="1.8" marker-end="url(#arw3)"/>
+        <path d="M524 38 L560 38" stroke="var(--pos)" stroke-width="1.8" marker-end="url(#arw3)"/>
+
+        <rect x="290" y="146" width="96" height="40" rx="9" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.5"/>
+        <text x="338" y="171" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)">عدم ادامه</text>
+
+        <path d="M62 58 L62 100 L338 100 L338 142" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#arw4)"/>
+        <text x="185" y="94" text-anchor="middle" font-size="9" fill="var(--danger)">رد در هر مرحله — با دلیل</text>
+
+        <path d="M290 38 L243 38 L243 62" stroke="var(--teal)" stroke-width="1.4" fill="none" opacity="0"/>
+        <path d="M566 58 L566 78 L338 78" stroke="var(--teal)" stroke-width="1.3" stroke-dasharray="4 3" fill="none" opacity=".7" marker-end="url(#arw3)"/>
+        <text x="452" y="72" text-anchor="middle" font-size="8.5" fill="var(--teal-ink)">فقط مدیر HR</text>
+      </svg>
+    </div>
+    <figcaption>شکل ۴ — گذارهای مجاز. خطوط ممتد مسیر عادی‌اند؛ خط‌چین قرمز «رد» است (همیشه با دلیل).</figcaption>
+  </figure>
+</section>
+
+<!-- ========== ۶ ========== -->
+<section id="detail">
+  <div class="sec-head"><span class="sec-n">۰۶</span><h2>کار با یک پرونده</h2></div>
+  <p>با کلیک روی هر کارت در تابلوی فرآیند جذب (یا روی «مشاهده پرونده» در داشبورد) به صفحهٔ جزئیات می‌رسید. این صفحه چهار بخش دارد:</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 760 268" role="img" aria-label="صفحهٔ جزئیات پرونده با چهار بخش: اطلاعات، ارجاع، تغییر وضعیت و یادداشت‌ها">
+        <rect x="10" y="10" width="740" height="52" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="730" y="34" text-anchor="end" font-size="13" font-weight="800" fill="var(--fg)">نگار احمدی</text>
+        <text x="730" y="50" text-anchor="end" font-size="9.5" fill="var(--fg-faint)">کد پیگیری: 4d1dffd51f7728e7</text>
+        <rect x="26" y="24" width="96" height="22" rx="11" fill="var(--brand-soft)"/>
+        <text x="74" y="39" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--brand-ink)">در انتظار غربالگری</text>
+
+        <rect x="10" y="72" width="740" height="46" rx="10" fill="var(--sunk)"/>
+        <text x="730" y="100" text-anchor="end" font-size="10" font-weight="700" fill="var(--fg)">۱. اطلاعات متقاضی — موبایل، شهر، موقعیت، سابقه، امکان شروع</text>
+
+        <rect x="386" y="128" width="364" height="52" rx="10" fill="var(--surface)" stroke="var(--teal)" stroke-width="1.5"/>
+        <text x="730" y="150" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--teal-ink)">۲. ارجاع پرونده</text>
+        <text x="730" y="167" text-anchor="end" font-size="9" fill="var(--fg-faint)">فقط مدیر HR — از فهرست کارمندان انتخاب می‌کند</text>
+
+        <rect x="10" y="128" width="364" height="52" rx="10" fill="var(--surface)" stroke="var(--pos)" stroke-width="1.5"/>
+        <text x="354" y="150" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--pos-ink)">۳. تغییر وضعیت</text>
+        <text x="354" y="167" text-anchor="end" font-size="9" fill="var(--fg-faint)">فقط مراحل مجاز در فهرست می‌آید</text>
+
+        <rect x="10" y="190" width="740" height="62" rx="10" fill="var(--surface)" stroke="var(--violet)" stroke-width="1.5"/>
+        <text x="730" y="212" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--violet)">۴. یادداشت‌های داخلی</text>
+        <text x="730" y="229" text-anchor="end" font-size="9" fill="var(--fg-faint)">تاریخچه با نام نویسنده و زمان — قابل ویرایش یا حذف نیست</text>
+        <text x="730" y="244" text-anchor="end" font-size="9" fill="var(--fg-faint)">یادداشت‌ها را فقط کارکنان می‌بینند؛ متقاضی هرگز</text>
+      </svg>
+    </div>
+    <figcaption>شکل ۵ — چهار بخش صفحهٔ جزئیات پرونده.</figcaption>
+  </figure>
+
+  <h3>ارجاع پرونده</h3>
+  <p>فقط <span class="role role-hr">مدیر HR</span> می‌تواند پرونده را به کسی ارجاع دهد. نکته‌های مهم:</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>قاعده</th><th>توضیح</th></tr></thead>
+      <tbody>
+        <tr><td>اولین ارجاع</td><td>باید به <span class="role role-rec">کارشناس جذب</span> باشد</td></tr>
+        <tr><td>ارجاع دوم</td><td>می‌تواند به <span class="role role-hm">مدیر استخدام</span> باشد و ارجاع قبلی را خودکار لغو می‌کند</td></tr>
+        <tr><td>تعداد ارجاع فعال</td><td>در هر لحظه فقط یک نفر — بیشتر ممکن نیست</td></tr>
+        <tr><td>لغو ارجاع</td><td>دسترسی همان نفر در درخواست بعدی‌اش فوراً قطع می‌شود، حتی اگر صفحه باز باشد</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box ok">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+    <p>اگر دو نفر همزمان یک پرونده را باز کنند و وضعیت را تغییر دهند، نفر دوم پیام «این پرونده توسط کاربر دیگری تغییر کرده» می‌بیند و تغییری گم نمی‌شود.</p>
+  </div>
+</section>
+
+<!-- ========== ۷ ========== -->
+<section id="jobs">
+  <div class="sec-head"><span class="sec-n">۰۷</span><h2>مدیریت موقعیت‌های شغلی</h2></div>
+  <p>از منوی «موقعیت‌های شغلی» می‌توانید موقعیت تازه بسازید و چرخهٔ انتشارش را مدیریت کنید. فقط <span class="role role-hr">مدیر HR</span> به این بخش دسترسی دارد.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 760 168" role="img" aria-label="چرخهٔ وضعیت موقعیت شغلی: پیش‌نویس، باز و بسته">
+        <defs>
+          <marker id="arw5" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--fg-soft)"/>
+          </marker>
+        </defs>
+        <rect x="80" y="18" width="150" height="48" rx="11" fill="var(--sunk)" stroke="var(--border-strong)" stroke-width="1.6"/>
+        <text x="155" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="var(--fg-soft)">پیش‌نویس</text>
+        <text x="155" y="56" text-anchor="middle" font-size="9" fill="var(--fg-faint)">دیده نمی‌شود</text>
+
+        <rect x="305" y="18" width="150" height="48" rx="11" fill="var(--pos-soft)" stroke="var(--pos)" stroke-width="1.8"/>
+        <text x="380" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="var(--pos-ink)">باز</text>
+        <text x="380" y="56" text-anchor="middle" font-size="9" fill="var(--pos-ink)">پذیرش درخواست</text>
+
+        <rect x="530" y="18" width="150" height="48" rx="11" fill="var(--danger-soft)" stroke="var(--danger)" stroke-width="1.6"/>
+        <text x="605" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="var(--danger)">بسته</text>
+        <text x="605" y="56" text-anchor="middle" font-size="9" fill="var(--danger)">فقط مشاهده</text>
+
+        <path d="M230 42 L299 42" stroke="var(--fg-soft)" stroke-width="1.6" marker-end="url(#arw5)"/>
+        <text x="265" y="34" text-anchor="middle" font-size="8.5" fill="var(--fg-faint)">فعال‌سازی</text>
+        <path d="M455 42 L524 42" stroke="var(--fg-soft)" stroke-width="1.6" marker-end="url(#arw5)"/>
+        <text x="490" y="34" text-anchor="middle" font-size="8.5" fill="var(--fg-faint)">بستن</text>
+        <path d="M605 70 L605 112 L380 112 L380 70" stroke="var(--fg-soft)" stroke-width="1.4" stroke-dasharray="5 4" fill="none" marker-end="url(#arw5)"/>
+        <text x="492" y="128" text-anchor="middle" font-size="8.5" fill="var(--fg-faint)">بازگشایی</text>
+
+        <text x="380" y="152" text-anchor="middle" font-size="9.5" fill="var(--fg-faint)">حذف فیزیکی وجود ندارد — فقط بستن</text>
+      </svg>
+    </div>
+    <figcaption>شکل ۶ — چرخهٔ وضعیت موقعیت شغلی. موقعیت تازه همیشه «پیش‌نویس» ساخته می‌شود.</figcaption>
+  </figure>
+
+  <h3>شایستگی‌های احراز شغل</h3>
+  <p>هنگام ساخت موقعیت، فیلد «شایستگی‌های احراز شغل» را پر کنید — <b>هر مورد در یک خط</b>. این فهرست بعداً در صفحهٔ عمومی «موقعیت‌های شغلی باز» به‌صورت بولت به متقاضی نشان داده می‌شود تا بداند چه انتظاری هست.</p>
+  <div class="box tip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 16v-4"/><path d="M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg>
+    <p>مثال: <code>مدرک کارشناسی مرتبط</code> / <code>حداقل ۲ سال سابقه فروش</code> / <code>آشنایی با اکسل</code> — هر کدام در خط جدا.</p>
+  </div>
+</section>
+
+<!-- ========== ۸ ========== -->
+<section id="users">
+  <div class="sec-head"><span class="sec-n">۰۸</span><h2>مدیریت کاربران</h2></div>
+  <p>از منوی «مدیریت کاربران» می‌توانید حساب کارمند بسازید، نقش کسی را عوض کنید یا حسابی را فعال/غیرفعال کنید. فقط <span class="role role-hr">مدیر HR</span>.</p>
+
+  <figure>
+    <div class="scroll">
+      <svg viewBox="0 0 760 186" role="img" aria-label="جدول مدیریت کاربران: نام کاربری با چیپ وضعیت، نقش، و دکمه‌های تغییر نقش و فعال یا غیرفعال">
+        <rect x="10" y="10" width="740" height="34" rx="8" fill="var(--sunk)"/>
+        <text x="726" y="32" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--fg-soft)">نام کاربری</text>
+        <text x="400" y="32" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--fg-soft)">نقش</text>
+        <text x="190" y="32" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--fg-soft)">عملیات</text>
+
+        <rect x="10" y="52" width="740" height="38" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="726" y="76" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--fg)">نگار</text>
+        <rect x="640" y="62" width="52" height="20" rx="10" fill="var(--pos-soft)"/>
+        <text x="666" y="76" text-anchor="middle" font-size="9" font-weight="700" fill="var(--pos-ink)">فعال</text>
+        <text x="400" y="76" text-anchor="end" font-size="10" fill="var(--fg-soft)">کارشناس جذب</text>
+        <rect x="112" y="61" width="72" height="22" rx="7" fill="none" stroke="var(--border-strong)"/>
+        <text x="148" y="76" text-anchor="middle" font-size="9" fill="var(--fg-soft)">تغییر نقش</text>
+        <rect x="28" y="61" width="76" height="22" rx="7" fill="none" stroke="var(--border-strong)"/>
+        <text x="66" y="76" text-anchor="middle" font-size="9" fill="var(--fg-soft)">غیرفعال</text>
+
+        <rect x="10" y="98" width="740" height="38" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="726" y="122" text-anchor="end" font-size="10.5" font-weight="700" fill="var(--fg)">علی</text>
+        <rect x="640" y="108" width="52" height="20" rx="10" fill="var(--sunk)"/>
+        <text x="666" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="var(--fg-faint)">غیرفعال</text>
+        <text x="400" y="122" text-anchor="end" font-size="10" fill="var(--fg-soft)">مدیر استخدام</text>
+        <rect x="112" y="107" width="72" height="22" rx="7" fill="none" stroke="var(--border-strong)"/>
+        <text x="148" y="122" text-anchor="middle" font-size="9" fill="var(--fg-soft)">تغییر نقش</text>
+        <rect x="28" y="107" width="76" height="22" rx="7" fill="var(--brand)"/>
+        <text x="66" y="122" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">فعال</text>
+
+        <text x="730" y="158" text-anchor="end" font-size="9.5" fill="var(--fg-faint)">تغییر نقش فقط با کلیک روی دکمه باز می‌شود — ردیف‌ها فشرده می‌مانند</text>
+        <text x="730" y="174" text-anchor="end" font-size="9.5" fill="var(--fg-faint)">دکمهٔ «فعال» آبی است چون عمل مورد انتظار در آن ردیف فعال‌سازی است</text>
+      </svg>
+    </div>
+    <figcaption>شکل ۷ — جدول کاربران. وضعیت هر حساب کنار نامش نشان داده می‌شود.</figcaption>
+  </figure>
+
+  <div class="box warn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <p><b>نمی‌توانید آخرین مدیر HR فعال را غیرفعال کنید یا نقشش را عوض کنید.</b> این محافظ جلوی قفل‌شدن کامل سامانه را می‌گیرد. قبل از تغییر نقش، مطمئن شوید یک مدیر HR دیگر فعال هست.</p>
+  </div>
+</section>
+
+<!-- ========== ۹ ========== -->
+<section id="export">
+  <div class="sec-head"><span class="sec-n">۰۹</span><h2>خروجی‌گیری</h2></div>
+  <p>از منوی «خروجی‌گیری» می‌توانید پرونده‌ها را به CSV یا Excel بگیرید. فقط <span class="role role-hr">مدیر HR</span>.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>موضوع</th><th>توضیح</th></tr></thead>
+      <tbody>
+        <tr><td>فیلترها</td><td>وضعیت، شهر و جست‌وجو (نام، موبایل، کد پیگیری) — خروجی دقیقاً همان چیزی است که فیلتر کرده‌اید</td></tr>
+        <tr><td>انتخاب ستون‌ها</td><td>هر ستون را می‌توانید تیک بزنید یا بردارید</td></tr>
+        <tr><td>سقف</td><td>۱۰٬۰۰۰ ردیف در هر خروجی</td></tr>
+        <tr><td>محدودیت تکرار</td><td>برای جلوگیری از فشار روی سرور، تعداد خروجی در بازهٔ زمانی محدود است</td></tr>
+        <tr><td>صفر ابتدای موبایل</td><td>در CSV موقع باز کردن در Excel، ستون را به‌عنوان «متن» وارد کنید؛ در Excel این از پیش تنظیم شده</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== ۱۰ ========== -->
+<section id="faq">
+  <div class="sec-head"><span class="sec-n">۱۰</span><h2>پرسش‌های رایج</h2></div>
+
+  <h4>کد پیگیری‌ام را گم کرده‌ام، چه کنم؟</h4>
+  <p>راهی برای بازیابی وجود ندارد؛ کد تنها راه دسترسی است. اگر درخواست تازه در پیش دارید، دوباره ثبت کنید (برای همان موقعیت شغلی، تا وقتی درخواست قبلی در جریان است، درخواست تکراری پذیرفته نمی‌شود).</p>
+
+  <h4>چرا صفحه را باز می‌کنم و چیزی نمایش داده نمی‌شود؟</h4>
+  <p>اگر وارد نشده باشید، صفحه‌های پنل کارکنان شما را به صفحهٔ ورود می‌فرستند. اگر وارد شده‌اید اما داده‌ای نمی‌بینید، احتمالاً نقش شما دسترسی به آن بخش ندارد — جدول بخش ۰۴ را ببینید.</p>
+
+  <h4>چرا نمی‌توانم وضعیت پرونده را تغییر دهم؟</h4>
+  <p>دو دلیل ممکن است: یا نقش شما مدیر استخدام/اپراتور است (که اجازهٔ تغییر وضعیت ندارد)، یا آن وضعیت در مسیر مجاز نیست (شکل ۴).</p>
+
+  <h4>رزومه آپلود می‌شود اما ثبت نهایی انجام نمی‌شود</h4>
+  <p>فایل باید ابتدا از نظر بدافزار اسکن شود. اگر سرویس اسکن در دسترس نباشد، ثبت متوقف می‌شود — به‌صورت عمدی، تا فایل مشکوک پذیرفته نشود. کمی بعد دوباره تلاش کنید؛ اگر ادامه داشت، به پشتیبانی فنی اطلاع دهید.</p>
+
+  <h4>بعد از خروج، به کجا برمی‌گردم؟</h4>
+  <p>با زدن «خروج»، نشست شما باطل می‌شود و به صفحهٔ اصلی پورتال برمی‌گردید، نه مستقیم به صفحهٔ ورود.</p>
+
+  <h4>می‌توانم پرونده را حذف کنم؟</h4>
+  <p>خیر. پرونده‌ها و سوابق آن‌ها برای پاسخ‌گویی نگه داشته می‌شوند. فقط می‌توانید وضعیت را ببندید (رد یا استخدام). سوابق حسابرسی هم هرگز حذف نمی‌شوند.</p>
+</section>
+
+<footer>
+  <span>پورتال جذب و استخدام میلان پارس</span>
+  <span>راهنمای استفاده — بر اساس رفتار واقعی نرم‌افزار</span>
+</footer>
+
+</div>
