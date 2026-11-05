@@ -179,7 +179,7 @@ a{color:var(--accent)}
 .user-chip strong{font-size:13px;color:var(--ink)}
 .user-chip .muted{font-size:11px}
 
-.inline-msg{font-size:12px;color:var(--fg-soft);white-space:nowrap}
+.inline-msg{font-size:12px;color:var(--ink-soft);white-space:nowrap}
 .inline-msg--error{color:var(--danger);font-weight:700}
 
 /* ---------- پیگیری درخواست: خط زمانی مراحل ---------- */
@@ -205,13 +205,13 @@ a{color:var(--accent)}
   transition:background .18s ease,border-color .18s ease;
 }
 .track-label{
-  font-size:12.5px;color:var(--fg-faint);text-align:center;line-height:1.5;
+  font-size:12.5px;color:var(--ink-faint);text-align:center;line-height:1.5;
   max-width:120px;
 }
 /* مراحل گذشته: نقطهٔ توپر و برچسب پررنگ */
 .track-step.is-done .track-dot{background:var(--positive);border-color:var(--positive)}
 .track-step.is-done::before{background:var(--positive)}
-.track-step.is-done .track-label{color:var(--fg-soft)}
+.track-step.is-done .track-label{color:var(--ink-soft)}
 /* مرحلهٔ جاری: نقطهٔ برند + حلقهٔ هاله تا چشم فوراً آن را پیدا کند */
 .track-step.is-current .track-dot{
   background:var(--accent);border-color:var(--accent);
@@ -226,10 +226,13 @@ a{color:var(--accent)}
   padding:14px 0 0;margin-top:6px;border-top:1px solid var(--border);width:100%;font-size:13px;
 }
 
+/* موبایل: خط زمانی افقی با پنج مرحله سرریز می‌شد و هیچ نشانه‌ای برای اسکرول نبود.
+   در RTL به یک stepper عمودی تبدیل می‌شود: خط اتصال سمت راست، برچسب‌ها راست‌چین. */
 @media(max-width:560px){
-  .track-steps{padding-top:16px}
-  .track-step{min-width:80px}
-  .track-label{font-size:11px;max-width:80px}
+  .track-steps{flex-direction:column;align-items:stretch;overflow:visible;gap:0;padding:8px 0 0}
+  .track-step{flex-direction:row;align-items:flex-start;min-width:0;gap:12px;padding-bottom:18px}
+  .track-step::before{top:20px;right:9px;width:2px;height:calc(100% - 20px)}
+  .track-label{text-align:right;max-width:none;font-size:13px}
 }
 
 /* صفحهٔ حساب من */
@@ -272,7 +275,9 @@ a{color:var(--accent)}
 .btn.primary:hover{background:var(--accent-ink);opacity:1}
 .btn.ghost{background:transparent;border-color:var(--border-strong);color:var(--ink)}
 .btn.ghost:hover{background:var(--surface-sunken);opacity:1}
-.btn.danger{background:var(--danger-soft);color:var(--danger)}
+.btn.danger{background:var(--danger-soft);color:var(--danger);border-color:var(--danger)}
+/* آیکون سطل زباله: رنگ تنها نشانگر نباشد (WCAG 1.4.1) — کاربر کوررنگ هم «حذف» را از «غیرفعال» جدا ببیند. */
+.btn.danger .btn-icon{width:14px;height:14px;flex-shrink:0}
 .link-btn{border:none;background:none;color:var(--accent);font-weight:700;padding:0;cursor:pointer;text-decoration:none}
 .link-btn:hover{text-decoration:underline}
 
@@ -385,8 +390,10 @@ textarea{min-height:88px;resize:vertical;line-height:1.7}
    ارتفاع ردیف را دو برابر می‌کرد) نقش فقط با کلیک روی «تغییر نقش» قابل ویرایش می‌شود. */
 .user-cell{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .user-cell-name{font-weight:700}
-.actions-cell{display:flex;gap:6px;justify-content:flex-end}
-.btn-sm{min-height:32px;padding:5px 12px;font-size:12.5px;border-radius:8px}
+.actions-cell{display:flex;gap:8px;justify-content:flex-end;align-items:center}
+/* دکمهٔ مخرب از بقیه جدا می‌شود تا کلیک اشتباه روی «غیرفعال» به «حذف» نرسد (Fitts's Law). */
+.actions-cell .btn.danger{margin-inline-start:8px}
+.btn-sm{min-height:36px;padding:6px 12px;font-size:12.5px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
 .btn-sm.primary{box-shadow:none}
 .badge-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;line-height:1.7}
 .badge-pill::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
@@ -458,3 +465,16 @@ textarea{min-height:88px;resize:vertical;line-height:1.7}
   .flow-rule{flex-direction:column;gap:4px}
   .role-chip{width:fit-content}
 }
+
+/* ---------- دیالوگ تأیید درون‌برنامه‌ای ---------- */
+/* جایگزین window.confirm برای اعمال برگشت‌ناپذیر: نام شیء در عنوان، دکمهٔ تأیید با برچسب فعل،
+   و تایپ نام کاربری برای فعال‌شدن دکمه (Nielsen, 2018 — Confirmation Dialogs). */
+.confirm-dialog{
+  border:none;border-radius:var(--radius);padding:24px;max-width:440px;width:calc(100% - 32px);
+  box-shadow:var(--shadow);background:var(--surface);color:var(--ink);
+}
+.confirm-dialog::backdrop{background:rgba(18,23,38,.45)}
+.confirm-dialog h3{margin:0 0 8px;font-size:17px}
+.confirm-dialog p{margin:0 0 14px;font-size:13.5px;color:var(--ink-soft);line-height:1.7}
+.confirm-dialog .actions-row{display:flex;gap:10px;justify-content:flex-start;margin-top:16px}
+.confirm-dialog .btn{min-height:40px}

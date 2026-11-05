@@ -12,9 +12,11 @@ function safeNextPath() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const loginForm = document.getElementById("login-form");
     const loginButton = document.getElementById("login-button");
 
-    loginButton.addEventListener("click", async () => {
+    // فرم: Enter در فیلد نام کاربری یا رمز هم ورود را اجرا می‌کند (WCAG 2.1.1 Keyboard).
+    const submitLogin = async () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
         const errorEl = document.querySelector('[data-error-for="login"]');
@@ -33,5 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         window.location.href = safeNextPath();
-    });
+    };
+
+    if (loginForm) {
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            submitLogin();
+        });
+    } else {
+        loginButton.addEventListener("click", submitLogin);
+    }
 });

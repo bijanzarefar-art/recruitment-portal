@@ -92,7 +92,20 @@ async function loadUsers() {
         const deleteBtn = document.createElement("button");
         deleteBtn.type = "button";
         deleteBtn.className = "btn danger btn-sm";
-        deleteBtn.textContent = "حذف";
+        // آیکون سطل زباله: رنگ تنها نشانگر نباشد (WCAG 1.4.1)؛ برای صفحه‌خوان پنهان است چون
+        // متن «حذف» کنارش هست.
+        const trashIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        trashIcon.setAttribute("class", "btn-icon");
+        trashIcon.setAttribute("viewBox", "0 0 24 24");
+        trashIcon.setAttribute("fill", "none");
+        trashIcon.setAttribute("stroke", "currentColor");
+        trashIcon.setAttribute("stroke-width", "2");
+        trashIcon.setAttribute("aria-hidden", "true");
+        const trashPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        trashPath.setAttribute("d", "M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5");
+        trashIcon.appendChild(trashPath);
+        deleteBtn.appendChild(trashIcon);
+        deleteBtn.appendChild(document.createTextNode("حذف"));
         deleteBtn.addEventListener("click", () => deleteUser(user));
         actionsTd.appendChild(deleteBtn);
 
@@ -177,10 +190,79 @@ function flashNotice(text) {
     }, 4000);
 }
 
+// دیالوگ تأیید درون‌برنامه‌ای به‌جای window.confirm: نام حساب در عنوان، دکمهٔ تأیید با برچسب
+// فعل («حذف حساب»)، و فعال‌شدن دکمه فقط پس از تایپ دقیق نام کاربری — برای عمل برگشت‌ناپذیر
+// (Nielsen, 2018). خطای سرور (مثلاً ۴۰۹ برای حساب دارای سوابق) در همان دیالوگ نمایش داده
+// می‌شود، نه در alert کوتاه که قابل کپی نیست.
+function confirmDelete(user) {
+    return new Promise((resolve) => {
+        const dlg = document.createElement("dialog");
+        dlg.className = "confirm-dialog";
+        dlg.setAttribute("aria-labelledby", "confirm-title");
+
+        const title = document.createElement("h3");
+        title.id = "confirm-title";
+        title.textContent = `حذف حساب «${user.username}»`;
+        dlg.appendChild(title);
+
+        const desc = document.createElement("p");
+        desc.textContent = "این عمل برگشت‌ناپذیر است. برای تأیید، نام کاربری را دقیقاً تایپ کنید:";
+        dlg.appendChild(desc);
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "input";
+        input.autocomplete = "off";
+        input.setAttribute("aria-label", "نام کاربری برای تأیید حذف");
+        dlg.appendChild(input);
+
+        const errorEl = document.createElement("div");
+        errorEl.className = "field-error";
+        errorEl.setAttribute("role", "alert");
+        dlg.appendChild(errorEl);
+
+        const actions = document.createElement("div");
+        actions.className = "actions-row";
+
+        const yesBtn = document.createElement("button");
+        yesBtn.type = "button";
+        yesBtn.className = "btn danger";
+        yesBtn.textContent = "حذف حساب";
+        yesBtn.disabled = true;
+
+        const noBtn = document.createElement("button");
+        noBtn.type = "button";
+        noBtn.className = "btn ghost";
+        noBtn.textContent = "انصراف";
+
+        actions.appendChild(yesBtn);
+        actions.appendChild(noBtn);
+        dlg.appendChild(actions);
+
+        const close = (result) => {
+            dlg.close();
+            dlg.remove();
+            resolve(result);
+        };
+
+        input.addEventListener("input", () => {
+            yesBtn.disabled = input.value !== user.username;
+        });
+        noBtn.addEventListener("click", () => close(false));
+        yesBtn.addEventListener("click", () => close(true));
+        dlg.addEventListener("cancel", (event) => {
+            event.preventDefault();
+            close(false);
+        });
+
+        document.body.appendChild(dlg);
+        dlg.showModal();
+        input.focus();
+    });
+}
+
 async function deleteUser(user) {
-    const confirmed = window.confirm(
-        `حذف حساب «${user.username}» برگشت‌ناپذیر است. آیا مطمئن هستید؟`
-    );
+    const confirmed = await confirmDelete(user);
     if (!confirmed) return;
 
     const resp = await apiFetch(`/api/v1/staff/users/${user.id}`, { method: "DELETE" });
@@ -190,7 +272,7 @@ async function deleteUser(user) {
         return;
     }
     const body = await resp.json().catch(() => ({}));
-    window.alert(body.message || "حذف ناموفق بود.");
+    flashNotice(body.message || "حذف ناموفق بود.");
 }
 
 async function updateUser(userId, payload) {
@@ -203,7 +285,7 @@ async function updateUser(userId, payload) {
         await loadUsers();
     } else {
         const body = await resp.json().catch(() => ({}));
-        window.alert(body.message || "به‌روزرسانی ناموفق بود.");
+        flashNotice(body.message || "به‌روزرسانی ناموفق بود.");
         await loadUsers();
     }
 }
