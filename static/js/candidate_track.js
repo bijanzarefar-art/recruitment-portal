@@ -19,22 +19,37 @@ function renderSteps(currentStatus) {
     if (!container) return;
     container.innerHTML = "";
 
+    // صفحه‌خوان باید بفهمد این یک فهرست مرتب از مراحل است و کدام مرحله جاری است
+    // (WCAG 1.3.1؛ الگوی Stepper در WAI-ARIA Authoring Practices).
+    container.setAttribute("role", "list");
+    container.setAttribute("aria-label", "مراحل بررسی درخواست");
+
     const isRejected = currentStatus === "rejected";
     const reachedIndex = PROGRESS_STEPS.indexOf(currentStatus);
 
     PROGRESS_STEPS.forEach((status, index) => {
         const step = document.createElement("div");
         step.className = "track-step";
+        step.setAttribute("role", "listitem");
 
-        // وقتی رد شده، مراحل تا قبل از «استخدام» گذشته‌اند ولی دیگر ادامه‌ای نیست؛
-        // پس هیچ مرحله‌ای «فعال» نشان داده نمی‌شود و وضعیت رد جداگانه پایین می‌آید.
-        if (!isRejected) {
-            if (index < reachedIndex) step.classList.add("is-done");
-            else if (index === reachedIndex) step.classList.add("is-current");
+        // در حالت «رد»، مراحل طی‌شده تا نقطهٔ رد همچنان «انجام‌شده» می‌مانند؛ قبلاً همه خاکستری
+        // می‌شدند و کاربری که تا مصاحبه رفته بود می‌دید انگار هیچ مرحله‌ای طی نشده است.
+        let stateLabel;
+        if (index < reachedIndex) {
+            step.classList.add("is-done");
+            stateLabel = "انجام شد";
+        } else if (index === reachedIndex) {
+            step.classList.add("is-current");
+            step.setAttribute("aria-current", "step");
+            stateLabel = isRejected ? "فرآیند در این مرحله متوقف شد" : "مرحلهٔ جاری";
+        } else {
+            stateLabel = "در انتظار";
         }
+        step.setAttribute("aria-label", `${STATUS_LABELS[status]} — ${stateLabel}`);
 
         const dot = document.createElement("div");
         dot.className = "track-dot";
+        dot.setAttribute("aria-hidden", "true");
         step.appendChild(dot);
 
         const label = document.createElement("div");
@@ -56,7 +71,8 @@ function renderSteps(currentStatus) {
         hint.className = "muted";
         hint.textContent = "فرآیند بررسی این درخواست پایان یافته است.";
         rejectedNote.appendChild(hint);
-        container.appendChild(rejectedNote);
+        // بیرون از فهرست مراحل: این یادداشت یک مرحله نیست و نباید listitem خوانده شود.
+        container.parentNode.insertBefore(rejectedNote, container.nextSibling);
     }
 }
 
@@ -112,7 +128,16 @@ document.addEventListener("DOMContentLoaded", () => {
         resultSection.hidden = false;
     };
 
-    submitButton.addEventListener("click", runLookup);
+    // فرم: Enter در فیلد کد هم جست‌وجو را اجرا می‌کند (WCAG 2.1.1 Keyboard).
+    const form = document.getElementById("track-form");
+    if (form) {
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            runLookup();
+        });
+    } else {
+        submitButton.addEventListener("click", runLookup);
+    }
 
     // اگر از دکمهٔ «پیگیری وضعیت درخواست» در صفحهٔ موفقیت ثبت‌نام با ?code=... وارد شده باشد،
     // کد از پیش پر و جست‌وجو خودکار اجرا می‌شود تا کاربر دوباره تایپ نکند.
